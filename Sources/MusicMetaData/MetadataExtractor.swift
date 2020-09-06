@@ -149,7 +149,12 @@ public struct MetadataExtractor {
         return jsonData
     }
         
-    public func printAudioFiles() {
+    public func printJSON(from json: Data) {
+        let jsonString = String(data: json, encoding: .utf8)!
+        print(jsonString)
+    }
+    
+     public func printAudioFiles() {
         print("\nDirectory: \(directory)")
 
         printFrames()
