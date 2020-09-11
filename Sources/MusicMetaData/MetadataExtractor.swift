@@ -9,14 +9,16 @@ import Foundation
 import ID3TagEditor
 import Cocoa
 
+@available(OSX 11.0, *)
 public struct MetadataExtractor {
     
     let url: URL
     let directory: String
-    var audioFiles: [AudioFileExtractor] = []
+    var audioFiles: [ExtractorProtocol] = []
+    var flacAudioFiles: [ExtractorProtocol] = []
 //    var imageData: Data?
     var imageRefs: [String] = []
-    private var frames: [FrameName:ID3FrameEx] = [:]
+    private var items: [MetadataType:MetadataItem] = [:]
     
     public init(dir: String) {
         directory = dir
@@ -29,38 +31,75 @@ public struct MetadataExtractor {
     }
     
     mutating func normalize() {
-        for frameName in FrameName.allCases {
+        // flac files
+        for type in MetadataType.allCases {
             var matches = true
-
-            var firstFrame: ID3FrameEx?
-            var firstFrameValue: String?
             
-            for file in audioFiles {
-                if firstFrame == nil {
-                    firstFrame = file.getFrame(frameName)
-                    firstFrameValue = file.getFrameValue(frameName)
+            var firstBlock: MetadataItem?
+            
+            for file in flacAudioFiles {
+                if firstBlock == nil {
+                    firstBlock = file.getDataItem(type)
                 } else {
-                    let currentFrameValue = file.getFrameValue(frameName)
-                    if currentFrameValue != firstFrameValue {
+                    let currentBlock = file.getDataItem(type)
+                    // TODO: comparing flac data items
+                    if currentBlock != firstBlock {
                         matches = false
                     }
                 }
             }
             
             if matches {
-                // Add frame to Album
-                frames[frameName] = firstFrame
-                // Remove frame from AudioFiles
-                var newAudioFiles: [AudioFileExtractor] = []
-                for var file in audioFiles {
-                    file.removeFrame(frameName)
-                    newAudioFiles.append(file)
+                // Add block to Album
+                items[type] = firstBlock
+                // Remove block from flacAudioFiles
+                var newFlacAudioFiles: [ExtractorProtocol] = []
+                for var file in flacAudioFiles {
+                    // TODO: remove flac data item
+                    file.removeItem(type)
+                    newFlacAudioFiles.append(file)
                 }
-                audioFiles = newAudioFiles
+                flacAudioFiles = newFlacAudioFiles
             }
-                        
         }
     }
+    
+//    // TODO: deprecated
+//    #if false
+//    mutating func normalize() {
+//        for frameName in FrameName.allCases {
+//            var matches = true
+//
+//            var firstFrame: ID3FrameEx?
+//            var firstFrameValue: String?
+//            
+//            for file in audioFiles {
+//                if firstFrame == nil {
+//                    firstFrame = file.getFrame(frameName)
+//                    firstFrameValue = file.getFrameValue(frameName)
+//                } else {
+//                    let currentFrameValue = file.getFrameValue(frameName)
+//                    if currentFrameValue != firstFrameValue {
+//                        matches = false
+//                    }
+//                }
+//            }
+//            
+//            if matches {
+//                // Add frame to Album
+//                frames[frameName] = firstFrame
+//                // Remove frame from AudioFiles
+//                var newAudioFiles: [ID3Extractor] = []
+//                for var file in audioFiles {
+//                    file.removeFrame(frameName)
+//                    newAudioFiles.append(file)
+//                }
+//                audioFiles = newAudioFiles
+//            }
+//            
+//        }
+//    }
+//    #endif
     
     mutating public func getAudioFiles() {
         let fm = FileManager.default
@@ -69,11 +108,15 @@ public struct MetadataExtractor {
             let files = try fm.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions())
             
             for fileurl in files {
-                let validExtensions = ["mp3","flac"]
+                let validExtensions = ["mp3","mp4"]
                 let validPictureFormats = ["gmp","gif","ico","jpg","jpeg","png","tiff"]
-                if validExtensions.contains(fileurl.pathExtension) {
-                    var audioFile = AudioFileExtractor(url: fileurl)
-                    audioFile.getFrames()
+                if fileurl.pathExtension == "flac" {
+                    var audioFile = FlacExtractor(url: fileurl)
+                    _ = audioFile.extractTags()
+                    flacAudioFiles.append(audioFile)
+                } else if validExtensions.contains(fileurl.pathExtension) {
+                    var audioFile: ExtractorProtocol = ID3Extractor(url: fileurl)
+                    _ = audioFile.extractTags()
                     audioFiles.append(audioFile)
                 } else if validPictureFormats.contains(fileurl.pathExtension) {
                     let imagePath = fileurl.path
@@ -108,6 +151,41 @@ public struct MetadataExtractor {
     }
     
     public func getAlbum() -> Album? {
+        if let albumTitle = items[.album]?.contentsString {
+            var album = Album(album: albumTitle)
+            album.artist = items[.artist]?.contentsString
+            album.composer = items[.composer]?.contentsString
+            album.conductor = items[.composer]?.contentsString
+            album.lyricist = items[.lyricist]?.contentsString
+            album.genre = items[.genre]?.contentsString
+            album.publisher = items[.publisher]?.contentsString
+            album.copyright = items[.copyright]?.contentsString
+            album.encodedBy = items[.encodedBy]?.contentsString
+            album.encoderSettings = items[.encoderSettings]?.contentsString
+            album.recordingYear = items[.recordingYear]?.contentsInt
+            album.coverArtRefs = imageRefs
+
+            for file in audioFiles.sorted(by: { $0.getDataItem(.track)?.contentsInt ?? 0 <
+                                            $1.getDataItem(.track)?.contentsInt ?? 0 }) {
+                let filename = file.relativeFilename
+                if let track = file.getDataItem(.track)?.contentsInt,
+                   let title = file.getDataItem(.title)?.contentsString {
+                    var audioFile = AudioFile(track: track, title: title, filename: filename)
+                    audioFile.artist = file.getDataItem(.artist)?.contentsString
+                    audioFile.composer = file.getDataItem(.composer)?.contentsString
+                    audioFile.genre = file.getDataItem(.genre)?.contentsString
+                    audioFile.recordingYear = file.getDataItem(.recordingYear)?.contentsInt
+                    album.audioFiles.append(audioFile)
+                }
+            }
+            return album
+        }
+        return nil
+
+    }
+    
+    #if false
+    public func getAlbum() -> Album? {
         if let albumTitle = frames[.Album]?.getFrameValue() {
             var album = Album(album: albumTitle)
             album.artist = frames[.Artist]?.getFrameValue()
@@ -127,7 +205,7 @@ public struct MetadataExtractor {
                 let filename = file.getRelativeFilename()
                 if let track = file.getFramePartValue(.TrackPosition) ,
                    let title = file.getFrameValue(.Title) {
-                    var audioFile = AudioFile(track: track, title: title, filename: filename)
+                    var audioFile = AudioFile(track: track, title: title, lFilename: lFilename)
                     audioFile.artist = file.getFrameValue(.Artist)
                     audioFile.composer = file.getFrameValue(.Composer)
                     audioFile.genre = file.getFrameValue(.Genre)
@@ -136,9 +214,16 @@ public struct MetadataExtractor {
                 }
             }
             return album
+        } else if let albumBlock = items[.album]?.contents {
+            switch albumBlock {
+            case .string(let s):
+                let albumTitle = s
+                    = Album(album: )
+            }
         }
         return nil
     }
+    #endif
 
     public func getJSON(from album: Album, pretty: Bool = false) -> Data? {
         let encoder = JSONEncoder()
@@ -157,19 +242,23 @@ public struct MetadataExtractor {
      public func printAudioFiles() {
         print("\nDirectory: \(directory)")
 
-        printFrames()
-        for file in audioFiles.sorted(by: { Int($0.getFrameValue(.TrackPosition) ?? "0") ?? 0 <
-                                        Int($1.getFrameValue(.TrackPosition) ?? "0") ?? 0 }) {
+        printItems()
+        for file in audioFiles.sorted(by: { $0.getDataItem(.track)?.contentsInt ?? 0 <
+                                        $1.getDataItem(.track)?.contentsInt ?? 0 }) {
             file.printAudioFile()
         }
 
     }
 
-    func printFrames() {
-        for (_, frame) in frames {
-            frame.printFrame()
-
-        }
+    func printItems() {
+        // TODO: Add function body
     }
+    
+//    func printFrames() {
+//        for (_, frame) in frames {
+//            frame.printFrame()
+//
+//        }
+//    }
     
 }

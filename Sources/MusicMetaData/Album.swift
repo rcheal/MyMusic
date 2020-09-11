@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  Album.swift
 //  
 //
 //  Created by Robert Cheal on 9/6/20.
@@ -27,10 +27,22 @@ public struct Album: Codable {
     
     public var audioFiles: [AudioFile] = []
     public var compositions: [Composition] = []
+    
+    func load(fromFrames: [ID3FrameEx]) {
+        
+    }
 
     var json: Data? {
         let encoder = JSONEncoder()
         return try? encoder.encode(self)
+    }
+    
+    public static func decodeFrom(json: Data) -> Album? {
+        let decoder = JSONDecoder()
+        if let jsonAlbum = try? decoder.decode(Album.self, from: json) {
+            return jsonAlbum
+        }
+        return nil
     }
     
 }
