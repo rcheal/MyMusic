@@ -230,7 +230,7 @@ struct FlacExtractor : ExtractorProtocol {
     }
     
     mutating func extractTags() -> (Bool, String) {
-        if let buffer = readFile(8192) {
+        if let buffer = readFile(100000) {
             
             if var offset = findSyncOffset(buffer) {
 
