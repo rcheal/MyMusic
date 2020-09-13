@@ -35,7 +35,7 @@ struct FlacExtractor : ExtractorProtocol {
     private let lFilename: String
     private let lRelativeFilename: String
     private var metadataItems: [MetadataType:MetadataItem] = [:]
-    private var images: [MetadataImageType:Data] = [:]
+    private var images: [MetadataImageType:(String,Data)] = [:]
     
     private var logger = Logger(subsystem: "com.cheal.bob.MusicMetaData", category: "FlacExtractor")
 
@@ -57,7 +57,7 @@ struct FlacExtractor : ExtractorProtocol {
         metadataItems[type]
     }
     
-    func getImage(_ type: MetadataImageType) -> Data? {
+    func getImage(_ type: MetadataImageType) -> (String,Data)? {
         return images[type] 
     }
     
@@ -158,7 +158,7 @@ struct FlacExtractor : ExtractorProtocol {
             let mimeLength = Data([UInt8](blockData[start..<end])).bigEndian32()
             start = end
             end = start + mimeLength
-            let /*mimeType*/ _ = String(bytes: [UInt8](blockData[start..<end]), encoding: .utf8)
+            let mimeType = String(bytes: [UInt8](blockData[start..<end]), encoding: .utf8)
             start = end
             end = start + 4
             let descLength = Data([UInt8](blockData[start..<end])).bigEndian32()
@@ -183,8 +183,32 @@ struct FlacExtractor : ExtractorProtocol {
             start = end
             end = start + pictureLength
             let data = Data([UInt8](blockData[start..<end]))
-            let imageType: MetadataImageType = (type == 3) ? .frontCover : .backCover
-            images[imageType] = data
+            var imageType: MetadataImageType?
+            switch type {
+            case 3:
+                imageType = .frontCover
+            case 4:
+                imageType = .backCover
+            default:
+                break
+            }
+            var format: String?
+            switch mimeType {
+            case "image/jpeg":
+                format = "jpg"
+            case "image/png":
+                format = "png"
+            default:
+                break
+            }
+            if let format = format, let imageType = imageType {
+                switch imageType {
+                case .frontCover:
+                    images[imageType] = ("FrontCover.\(format)",data)
+                case .backCover:
+                    images[imageType] = ("BackCover.\(format)",data)
+                }
+            }
         }
     }
     
@@ -242,6 +266,8 @@ struct FlacExtractor : ExtractorProtocol {
                     }
                 }
             }
+        } else {
+            return (false, "Unable to read from '\(url.path)")
         }
         return (true, "OK")
     }

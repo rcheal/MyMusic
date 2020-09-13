@@ -15,7 +15,7 @@ struct ID3Extractor: ExtractorProtocol {
     private let lFilename: String
     private let lRelativeFilename: String
     private var metadataItems: [MetadataType:MetadataItem] = [:]
-    var images: [MetadataImageType:Data] = [:]
+    var images: [MetadataImageType:(String,Data)] = [:]
     
     var filename: String {
         lFilename
@@ -30,7 +30,6 @@ struct ID3Extractor: ExtractorProtocol {
         url = URL(fileURLWithPath: fname, relativeTo: durl)
         lFilename = url.path
         lRelativeFilename = url.relativePath
-        metadataItems = [:]
     }
 
     init(file fname: String) {
@@ -55,7 +54,7 @@ struct ID3Extractor: ExtractorProtocol {
         metadataItems[type]
     }
           
-    func getImage(_ type: MetadataImageType) -> Data? {
+    func getImage(_ type: MetadataImageType) -> (String, Data)? {
         return images[type]
     }
 
@@ -69,6 +68,14 @@ struct ID3Extractor: ExtractorProtocol {
                     case .Album:
                         if let value = frame.getFrameValue() {
                             metadataItem = MetadataItem(type: .album, contentsString: value)
+                        }
+                    case .Title:
+                        if let value = frame.getFrameValue() {
+                            metadataItem = MetadataItem(type: .title, contentsString: value)
+                        }
+                    case .Subtitle:
+                        if let value = frame.getFrameValue() {
+                            metadataItem = MetadataItem(type: .subtitle, contentsString: value)
                         }
                     case .Artist:
                         if let value = frame.getFrameValue() {
@@ -118,14 +125,15 @@ struct ID3Extractor: ExtractorProtocol {
                         metadataItem = MetadataItem(type: .track, contentsInt: value)
                     case .AttachedPicture(let t):
                         let value = frame.getFramePicture()
+                        let format = (frame.getFramePictureFormat() == .Jpeg) ? "jpg" : "png"
                         switch t {
                         case .FrontCover:
                             if let value = value {
-                                images[.frontCover] = value
+                                images[.frontCover] = ("FrontCover.\(format)",value)
                             }
                         case .BackCover:
                             if let value = value {
-                                images[.backCover] = value
+                                images[.backCover] = ("BackCover.\(format)",value)
                             }
                         default:
                             break
