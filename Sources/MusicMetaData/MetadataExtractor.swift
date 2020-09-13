@@ -8,6 +8,7 @@
 import Foundation
 import ID3TagEditor
 import Cocoa
+import OSLog
 
 @available(OSX 11.0, *)
 public struct MetadataExtractor {
@@ -21,6 +22,8 @@ public struct MetadataExtractor {
     var imageRefs: [String] = []
     private var items: [MetadataType:MetadataItem] = [:]
     
+    private var logger = Logger(subsystem: "com.cheal.bob.MusicMetaData", category: "MetadataExtractor")
+
     init(dir: String, relativeTo baseurl: URL) {
         self.baseurl = baseurl
         reldir = dir
@@ -123,6 +126,16 @@ public struct MetadataExtractor {
                     newAudioFiles.append(file)
                 }
                 audioFiles = newAudioFiles
+            } else if type == .album {
+                if items[.album] == nil {
+                    items[type] = firstBlock
+                    logger.warning("Files are not from the same album")
+                    for file in audioFiles {
+                        let fname = file.relativeFilename
+                        let albumTitle = file.getDataItem(.album)?.contentsString ?? ""
+                        logger.info("\(fname): \(albumTitle)")
+                    }
+                }
             }
         }
     }
