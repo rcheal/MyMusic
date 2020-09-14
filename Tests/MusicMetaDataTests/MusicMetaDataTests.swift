@@ -331,9 +331,87 @@ final class MetadataExtractorTests: XCTestCase {
             
     }
     
+    func testMetadataExtractTags3() throws {
+        let dname = "Mozart/Clarinet Concerto"
+        let expectedAlbum = "Clarinet Concerto in A, K622"
+        let expectedArtist = "Emma Johnson - English Chamber Orchestra"
+        let expectedComposer = "Mozart, Wolfgang Amadeus (1756-1791)"
+        let expectedGenre = "Classical"
+        let expectedYear = 1985
+        let expectedComposition = ["Clarinet Concerto in A, K622","Flute & Harp Concerto in C, K299"]
+        let expectedStartTrack = [1,1]
+        var expectedDuration: [Int: Int] = [:]
+        expectedDuration[1] = 758
+        expectedDuration[2] = 457
+        expectedDuration[3] = 508
+        expectedDuration[101] = 613
+        expectedDuration[102] = 474
+        expectedDuration[103] = 527
+        var expectedTitle: [Int: String] = [:]
+        expectedTitle[1] = "I. Allegro"
+        expectedTitle[2] = "II. Adagio"
+        expectedTitle[3] = "III. Rondo. Allegro"
+        expectedTitle[101] = "I. Allegro"
+        expectedTitle[102] = "II. Andantino"
+        expectedTitle[103] = "III. Rondo. Allegro"
+
+        var expectedFilename: [Int: String] = [:]
+        expectedFilename[1] = "Mozart/Clarinet Concerto/first_movement__allegro__concerto_for_clarinet_and_orchestra_in_a_k622.flac"
+        expectedFilename[2] = "Mozart/Clarinet Concerto/second_movement__adagio__concerto_for_clarinet_and_orchestra_in_a_k622.flac"
+        expectedFilename[3] = "Mozart/Clarinet Concerto/third_movement__rondo_allegro__concerto_for_clarinet_and_orchestrain_a_k622.flac"
+        expectedFilename[101] = "Mozart/Clarinet Concerto/first_movement__allegro__concerto_for_flute_harp_and_orchestra_in_c_k299.flac"
+        expectedFilename[102] = "Mozart/Clarinet Concerto/second_movement__andantino__concerto_for_flute_harp_and_orchestra_in_c_k299.flac"
+        expectedFilename[103] = "Mozart/Clarinet Concerto/third_movement__rondo_allegro__concerto_for_flute_harp_and_orchestra_in_c_k299.flac"
+
+        let directory = try Resource(relativePath: dname)
+        var metadataExtractor = MusicMetaData.MetadataExtractor(dir: dname, relativeTo: directory.baseURL)
+        
+        metadataExtractor.getAudioFiles()
+    
+        let album = metadataExtractor.getAlbum()
+        
+        XCTAssertNotNil(album, "Album is nil")
+        if let album = album {
+            XCTAssertEqual(album.album, expectedAlbum)
+            XCTAssertEqual(album.artist ?? "nil", expectedArtist)
+            XCTAssertEqual(album.composer ?? "nil", expectedComposer)
+            XCTAssertEqual(album.genre ?? "nil", expectedGenre)
+            XCTAssertEqual(album.recordingYear ?? 0, expectedYear)
+
+            XCTAssert(album.audioFiles.count == 0, "Unexpected single audiofiles found")
+
+            for index in album.compositions.indices {
+                let composition = album.compositions[index]
+                XCTAssertEqual(composition.title, expectedComposition[index])
+                XCTAssertEqual(composition.startTrack, expectedStartTrack[index])
+                for file in composition.audioFiles {
+                    let track = file.track
+                    if (1...3).contains(track) {
+                        XCTAssertEqual(file.title, expectedTitle[index*100+track])
+                        XCTAssertEqual(file.duration, expectedDuration[index*100+track])
+                        XCTAssertEqual(file.fileRef, expectedFilename[index*100+track])
+                    } else {
+                        XCTAssert(true, "Extra track - \(track)")
+                    }
+                }
+            }
+
+            let json = metadataExtractor.getJSON(from: album, pretty:  true)
+            XCTAssertNotNil(json, "JSON is nil")
+           
+            if let json = json {
+                let value = String(data: json, encoding: .utf8) ?? ""
+                print(value)
+            }
+        }
+            
+            
+    }
+    
     static var allTests = [
         ("testMetadataExtractTags1", testMetadataExtractTags1),
         ("testMetadataExtractTags2", testMetadataExtractTags2),
+        ("testMetadataExtractTags2", testMetadataExtractTags3),
     ]
 }
 

@@ -21,6 +21,7 @@ public struct MetadataExtractor {
     var images: [MetadataImageType:(String,Data)] = [:]
     var imageRefs: [String] = []
     private var items: [MetadataType:MetadataItem] = [:]
+    private var compositionFileCounts: [Int:Int] = [:]
     
     private var logger = Logger(subsystem: "com.cheal.bob.MusicMetaData", category: "MetadataExtractor")
 
@@ -100,6 +101,49 @@ public struct MetadataExtractor {
     
     mutating func normalize() {
         // flac files
+        
+        // find compositions base on Album title or Composition title
+        var firstAlbumBlock: MetadataItem?
+        var firstCompositionBlock: MetadataItem?
+        var compositionCount = 0
+        var startTrack = 0
+        for file in audioFiles.sorted(by: {
+            let tracka = $0.getDataItem(.track)?.contentsInt ?? 0
+            let trackb = $1.getDataItem(.track)?.contentsInt ?? 0
+            let albuma = $0.getDataItem(.album)?.contentsString ?? ""
+            let albumb = $1.getDataItem(.album)?.contentsString ?? ""
+            if albuma == albumb {
+                return tracka < trackb
+            } else {
+                return albuma < albumb
+            }            
+        }) {
+            let currentAlbumBlock = file.getDataItem(.album) ?? MetadataItem(type: .album, contentsString: "")
+            let currentCompositionBlock = file.getDataItem(.composition) ?? MetadataItem(type: .composition, contentsString: "")
+            let currentTrack = file.getDataItem(.track)?.contentsInt ?? 0
+            
+            if firstAlbumBlock == nil  {
+                firstAlbumBlock = currentAlbumBlock
+                firstCompositionBlock = currentCompositionBlock
+                compositionCount = 1
+                startTrack = currentTrack
+            } else {
+                if (currentAlbumBlock != firstAlbumBlock) ||
+                    (currentCompositionBlock != firstCompositionBlock) {
+                    if compositionCount >= 2 {
+                        compositionFileCounts[startTrack] = compositionCount
+                    }
+                    firstAlbumBlock = currentAlbumBlock
+                    firstCompositionBlock = currentCompositionBlock
+                    compositionCount = 1
+                } else {
+                    compositionCount += 1
+                }
+            }
+            
+        }
+        
+        
         for type in MetadataType.allCases {
             var matches = true
             
@@ -145,7 +189,7 @@ public struct MetadataExtractor {
             var album = Album(album: albumTitle)
             album.artist = items[.artist]?.contentsString
             album.composer = items[.composer]?.contentsString
-            album.conductor = items[.composer]?.contentsString
+            album.conductor = items[.conductor]?.contentsString
             album.lyricist = items[.lyricist]?.contentsString
             album.genre = items[.genre]?.contentsString
             album.publisher = items[.publisher]?.contentsString
@@ -155,8 +199,20 @@ public struct MetadataExtractor {
             album.recordingYear = items[.recordingYear]?.contentsInt
             album.coverArtRefs = imageRefs
 
-            for file in audioFiles.sorted(by: { $0.getDataItem(.track)?.contentsInt ?? 0 <
-                                            $1.getDataItem(.track)?.contentsInt ?? 0 }) {
+            var compositionCount = 0
+            var composition: Composition?
+            for file in audioFiles.sorted(by: {
+                    let tracka = $0.getDataItem(.track)?.contentsInt ?? 0
+                    let trackb = $1.getDataItem(.track)?.contentsInt ?? 0
+                    let albuma = $0.getDataItem(.album)?.contentsString ?? ""
+                    let albumb = $1.getDataItem(.album)?.contentsString ?? ""
+                    if albuma == albumb {
+                        return tracka < trackb
+                    } else {
+                        return albuma < albumb
+                    }
+
+                }) {
                 let filename = file.relativeFilename
                 if let track = file.getDataItem(.track)?.contentsInt,
                    let title = file.getDataItem(.title)?.contentsString {
@@ -166,8 +222,30 @@ public struct MetadataExtractor {
                     audioFile.genre = file.getDataItem(.genre)?.contentsString
                     audioFile.recordingYear = file.getDataItem(.recordingYear)?.contentsInt
                     audioFile.duration = file.getDataItem(.duration)?.contentsInt
-                    album.audioFiles.append(audioFile)
+                    if let compositionFileCount = compositionFileCounts[track] {
+                        if composition != nil {
+                            album.compositions.append(composition!)
+                        }
+                        composition = Composition(startTrack: track, title: file.getDataItem(.composition)?.contentsString
+                                                    ?? file.getDataItem(.album)?.contentsString ?? "")
+                        if composition != nil {
+                            composition!.audioFiles.append(audioFile)
+                            compositionCount = compositionFileCount-1
+                        }
+                    } else if compositionCount > 0 {
+                        composition?.audioFiles.append(audioFile)
+                        compositionCount -= 1
+                    } else {
+                        if composition != nil {
+                            album.compositions.append(composition!)
+                            composition = nil
+                        }
+                        album.audioFiles.append(audioFile)
+                    }
                 }
+            }
+            if composition != nil {
+                album.compositions.append(composition!)
             }
             return album
         }
