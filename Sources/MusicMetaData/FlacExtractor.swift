@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import os.log
+import OSLog
 
 struct MetaDataBlock {
     var lastBlock: Bool = false
@@ -37,7 +37,7 @@ struct FlacExtractor : ExtractorProtocol {
     private var metadataItems: [MetadataType:MetadataItem] = [:]
     private var images: [MetadataImageType:(String,Data)] = [:]
     
-//    private var logger = Logger(subsystem: "com.cheal.bob.MusicMetaData", category: "FlacExtractor")
+    private var logger = Logger(subsystem: "com.cheal.bob.MusicMetaData", category: "FlacExtractor")
 
     var filename: String {
         lFilename
@@ -109,10 +109,8 @@ struct FlacExtractor : ExtractorProtocol {
         let vendorLength = Int(Data(blockData[0...3]).littleEndian32())
         var start = 4
         var end = start + vendorLength
-        #if DEBUG
         let vendorString = String(bytes: blockData[start..<end], encoding: .utf8) ?? ""
-        print("VendorString: \(vendorString)")
-        #endif
+        logger.info("VendorString: \(vendorString, privacy: .public)")
         start = end
         end += 4
         let userCommentCount = Int(Data([UInt8](blockData[start..<end])).littleEndian32())
@@ -146,9 +144,7 @@ struct FlacExtractor : ExtractorProtocol {
             if let item = metadataItem {
                 metadataItems[item.type] = item
             } else {
-#if DEBUG
-                print("Vorbis Comment not handled: \(idx): \(tagString)")
-#endif
+                logger.info("Vorbis Comment not handled: \(idx, privacy: .public): \(tagString, privacy: .public)")
             }
         }
     }
@@ -248,23 +244,19 @@ struct FlacExtractor : ExtractorProtocol {
                         case 0:
                              getStreamInfo(blockData)
                         case 1:
-//                            logger.info("Metadata Padding block of length \(blockHeader.length) skipped")
-                            break
+                            logger.info("Metadata Padding block of length \(blockHeader.length) skipped")
                         case 2:
-//                            logger.info("Metadata Application block of length \(blockHeader.length) skipped")
-                            break
+                            logger.info("Metadata Application block of length \(blockHeader.length) skipped")
                         case 3:
-//                            logger.info("Metadata Seektable block of length \(blockHeader.length) skipped")
-                            break
+                            logger.info("Metadata Seektable block of length \(blockHeader.length) skipped")
                         case 4:
                             getVorbisComments(blockData)
                         case 5:
-//                            logger.info("Metadata Cuesheet block of length \(blockHeader.length) skipped")
-                            break
+                            logger.info("Metadata Cuesheet block of length \(blockHeader.length) skipped")
                         case 6:
                             getPicture(blockData)
                         default:
-//                            logger.info("Unknown metadata block - <\(blockHeader.type)> - of length \(blockHeader.length) skipped")
+                            logger.info("Unknown metadata block - <\(blockHeader.type)> - of length \(blockHeader.length) skipped")
                             break
                             
                     }
