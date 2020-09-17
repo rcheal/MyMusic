@@ -23,7 +23,7 @@ public struct MetadataExtractor {
     private var items: [MetadataType:MetadataItem] = [:]
     private var compositionFileCounts: [Int:Int] = [:]
     
-    private var logger = Logger(subsystem: "com.cheal.bob.MusicMetaData", category: "MetadataExtractor")
+//    private var logger = Logger(subsystem: "com.cheal.bob.MusicMetaData", category: "MetadataExtractor")
 
     init(dir: String, relativeTo baseurl: URL) {
         self.baseurl = baseurl
@@ -173,11 +173,15 @@ public struct MetadataExtractor {
             } else if type == .album {
                 if items[.album] == nil {
                     items[type] = firstBlock
-                    logger.warning("Files are not from the same album")
+                    #if DEBUG
+                    print("Files are not from the same album")
+                    #endif
                     for file in audioFiles {
                         let fname = file.relativeFilename
                         let albumTitle = file.getDataItem(.album)?.contentsString ?? ""
-                        logger.info("\(fname): \(albumTitle)")
+                        #if DEBUG
+                        print("\(fname): \(albumTitle)")
+                        #endif
                     }
                 }
             }
