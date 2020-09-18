@@ -222,7 +222,7 @@ public struct MetadataExtractor {
             album.copyright = items[.copyright]?.contentsString
             album.encodedBy = items[.encodedBy]?.contentsString
             album.encoderSettings = items[.encoderSettings]?.contentsString
-            album.recordingYear = Int(items[.recordingYear]?.contentsString ?? "")
+            album.recordingYear = items[.recordingYear]?.contentsInt
             album.coverArtRefs = imageRefs
 
             var compositionCount = 0
@@ -246,7 +246,7 @@ public struct MetadataExtractor {
                     audioFile.artist = file.getDataItem(.artist)?.contentsString
                     audioFile.composer = file.getDataItem(.composer)?.contentsString
                     audioFile.genre = file.getDataItem(.genre)?.contentsString
-                    audioFile.recordingYear = Int(file.getDataItem(.recordingYear)?.contentsString ?? "")
+                    audioFile.recordingYear = file.getDataItem(.recordingYear)?.contentsInt
                     audioFile.duration = file.getDataItem(.duration)?.contentsInt
                     logger.debug("Duration for \(title): \(audioFile.duration ?? 0)")
                     let key = (file.getDataItem(.album)?.contentsString ?? "") + ":\(track)"
