@@ -144,7 +144,7 @@ public struct MetadataExtractor {
                 if (currentAlbumBlock != firstAlbumBlock) ||
                     (currentCompositionBlock != firstCompositionBlock) {
                     if compositionCount >= 2 {
-                        let key = firstAlbumBlock?.contentsString ?? "" + ":\(startTrack)"
+                        let key = (firstAlbumBlock?.contentsString ?? "") + ":\(startTrack)"
                         compositionFileCounts[key] = compositionCount
                         logger.debug("normalize() Key: \(key)")
                         logger.debug("normalize() Composition count: \(compositionCount)")
@@ -240,9 +240,9 @@ public struct MetadataExtractor {
                     audioFile.recordingYear = file.getDataItem(.recordingYear)?.contentsInt
                     audioFile.duration = file.getDataItem(.duration)?.contentsInt
                     logger.debug("Duration for \(title): \(audioFile.duration ?? 0)")
-                    let key = title + ":\(track)"
-                    logger.debug("getAlbum() Key: \(key)")
+                    let key = albumTitle + ":\(track)"
                     if let compositionFileCount = compositionFileCounts[key] {
+                        logger.debug("getAlbum() Key: \(key)")
                         logger.debug("getAlbum() composition file count: \(compositionFileCount)")
                         if composition != nil {
                             album.compositions.append(composition!)
