@@ -240,7 +240,7 @@ public struct MetadataExtractor {
                     audioFile.recordingYear = file.getDataItem(.recordingYear)?.contentsInt
                     audioFile.duration = file.getDataItem(.duration)?.contentsInt
                     logger.debug("Duration for \(title): \(audioFile.duration ?? 0)")
-                    let key = albumTitle + ":\(track)"
+                    let key = file.getDataItem(.album)?.contentsString ?? "" + ":\(track)"
                     if let compositionFileCount = compositionFileCounts[key] {
                         logger.debug("getAlbum() Key: \(key)")
                         logger.debug("getAlbum() composition file count: \(compositionFileCount)")
