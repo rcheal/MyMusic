@@ -7,6 +7,7 @@
 
 import Foundation
 import ID3TagEditor
+import AVFoundation
 
 struct ID3Extractor: ExtractorProtocol {
     
@@ -151,6 +152,11 @@ struct ID3Extractor: ExtractorProtocol {
                     }
                 }
             }
+            let audioAsset = AVURLAsset(url: URL(fileURLWithPath: lFilename))
+            let duration = Int(CMTimeGetSeconds(audioAsset.duration))
+            let item = MetadataItem(type: .duration, contentsInt: duration)
+            metadataItems[.duration] = item
+        
         } catch {
             return (false,"Exception getting frames for \(lFilename) - \(error)")
         }

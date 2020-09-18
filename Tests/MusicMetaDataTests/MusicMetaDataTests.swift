@@ -136,7 +136,7 @@ final class AudioFileExtractorTests: XCTestCase {
         let expectedYear = 2002
         let expectedTrack = 1
         let expectedTitle = "Moanin'"
-        let expectedDuration = 0
+        let expectedDuration = 362
  
         let file = try Resource(relativePath: fname)
         var extractor = ID3Extractor(file: fname, relativeTo: file.baseURL)
@@ -266,19 +266,19 @@ final class MetadataExtractorTests: XCTestCase {
         expectedTitle[12] = "Love Me Like a Man"
         expectedTitle[13] = "Angel Eyes"
         var expectedDuration: [Int: Int] = [:]
-        expectedDuration[1] = nil
-        expectedDuration[2] = nil
-        expectedDuration[3] = nil
-        expectedDuration[4] = nil
-        expectedDuration[5] = nil
-        expectedDuration[6] = nil
-        expectedDuration[7] = nil
-        expectedDuration[8] = nil
-        expectedDuration[9] = nil
-        expectedDuration[10] = nil
-        expectedDuration[11] = nil
-        expectedDuration[12] = nil
-        expectedDuration[13] = nil
+        expectedDuration[1] = 362
+        expectedDuration[2] = 237
+        expectedDuration[3] = 275
+        expectedDuration[4] = 455
+        expectedDuration[5] = 271
+        expectedDuration[6] = 340
+        expectedDuration[7] = 341
+        expectedDuration[8] = 302
+        expectedDuration[9] = 253
+        expectedDuration[10] = 363
+        expectedDuration[11] = 251
+        expectedDuration[12] = 260
+        expectedDuration[13] = 289
         var expectedFilename: [Int: String] = [:]
         expectedFilename[1] = "Karrin Allyson/In Blue/01 Moanin'.mp3"
         expectedFilename[2] = "Karrin Allyson/In Blue/02 Everybody's Cryin' Mercy.mp3"
@@ -313,7 +313,7 @@ final class MetadataExtractorTests: XCTestCase {
                 let track = file.track
                 if (1...13).contains(track) {
                     XCTAssertEqual(file.title, expectedTitle[track])
-                    XCTAssertEqual(file.duration, expectedDuration[track])
+                    XCTAssertEqual(file.duration, expectedDuration[track], "track \(track)")
                     XCTAssertEqual(file.fileRef, expectedFilename[track])
                 }
                 
