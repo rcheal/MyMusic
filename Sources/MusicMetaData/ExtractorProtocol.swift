@@ -14,6 +14,7 @@ protocol ExtractorProtocol {
 
     mutating func removeItem(_ type: MetadataType) 
     func getDataItem(_ type: MetadataType) -> MetadataItem?
+    mutating func setDataItem(_ item: MetadataItem)
     mutating func extractTags() -> (Bool, String) 
     func printAudioFile()
     func getImage(_ type: MetadataImageType) -> (String, Data)?

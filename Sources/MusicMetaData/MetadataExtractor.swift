@@ -107,31 +107,44 @@ public struct MetadataExtractor {
         var firstCompositionBlock: MetadataItem?
         var compositionCount = 0
         var startTrack = 0
+        var startDisk = 0
         for file in audioFiles.sorted(by: {
-            let tracka = $0.getDataItem(.track)?.contentsInt ?? 0
-            let trackb = $1.getDataItem(.track)?.contentsInt ?? 0
+            let diska = $0.getDataItem(.disk)?.contentsInt ?? 0
+            let diskb = $0.getDataItem(.disk)?.contentsInt ?? 0
+            let tracka = $0.getDataItem(.track)?.contentsInt ?? 1
+            let trackb = $1.getDataItem(.track)?.contentsInt ?? 1
             let albuma = $0.getDataItem(.album)?.contentsString ?? ""
             let albumb = $1.getDataItem(.album)?.contentsString ?? ""
-            if albuma == albumb {
-                return tracka < trackb
+            if diska == diskb {
+                if albuma == albumb {
+                    return tracka < trackb
+                } else {
+                    return albuma < albumb
+                }
             } else {
-                return albuma < albumb
-            }            
+                if albuma == albumb {
+                    return tracka < trackb
+                } else {
+                    return albuma < albumb
+                }
+            }
         }) {
             let currentAlbumBlock = file.getDataItem(.album) ?? MetadataItem(type: .album, contentsString: "")
             let currentCompositionBlock = file.getDataItem(.composition) ?? MetadataItem(type: .composition, contentsString: "")
-            let currentTrack = file.getDataItem(.track)?.contentsInt ?? 0
+            let currentTrack = file.getDataItem(.track)?.contentsInt ?? 1
+            let currentDisk = file.getDataItem(.disk)?.contentsInt ?? 0
             
             if firstAlbumBlock == nil  {
                 firstAlbumBlock = currentAlbumBlock
                 firstCompositionBlock = currentCompositionBlock
                 compositionCount = 1
+                startDisk = currentDisk
                 startTrack = currentTrack
             } else {
                 if (currentAlbumBlock != firstAlbumBlock) ||
                     (currentCompositionBlock != firstCompositionBlock) {
                     if compositionCount >= 2 {
-                        compositionFileCounts[startTrack] = compositionCount
+                        compositionFileCounts[startDisk*100+startTrack] = compositionCount
                     }
                     firstAlbumBlock = currentAlbumBlock
                     firstCompositionBlock = currentCompositionBlock
@@ -222,6 +235,7 @@ public struct MetadataExtractor {
                     audioFile.genre = file.getDataItem(.genre)?.contentsString
                     audioFile.recordingYear = file.getDataItem(.recordingYear)?.contentsInt
                     audioFile.duration = file.getDataItem(.duration)?.contentsInt
+                    logger.debug("Duration for \(title): \(audioFile.duration ?? 0)")
                     if let compositionFileCount = compositionFileCounts[track] {
                         if composition != nil {
                             album.compositions.append(composition!)

@@ -57,6 +57,11 @@ struct FlacExtractor : ExtractorProtocol {
         metadataItems[type]
     }
     
+    mutating func setDataItem(_ item: MetadataItem) {
+        removeItem(item.type)
+        metadataItems[item.type] = item
+    }
+    
     func getImage(_ type: MetadataImageType) -> (String,Data)? {
         return images[type] 
     }
@@ -225,6 +230,7 @@ struct FlacExtractor : ExtractorProtocol {
         var totalSamples = Data([UInt8](headerEndBuf[3...7])).bigEndian40()
         totalSamples &= 0x0fffffffff
         let elapsedTime = totalSamples / sampleRate
+        logger.debug("Duration: \(elapsedTime)")
         let metadataItem = MetadataItem(type: .duration, contentsInt: elapsedTime)
         metadataItems[.duration] = metadataItem
     }

@@ -54,6 +54,11 @@ struct ID3Extractor: ExtractorProtocol {
         metadataItems[type]
     }
           
+    mutating func setDataItem(_ item: MetadataItem) {
+        removeItem(item.type)
+        metadataItems[item.type] = item
+    }
+    
     func getImage(_ type: MetadataImageType) -> (String, Data)? {
         return images[type]
     }
