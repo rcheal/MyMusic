@@ -153,6 +153,8 @@ public struct MetadataExtractor {
                     firstAlbumBlock = currentAlbumBlock
                     firstCompositionBlock = currentCompositionBlock
                     compositionCount = 1
+                    startDisk = currentDisk
+                    startTrack = currentTrack
                 } else {
                     compositionCount += 1
                 }
