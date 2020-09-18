@@ -144,7 +144,7 @@ public struct MetadataExtractor {
                 if (currentAlbumBlock != firstAlbumBlock) ||
                     (currentCompositionBlock != firstCompositionBlock) {
                     if compositionCount >= 2 {
-                        let key = currentAlbumBlock.contentsString ?? "" + ":\(startTrack)"
+                        let key = firstAlbumBlock?.contentsString ?? "" + ":\(startTrack)"
                         compositionFileCounts[key] = compositionCount
                         logger.debug("normalize() Key: \(key)")
                         logger.debug("normalize() Composition count: \(compositionCount)")
