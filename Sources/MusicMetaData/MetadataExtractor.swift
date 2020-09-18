@@ -21,7 +21,7 @@ public struct MetadataExtractor {
     var images: [MetadataImageType:(String,Data)] = [:]
     var imageRefs: [String] = []
     private var items: [MetadataType:MetadataItem] = [:]
-    private var compositionFileCounts: [Int:Int] = [:]
+    private var compositionFileCounts: [String:Int] = [:]
     
     private var logger = Logger(subsystem: "com.cheal.bob.MusicMetaData", category: "MetadataExtractor")
 
@@ -144,7 +144,8 @@ public struct MetadataExtractor {
                 if (currentAlbumBlock != firstAlbumBlock) ||
                     (currentCompositionBlock != firstCompositionBlock) {
                     if compositionCount >= 2 {
-                        compositionFileCounts[startDisk*100+startTrack] = compositionCount
+                        let key = currentAlbumBlock.contentsString ?? "" + ":\(startTrack)"
+                        compositionFileCounts[key] = compositionCount
                     }
                     firstAlbumBlock = currentAlbumBlock
                     firstCompositionBlock = currentCompositionBlock
@@ -236,7 +237,8 @@ public struct MetadataExtractor {
                     audioFile.recordingYear = file.getDataItem(.recordingYear)?.contentsInt
                     audioFile.duration = file.getDataItem(.duration)?.contentsInt
                     logger.debug("Duration for \(title): \(audioFile.duration ?? 0)")
-                    if let compositionFileCount = compositionFileCounts[track] {
+                    let key = title + ":\(track)"
+                    if let compositionFileCount = compositionFileCounts[key] {
                         if composition != nil {
                             album.compositions.append(composition!)
                         }
