@@ -100,6 +100,11 @@ struct ID3FrameEx {
                     valueStr = "\(year)"
                     return valueStr
                 }
+            } else if let yearFrame = frame as? ID3FrameWithIntegerContent {
+                if let year = yearFrame.value {
+                    valueStr = "\(year)"
+                    return valueStr
+                }
             }
             return noValue
             
