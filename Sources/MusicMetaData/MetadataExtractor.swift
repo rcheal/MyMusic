@@ -161,7 +161,14 @@ public struct MetadataExtractor {
             }
             
         }
-        
+        if compositionCount >= 2 {
+            let key = (firstAlbumBlock?.contentsString ?? "") + ":\(startTrack)"
+            compositionFileCounts[key] = compositionCount
+            logger.debug("normalize() Key: \(key)")
+            logger.debug("normalize() Composition count: \(compositionCount)")
+
+        }
+
         
         for type in MetadataType.allCases {
             var matches = true
