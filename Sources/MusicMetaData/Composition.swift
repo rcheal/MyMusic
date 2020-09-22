@@ -8,6 +8,7 @@
 import Foundation
 
 public struct Composition: Codable {
+    public var id: String?
     public var startDisk: Int?
     public var startTrack: Int
     
@@ -17,6 +18,7 @@ public struct Composition: Codable {
     public var supportingArtists: [String]?
     public var composer: String?
     public var conductor: String?
+    public var orchestra: String?
     public var lyricist: String?
     public var genre: String?
     public var publisher: String?
@@ -26,5 +28,5 @@ public struct Composition: Codable {
     public var recordingYear: Int?
     public var duration: Int?       /// duration in seconds
 
-    public var audioFiles: [AudioFile] = []
+    public var contents: [Single] = []
 }

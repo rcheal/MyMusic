@@ -144,7 +144,7 @@ public struct MetadataExtractor {
                 if (currentAlbumBlock != firstAlbumBlock) ||
                     (currentCompositionBlock != firstCompositionBlock) {
                     if compositionCount >= 2 {
-                        let key = (firstAlbumBlock?.contentsString ?? "") + ":\(startTrack)"
+                        let key = (firstAlbumBlock?.contentsString ?? "") + ":\(startDisk):\(startTrack)"
                         compositionFileCounts[key] = compositionCount
                         logger.debug("normalize() Key: \(key)")
                         logger.debug("normalize() Composition count: \(compositionCount)")
@@ -162,7 +162,7 @@ public struct MetadataExtractor {
             
         }
         if compositionCount >= 2 {
-            let key = (firstAlbumBlock?.contentsString ?? "") + ":\(startTrack)"
+            let key = (firstAlbumBlock?.contentsString ?? "") + ":\(startDisk):\(startTrack)"
             compositionFileCounts[key] = compositionCount
             logger.debug("normalize() Key: \(key)")
             logger.debug("normalize() Composition count: \(compositionCount)")
@@ -212,7 +212,7 @@ public struct MetadataExtractor {
     
     public func getAlbum() -> Album? {
         if let albumTitle = items[.album]?.contentsString {
-            var album = Album(album: albumTitle)
+            var album = Album(title: albumTitle)
             album.artist = items[.artist]?.contentsString
             album.composer = items[.composer]?.contentsString
             album.conductor = items[.conductor]?.contentsString
@@ -223,7 +223,12 @@ public struct MetadataExtractor {
             album.encodedBy = items[.encodedBy]?.contentsString
             album.encoderSettings = items[.encoderSettings]?.contentsString
             album.recordingYear = items[.recordingYear]?.contentsInt
-            album.coverArtRefs = imageRefs
+            if let (imageRef, _) = images[.frontCover] {
+                album.frontCoverArtRef = imageRef
+            }
+            if let (imageRef, _) = images[.backCover] {
+                album.backCoverArtRef = imageRef
+            }
 
             var compositionCount = 0
             var composition: Composition?
@@ -242,40 +247,46 @@ public struct MetadataExtractor {
                 let filename = file.relativeFilename
                 if let track = file.getDataItem(.track)?.contentsInt,
                    let title = file.getDataItem(.title)?.contentsString {
-                    var audioFile = AudioFile(track: track, title: title, filename: filename)
-                    audioFile.artist = file.getDataItem(.artist)?.contentsString
-                    audioFile.composer = file.getDataItem(.composer)?.contentsString
-                    audioFile.genre = file.getDataItem(.genre)?.contentsString
-                    audioFile.recordingYear = file.getDataItem(.recordingYear)?.contentsInt
-                    audioFile.duration = file.getDataItem(.duration)?.contentsInt
-                    logger.debug("Duration for \(title): \(audioFile.duration ?? 0)")
-                    let key = (file.getDataItem(.album)?.contentsString ?? "") + ":\(track)"
+                    let disk = file.getDataItem(.disk)?.contentsInt ?? 0
+                    var single = Single(track: track, title: title, filename: filename)
+                    single.disk = disk
+                    single.artist = file.getDataItem(.artist)?.contentsString
+                    single.composer = file.getDataItem(.composer)?.contentsString
+                    single.genre = file.getDataItem(.genre)?.contentsString
+                    single.recordingYear = file.getDataItem(.recordingYear)?.contentsInt
+                    single.duration = file.getDataItem(.duration)?.contentsInt
+                    logger.debug("Duration for \(title): \(single.duration ?? 0)")
+                    let key = (file.getDataItem(.album)?.contentsString ?? "") + ":\(disk):\(track)"
                     if let compositionFileCount = compositionFileCounts[key] {
                         logger.debug("getAlbum() Key: \(key)")
                         logger.debug("getAlbum() composition file count: \(compositionFileCount)")
                         if composition != nil {
-                            album.compositions.append(composition!)
+                            let content = AlbumContent(disk: composition!.startDisk, track: composition!.startTrack, composition: composition)
+                            album.contents.append(content)
                         }
-                        composition = Composition(startTrack: track, title: file.getDataItem(.composition)?.contentsString
+                        composition = Composition(startDisk: disk, startTrack: track, title: file.getDataItem(.composition)?.contentsString
                                                     ?? file.getDataItem(.album)?.contentsString ?? "")
                         if composition != nil {
-                            composition!.audioFiles.append(audioFile)
+                            composition!.contents.append(single)
                             compositionCount = compositionFileCount-1
                         }
                     } else if compositionCount > 0 {
-                        composition?.audioFiles.append(audioFile)
+                        composition?.contents.append(single)
                         compositionCount -= 1
                     } else {
                         if composition != nil {
-                            album.compositions.append(composition!)
+                            let content = AlbumContent(disk: composition!.startDisk, track: composition!.startTrack, composition: composition)
+                            album.contents.append(content)
                             composition = nil
                         }
-                        album.audioFiles.append(audioFile)
+                        let content = AlbumContent(disk: single.disk, track: single.track, single: single)
+                        album.contents.append(content)
                     }
                 }
             }
             if composition != nil {
-                album.compositions.append(composition!)
+                let content = AlbumContent(disk: composition!.startDisk, track: composition!.startTrack, composition: composition)
+                album.contents.append(content)
             }
             return album
         }
@@ -297,26 +308,5 @@ public struct MetadataExtractor {
         print(jsonString)
     }
     
-     public func printAudioFiles() {
-        print("\nDirectory: \(directory)")
-
-        printItems()
-        for file in audioFiles.sorted(by: { $0.getDataItem(.track)?.contentsInt ?? 0 <
-                                        $1.getDataItem(.track)?.contentsInt ?? 0 }) {
-            file.printAudioFile()
-        }
-
-    }
-
-    func printItems() {
-        // TODO: Add function body
-    }
-    
-//    func printFrames() {
-//        for (_, frame) in frames {
-//            frame.printFrame()
-//
-//        }
-//    }
     
 }

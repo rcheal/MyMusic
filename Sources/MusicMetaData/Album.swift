@@ -7,13 +7,22 @@
 
 import Foundation
 
+public struct AlbumContent: Codable {
+    public var disk: Int?
+    public var track: Int
+    public var composition: Composition?
+    public var single: Single?
+}
+
 public struct Album: Codable {
-    public var album: String
+    public var id: String?
+    public var title: String
     public var subtitle: String?
     public var artist: String?
     public var supportingArtists: [String]?
     public var composer: String?
     public var conductor: String?
+    public var orchestra: String?
     public var lyricist: String?
     public var genre: String?
     public var publisher: String?
@@ -21,17 +30,13 @@ public struct Album: Codable {
     public var encodedBy: String?
     public var encoderSettings: String?
     public var recordingYear: Int?
-    public var duration: Int?       /// duration in seconds
+    public var duration: Int?       /// sumation of contents durations
 
-    public var coverArtRefs: [String]?
+    public var frontCoverArtRef: String?
+    public var backCoverArtRef: String?
     
-    public var audioFiles: [AudioFile] = []
-    public var compositions: [Composition] = []
+    public var contents: [AlbumContent] = []
     
-    func load(fromFrames: [ID3FrameEx]) {
-        
-    }
-
     var json: Data? {
         let encoder = JSONEncoder()
         return try? encoder.encode(self)

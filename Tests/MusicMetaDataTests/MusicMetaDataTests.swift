@@ -216,18 +216,18 @@ final class MetadataExtractorTests: XCTestCase {
         
         XCTAssertNotNil(album, "Album is nil")
         if let album = album {
-            XCTAssertEqual(album.album, expectedAlbum)
+            XCTAssertEqual(album.title, expectedAlbum)
             XCTAssertEqual(album.artist ?? "nil", expectedArtist)
             XCTAssertEqual(album.composer ?? "nil", expectedComposer)
             XCTAssertEqual(album.genre ?? "nil", expectedGenre)
             XCTAssertEqual(album.recordingYear ?? 0, expectedYear)
 
-            for file in album.audioFiles {
-                let track = file.track
+            for child in album.contents {
+                let track = child.track
                 if (1...4).contains(track) {
-                    XCTAssertEqual(file.title, expectedTitle[track])
-                    XCTAssertEqual(file.duration, expectedDuration[track])
-                    XCTAssertEqual(file.fileRef, expectedFilename[track])
+                    XCTAssertEqual(child.single?.title, expectedTitle[track])
+                    XCTAssertEqual(child.single?.duration, expectedDuration[track])
+                    XCTAssertEqual(child.single?.audiofileRef, expectedFilename[track])
                 }
                 
             }
@@ -303,18 +303,18 @@ final class MetadataExtractorTests: XCTestCase {
         
         XCTAssertNotNil(album, "Album is nil")
         if let album = album {
-            XCTAssertEqual(album.album, expectedAlbum)
+            XCTAssertEqual(album.title, expectedAlbum)
             XCTAssertEqual(album.artist ?? "nil", expectedArtist)
             XCTAssertEqual(album.composer ?? "nil", expectedComposer)
             XCTAssertEqual(album.genre ?? "nil", expectedGenre)
             XCTAssertEqual(album.recordingYear ?? 0, expectedYear)
 
-            for file in album.audioFiles {
-                let track = file.track
+            for child in album.contents {
+                let track = child.track
                 if (1...13).contains(track) {
-                    XCTAssertEqual(file.title, expectedTitle[track])
-                    XCTAssertEqual(file.duration, expectedDuration[track], "track \(track)")
-                    XCTAssertEqual(file.fileRef, expectedFilename[track])
+                    XCTAssertEqual(child.single?.title, expectedTitle[track])
+                    XCTAssertEqual(child.single?.duration, expectedDuration[track], "track \(track)")
+                    XCTAssertEqual(child.single?.audiofileRef, expectedFilename[track])
                 }
                 
             }
@@ -369,30 +369,38 @@ final class MetadataExtractorTests: XCTestCase {
         metadataExtractor.getAudioFiles()
     
         let album = metadataExtractor.getAlbum()
-        
         XCTAssertNotNil(album, "Album is nil")
+        
         if let album = album {
-            XCTAssertEqual(album.album, expectedAlbum)
+//            if let json = metadataExtractor.getJSON(from: album, pretty: true) {
+//                metadataExtractor.printJSON(from: json)
+//            }
+        
+            XCTAssertEqual(album.title, expectedAlbum)
             XCTAssertEqual(album.artist ?? "nil", expectedArtist)
             XCTAssertEqual(album.composer ?? "nil", expectedComposer)
             XCTAssertEqual(album.genre ?? "nil", expectedGenre)
             XCTAssertEqual(album.recordingYear ?? 0, expectedYear)
 
-            XCTAssert(album.audioFiles.count == 0, "Unexpected single audiofiles found")
 
-            for index in album.compositions.indices {
-                let composition = album.compositions[index]
-                XCTAssertEqual(composition.title, expectedComposition[index])
-                XCTAssertEqual(composition.startTrack, expectedStartTrack[index])
-                for file in composition.audioFiles {
-                    let track = file.track
-                    if (1...3).contains(track) {
-                        XCTAssertEqual(file.title, expectedTitle[index*100+track])
-                        XCTAssertEqual(file.duration, expectedDuration[index*100+track])
-                        XCTAssertEqual(file.fileRef, expectedFilename[index*100+track])
-                    } else {
-                        XCTAssert(true, "Extra track - \(track)")
+            for index in album.contents.indices {
+                let child = album.contents[index]
+                if let composition = child.composition {
+                    XCTAssertEqual(composition.title, expectedComposition[index])
+                    XCTAssertEqual(composition.startTrack, expectedStartTrack[index])
+                    
+                    for single in composition.contents {
+                        let track = single.track
+                        if (1...3).contains(track) {
+                            XCTAssertEqual(single.title, expectedTitle[index*100+track])
+                            XCTAssertEqual(single.duration, expectedDuration[index*100+track])
+                            XCTAssertEqual(single.audiofileRef, expectedFilename[index*100+track])
+                        } else {
+                            XCTAssert(true, "Extra track - \(track)")
+                        }
                     }
+                } else if let single = child.single {
+                    XCTAssert(false, "Unexpected single audiofile found: \(single.title)")
                 }
             }
 
@@ -414,25 +422,3 @@ final class MetadataExtractorTests: XCTestCase {
         ("testMetadataExtractTags2", testMetadataExtractTags3),
     ]
 }
-
-//final class MusicMetaDataTests: XCTestCase {
-//    func testExample() throws {
-//        // This is an example of a functional test case.
-//        // Use XCTAssert and related functions to verify your tests produce the correct
-//        // results.
-////        XCTAssertEqual(MusicMetaData().text, "Hello, World!")
-//
-//        let file = try Resource(relativePath: "schubert_symphony_no_9/symphony_no9_in_c_d944_i_andante__allegro_ma_non_troppo.flac")
-//
-//        let found = try file.url.checkPromisedItemIsReachable()
-//
-//        XCTAssertTrue(found)
-////        let s = try! String(contentsOf: url, encoding: .utf8)
-//
-////        XCTAssertTrue(exists, "\(url.absoluteString)")
-//    }
-//
-//    static var allTests = [
-//        ("testExample", testExample),
-//    ]
-//}

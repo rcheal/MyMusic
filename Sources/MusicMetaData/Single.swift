@@ -7,7 +7,8 @@
 
 import Foundation
 
-public struct AudioFile: Codable {
+public struct Single: Codable {
+    public var id: String?
     public var disk: Int?
     public var track: Int
     
@@ -17,6 +18,7 @@ public struct AudioFile: Codable {
     public var supportingArtists: [String]?
     public var composer: String?
     public var conductor: String?
+    public var orchestra: String?
     public var lyricist: String?
     public var genre: String?
     public var publisher: String?
@@ -26,12 +28,12 @@ public struct AudioFile: Codable {
     public var recordingYear: Int?
     public var duration: Int?       /// duration in seconds
 
-    public var fileRef: String?
+    public var audiofileRef: String?
 
     
     init(track: Int, title: String, filename: String) {
         self.track = track
         self.title = title
-        self.fileRef = filename
+        self.audiofileRef = filename
     }
 }
