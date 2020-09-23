@@ -38,12 +38,18 @@ public struct Album: Codable, Identifiable {
     
     public var contents: [AlbumContent] = []
     
-    init(title: String) {
+    public init(title: String) {
         self.title = title
     }
     
-    var json: Data? {
+    public var json: Data? {
         let encoder = JSONEncoder()
+        return try? encoder.encode(self)
+    }
+    
+    public var jsonp: Data? {
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
         return try? encoder.encode(self)
     }
     

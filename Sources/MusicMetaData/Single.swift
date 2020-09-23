@@ -31,7 +31,7 @@ public struct Single: Codable, Identifiable {
     public var audiofileRef: String?
 
     
-    init(track: Int, title: String, filename: String) {
+    public init(track: Int, title: String, filename: String) {
         self.track = track
         self.title = title
         self.audiofileRef = filename

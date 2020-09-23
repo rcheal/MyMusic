@@ -30,7 +30,7 @@ public struct Composition: Codable, Identifiable {
 
     public var contents: [Single] = []
     
-    init(track: Int, title: String, disk: Int? = nil) {
+    public init(track: Int, title: String, disk: Int? = nil) {
         self.startTrack = track
         self.title = title
         self.startDisk = disk
