@@ -261,7 +261,7 @@ public struct MetadataExtractor {
                         logger.debug("getAlbum() Key: \(key)")
                         logger.debug("getAlbum() composition file count: \(compositionFileCount)")
                         if composition != nil {
-                            let content = AlbumContent(disk: composition!.startDisk, track: composition!.startTrack, composition: composition)
+                            let content = AlbumContent(track: composition!.startTrack, composition: composition!, disk: composition!.startDisk)
                             album.contents.append(content)
                         }
                         composition = Composition(track: track, title: file.getDataItem(.composition)?.contentsString
@@ -275,17 +275,17 @@ public struct MetadataExtractor {
                         compositionCount -= 1
                     } else {
                         if composition != nil {
-                            let content = AlbumContent(disk: composition!.startDisk, track: composition!.startTrack, composition: composition)
+                            let content = AlbumContent(track: composition!.startTrack, composition: composition!, disk: composition!.startDisk)
                             album.contents.append(content)
                             composition = nil
                         }
-                        let content = AlbumContent(disk: single.disk, track: single.track, single: single)
+                        let content = AlbumContent(track: single.track, single: single, disk: single.disk)
                         album.contents.append(content)
                     }
                 }
             }
             if composition != nil {
-                let content = AlbumContent(disk: composition!.startDisk, track: composition!.startTrack, composition: composition)
+                let content = AlbumContent(track: composition!.startTrack, composition: composition!, disk: composition!.startDisk)
                 album.contents.append(content)
             }
             return album

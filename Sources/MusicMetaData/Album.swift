@@ -13,6 +13,18 @@ public struct AlbumContent: Codable, Identifiable {
     public var track: Int
     public var composition: Composition?
     public var single: Single?
+    
+    public init(track: Int, composition: Composition, disk: Int? = nil) {
+        self.track = track
+        self.composition = composition
+        self.disk = disk
+    }
+    
+    public init(track: Int, single: Single, disk: Int? = nil) {
+        self.track = track
+        self.single = single
+        self.disk = disk
+    }
 }
 
 public struct Album: Codable, Identifiable {
