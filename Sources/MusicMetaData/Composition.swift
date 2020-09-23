@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Composition: Codable {
+public struct Composition: Codable, Identifiable {
     public var id: String?
     public var startDisk: Int?
     public var startTrack: Int

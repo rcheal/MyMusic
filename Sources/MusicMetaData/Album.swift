@@ -14,7 +14,7 @@ public struct AlbumContent: Codable {
     public var single: Single?
 }
 
-public struct Album: Codable {
+public struct Album: Codable, Identifiable {
     public var id: String?
     public var title: String
     public var subtitle: String?

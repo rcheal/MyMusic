@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Single: Codable {
+public struct Single: Codable, Identifiable {
     public var id: String?
     public var disk: Int?
     public var track: Int
