@@ -29,4 +29,10 @@ public struct Composition: Codable, Identifiable {
     public var duration: Int?       /// duration in seconds
 
     public var contents: [Single] = []
+    
+    init(track: Int, title: String, disk: Int? = nil) {
+        self.startTrack = track
+        self.title = title
+        self.startDisk = disk
+    }
 }

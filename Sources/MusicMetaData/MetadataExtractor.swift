@@ -264,8 +264,8 @@ public struct MetadataExtractor {
                             let content = AlbumContent(disk: composition!.startDisk, track: composition!.startTrack, composition: composition)
                             album.contents.append(content)
                         }
-                        composition = Composition(startDisk: disk, startTrack: track, title: file.getDataItem(.composition)?.contentsString
-                                                    ?? file.getDataItem(.album)?.contentsString ?? "")
+                        composition = Composition(track: track, title: file.getDataItem(.composition)?.contentsString
+                                                    ?? file.getDataItem(.album)?.contentsString ?? "", disk: disk)
                         if composition != nil {
                             composition!.contents.append(single)
                             compositionCount = compositionFileCount-1
