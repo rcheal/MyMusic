@@ -8,7 +8,7 @@
 import Foundation
 
 public struct Single: Codable, Identifiable {
-    public var id: String?
+    public var id: String
     public var disk: Int?
     public var track: Int
     
@@ -32,6 +32,7 @@ public struct Single: Codable, Identifiable {
 
     
     public init(track: Int, title: String, filename: String) {
+        id = UUID().uuidString
         self.track = track
         self.title = title
         self.audiofileRef = filename

@@ -8,7 +8,7 @@
 import Foundation
 
 public struct Composition: Codable, Identifiable {
-    public var id: String?
+    public var id: String
     public var startDisk: Int?
     public var startTrack: Int
     
@@ -31,6 +31,7 @@ public struct Composition: Codable, Identifiable {
     public var contents: [Single] = []
     
     public init(track: Int, title: String, disk: Int? = nil) {
+        id = UUID().uuidString
         self.startTrack = track
         self.title = title
         self.startDisk = disk
