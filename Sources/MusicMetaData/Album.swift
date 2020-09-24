@@ -45,16 +45,26 @@ public struct Album: Codable, Identifiable {
     public var encodedBy: String?
     public var encoderSettings: String?
     public var recordingYear: Int?
-    public var duration: Int?       /// sumation of contents durations
+    public var duration: Int       /// sumation of contents durations
 
     public var frontCoverArtRef: String?
     public var backCoverArtRef: String?
     
-    public var contents: [AlbumContent] = []
+    public private(set) var contents: [AlbumContent] = []
     
     public init(title: String) {
         id = UUID().uuidString
+        duration = 0
         self.title = title
+    }
+    
+    public mutating func addContent(_ content: AlbumContent) {
+        contents.append(content)
+        if let composition = content.composition {
+            duration += composition.duration
+        } else if let single = content.single {
+            duration += single.duration
+        }
     }
     
     public var json: Data? {

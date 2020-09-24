@@ -254,39 +254,39 @@ public struct MetadataExtractor {
                     single.composer = file.getDataItem(.composer)?.contentsString
                     single.genre = file.getDataItem(.genre)?.contentsString
                     single.recordingYear = file.getDataItem(.recordingYear)?.contentsInt
-                    single.duration = file.getDataItem(.duration)?.contentsInt
-                    logger.debug("Duration for \(title): \(single.duration ?? 0)")
+                    single.duration = file.getDataItem(.duration)?.contentsInt ?? 0
+                    logger.debug("Duration for \(title): \(single.duration )")
                     let key = (file.getDataItem(.album)?.contentsString ?? "") + ":\(disk):\(track)"
                     if let compositionFileCount = compositionFileCounts[key] {
                         logger.debug("getAlbum() Key: \(key)")
                         logger.debug("getAlbum() composition file count: \(compositionFileCount)")
                         if composition != nil {
                             let content = AlbumContent(track: composition!.startTrack, composition: composition!, disk: composition!.startDisk)
-                            album.contents.append(content)
+                            album.addContent(content)
                         }
                         composition = Composition(track: track, title: file.getDataItem(.composition)?.contentsString
                                                     ?? file.getDataItem(.album)?.contentsString ?? "", disk: disk)
                         if composition != nil {
-                            composition!.contents.append(single)
+                            composition!.addContent(single)
                             compositionCount = compositionFileCount-1
                         }
                     } else if compositionCount > 0 {
-                        composition?.contents.append(single)
+                        composition?.addContent(single)
                         compositionCount -= 1
                     } else {
                         if composition != nil {
                             let content = AlbumContent(track: composition!.startTrack, composition: composition!, disk: composition!.startDisk)
-                            album.contents.append(content)
+                            album.addContent(content)
                             composition = nil
                         }
                         let content = AlbumContent(track: single.track, single: single, disk: single.disk)
-                        album.contents.append(content)
+                        album.addContent(content)
                     }
                 }
             }
             if composition != nil {
                 let content = AlbumContent(track: composition!.startTrack, composition: composition!, disk: composition!.startDisk)
-                album.contents.append(content)
+                album.addContent(content)
             }
             return album
         }

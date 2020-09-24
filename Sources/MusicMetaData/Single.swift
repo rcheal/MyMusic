@@ -26,13 +26,14 @@ public struct Single: Codable, Identifiable {
     public var encodedBy: String?
     public var encoderSettings: String?
     public var recordingYear: Int?
-    public var duration: Int?       /// duration in seconds
+    public var duration: Int       /// duration in seconds
 
     public var audiofileRef: String?
 
     
     public init(track: Int, title: String, filename: String) {
         id = UUID().uuidString
+        duration = 0
         self.track = track
         self.title = title
         self.audiofileRef = filename

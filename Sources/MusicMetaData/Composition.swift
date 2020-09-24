@@ -26,14 +26,20 @@ public struct Composition: Codable, Identifiable {
     public var encodedBy: String?
     public var encoderSettings: String?
     public var recordingYear: Int?
-    public var duration: Int?       /// duration in seconds
+    public var duration: Int       /// duration in seconds
 
-    public var contents: [Single] = []
+    public private(set) var contents: [Single] = []
     
     public init(track: Int, title: String, disk: Int? = nil) {
         id = UUID().uuidString
+        duration = 0
         self.startTrack = track
         self.title = title
         self.startDisk = disk
+    }
+    
+    public mutating func addContent(_ content: Single) {
+        contents.append(content)
+        duration += content.duration
     }
 }
