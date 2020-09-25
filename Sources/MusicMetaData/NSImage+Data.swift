@@ -8,14 +8,14 @@
 import Foundation
 import Cocoa
 
-extension NSBitmapImageRep {
+public extension NSBitmapImageRep {
     var png: Data? { representation(using: .png, properties: [:])}
     var jpg: Data? { representation(using: .jpeg, properties: [:])}
 }
-extension Data {
+public extension Data {
     var bitmap: NSBitmapImageRep? { NSBitmapImageRep(data: self)}
 }
-extension NSImage {
+public extension NSImage {
     var png: Data? { tiffRepresentation?.bitmap?.png}
     var jpg: Data? { tiffRepresentation?.bitmap?.jpg}
 }
