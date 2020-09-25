@@ -67,6 +67,17 @@ public struct Album: Codable, Identifiable {
         }
     }
     
+    public mutating func updateDuration() {
+        var duration = 0
+        for content in contents {
+            if let single = content.single {
+                duration += single.duration
+            } else if let composition = content.composition {
+                duration += composition.duration
+            }
+        }
+    }
+    
     public var json: Data? {
         let encoder = JSONEncoder()
         return try? encoder.encode(self)

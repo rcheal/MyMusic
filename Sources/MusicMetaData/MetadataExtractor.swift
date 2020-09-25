@@ -84,6 +84,9 @@ public struct MetadataExtractor {
                         if let imageData = imageData, images[.frontCover] == nil {
                             images[.frontCover] = (imageRef, imageData)
                             imageRefs.append(imagePath)
+                        } else if let imageData = imageData, images[.backCover] == nil {
+                            images[.backCover] = (imageRef, imageData)
+                            imageRefs.append(imagePath)
                         }
                     }
 
@@ -292,6 +295,10 @@ public struct MetadataExtractor {
         }
         return nil
 
+    }
+    
+    public func getImage(_ type: MetadataImageType) -> (String, Data)? {
+        return images[type]
     }
     
     public func getJSON(from album: Album, pretty: Bool = false) -> Data? {

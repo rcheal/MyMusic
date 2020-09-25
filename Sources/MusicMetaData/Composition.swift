@@ -42,4 +42,11 @@ public struct Composition: Codable, Identifiable {
         contents.append(content)
         duration += content.duration
     }
+    
+    public mutating func updateDuration() {
+        duration = 0
+        for single in contents {
+            duration += single.duration
+        }
+    }
 }

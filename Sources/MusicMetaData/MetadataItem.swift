@@ -47,7 +47,7 @@ enum MetadataContentsType {
     case empty
 }
 
-enum MetadataImageType {
+public enum MetadataImageType {
     case frontCover
     case backCover
 }
