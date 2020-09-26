@@ -73,7 +73,9 @@ public struct Album: Codable, Identifiable {
                 c.id == composition.id
             }) ?? -1
         if compIndex >= 0 {
-            contents[compIndex].composition = composition
+            var content = contents[compIndex]
+            content.composition = composition
+            contents[compIndex] = content
             updateDuration()
         }
     }
