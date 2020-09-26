@@ -67,6 +67,41 @@ public struct Album: Codable, Identifiable {
         }
     }
     
+    public mutating func replaceComposition(_ composition: Composition) {
+        let compIndex = contents.firstIndex(where:
+            { (c) in
+                c.id == composition.id
+            }) ?? -1
+        if compIndex >= 0 {
+            contents[compIndex].composition = composition
+            updateDuration()
+        }
+    }
+    
+    public mutating func replaceSingle(_ single: Single) {
+        let singleIndex = contents.firstIndex(where:
+            { (s) in
+                s.id == single.id
+            }) ?? -1
+        if singleIndex >= 0 {
+            contents[singleIndex].single = single
+            updateDuration()
+        }
+    }
+    
+    public mutating func replaceSingle(_ single: Single, composition: Composition) {
+        let compIndex = contents.firstIndex(where:
+            { (c) in
+                c.id == composition.id
+            }) ?? -1
+        if compIndex >= 0 {
+            var comp = composition
+            comp.replaceSingle(single)
+            contents[compIndex].composition = comp
+            updateDuration()
+        }
+    }
+    
     public mutating func updateDuration() {
         var duration = 0
         for content in contents {

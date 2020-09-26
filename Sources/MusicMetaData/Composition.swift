@@ -43,6 +43,16 @@ public struct Composition: Codable, Identifiable {
         duration += content.duration
     }
     
+    public mutating func replaceSingle(_ single: Single) {
+        let singleIndex = contents.firstIndex(where:
+            { (s) in
+                s.id == single.id
+            }) ?? -1
+        if singleIndex >= 0 {
+            contents[singleIndex] = single
+        }
+    }
+    
     public mutating func updateDuration() {
         duration = 0
         for single in contents {
