@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "ID3TagEditor",
+        "repositoryURL": "https://github.com/chicio/ID3TagEditor.git",
+        "state": {
+          "branch": null,
+          "revision": "3c72a24f7fa3fe3c74551e4932f753205fd7235b",
+          "version": "3.3.2"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
