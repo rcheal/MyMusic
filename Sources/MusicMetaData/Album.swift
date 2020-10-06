@@ -86,7 +86,9 @@ public struct Album: Codable, Identifiable {
                 s.id == single.id
             }) ?? -1
         if singleIndex >= 0 {
-            contents[singleIndex].single = single
+            var content = contents[singleIndex]
+            content.single = single
+            contents[singleIndex] = content
             updateDuration()
         }
     }
@@ -99,7 +101,9 @@ public struct Album: Codable, Identifiable {
         if compIndex >= 0 {
             var comp = composition
             comp.replaceSingle(single)
-            contents[compIndex].composition = comp
+            var content = contents[compIndex]
+            content.composition = comp
+            contents[compIndex] = content
             updateDuration()
         }
     }
