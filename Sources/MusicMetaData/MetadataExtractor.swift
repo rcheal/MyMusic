@@ -58,7 +58,7 @@ public struct MetadataExtractor {
             let files = try fm.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: FileManager.DirectoryEnumerationOptions())
             
             for fileurl in files {
-                let relfilename = "\(reldir)/\(fileurl.lastPathComponent)"
+                let relfilename = "\(fileurl.lastPathComponent)"
                 let validExtensions = ["mp3","mp4"]
                 let validPictureFormats = ["gmp","gif","ico","jpg","jpeg","png","tiff"]
                 var audioFile: ExtractorProtocol
