@@ -109,7 +109,7 @@ public struct Album: Codable, Identifiable {
     }
     
     public mutating func updateDuration() {
-        var duration = 0
+        duration = 0
         for content in contents {
             if let single = content.single {
                 duration += single.duration
