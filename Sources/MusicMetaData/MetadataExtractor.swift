@@ -16,7 +16,6 @@ public struct MetadataExtractor {
     let url: URL
     let baseurl: URL
     let directory: String
-    let reldir: String
     var audioFiles: [ExtractorProtocol] = []
     var images: [MetadataImageType:(String,Data)] = [:]
     var imageRefs: [String] = []
@@ -27,27 +26,19 @@ public struct MetadataExtractor {
 
     init(dir: String, relativeTo baseurl: URL) {
         self.baseurl = baseurl
-        reldir = dir
         url = URL(fileURLWithPath: dir, relativeTo: baseurl)
         directory = url.path
     }
 
     public init(dir: String) {
         directory = dir
-        let tmpurl = URL(fileURLWithPath: directory, isDirectory: true)
-        let components = tmpurl.pathComponents
-        let index = components.endIndex
-        reldir = "\(components[index-2])/\(components[index-1])"
-        baseurl = tmpurl.deletingLastPathComponent().deletingLastPathComponent()
-        url = URL(fileURLWithPath: reldir, isDirectory: true, relativeTo: baseurl)
+        baseurl = URL(fileURLWithPath: directory, isDirectory: true)
+        url = URL(fileURLWithPath: dir, isDirectory: true, relativeTo: baseurl)
     }
     
     public init(url: URL) {
-        let components = url.pathComponents
-        let index = components.endIndex
-        reldir = "\(components[index-2])/\(components[index-1])"
-        baseurl = url.deletingLastPathComponent().deletingLastPathComponent()
-        self.url = URL(fileURLWithPath: reldir, isDirectory: true, relativeTo: baseurl)
+        baseurl = url
+        self.url = URL(fileURLWithPath: url.path, isDirectory: true, relativeTo: baseurl)
         directory = self.url.path
     }
     
