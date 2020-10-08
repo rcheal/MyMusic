@@ -9,6 +9,8 @@ import Foundation
 
 public struct Single: Codable, Identifiable, Hashable {
     public var id: String
+    public var compositionId: String?
+    public var albumId: String?
     public var disk: Int?
     public var track: Int
     
