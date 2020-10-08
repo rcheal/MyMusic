@@ -292,6 +292,10 @@ public struct MetadataExtractor {
         return images[type]
     }
     
+    public func getDirectory() -> String? {
+        return directory
+    }
+    
     public func getJSON(from album: Album, pretty: Bool = false) -> Data? {
         let encoder = JSONEncoder()
         if pretty {
