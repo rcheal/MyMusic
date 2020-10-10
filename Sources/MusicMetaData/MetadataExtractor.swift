@@ -243,7 +243,7 @@ public struct MetadataExtractor {
                    let title = file.getDataItem(.title)?.contentsString {
                     let disk = file.getDataItem(.disk)?.contentsInt ?? 0
                     var single = Single(track: track, title: title, filename: filename)
-                    single.disk = disk
+                    single.disk = (disk > 0) ? disk : nil
                     single.artist = file.getDataItem(.artist)?.contentsString
                     single.composer = file.getDataItem(.composer)?.contentsString
                     single.genre = file.getDataItem(.genre)?.contentsString
@@ -259,7 +259,8 @@ public struct MetadataExtractor {
                             album.addContent(content)
                         }
                         composition = Composition(track: track, title: file.getDataItem(.composition)?.contentsString
-                                                    ?? file.getDataItem(.album)?.contentsString ?? "", disk: disk)
+                                                    ?? file.getDataItem(.album)?.contentsString ?? "")
+                        composition?.startDisk = (disk > 0) ? disk : nil
                         if composition != nil {
                             composition!.addContent(single)
                             compositionCount = compositionFileCount-1
