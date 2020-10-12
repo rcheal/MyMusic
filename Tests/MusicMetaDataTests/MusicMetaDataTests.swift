@@ -202,13 +202,13 @@ final class MetadataExtractorTests: XCTestCase {
         expectedDuration[3] = 820
         expectedDuration[4] = 922
         var expectedFilename: [Int: String] = [:]
-        expectedFilename[1] = "Schubert/Symphony_in_C_major_No__9/i_andante__allegro_ma_non_troppo.flac"
-        expectedFilename[2] = "Schubert/Symphony_in_C_major_No__9/ii__andante_con_moto.flac"
-        expectedFilename[3] = "Schubert/Symphony_in_C_major_No__9/iii_scherzo_allegro_vivace__trio.flac"
-        expectedFilename[4] = "Schubert/Symphony_in_C_major_No__9/iv_finale_allegro_vivace.flac"
+        expectedFilename[1] = "i_andante__allegro_ma_non_troppo.flac"
+        expectedFilename[2] = "ii__andante_con_moto.flac"
+        expectedFilename[3] = "iii_scherzo_allegro_vivace__trio.flac"
+        expectedFilename[4] = "iv_finale_allegro_vivace.flac"
         
         let directory = try Resource(relativePath: dname)
-        var metadataExtractor = MusicMetaData.MetadataExtractor(dir: dname, relativeTo: directory.baseURL)
+        var metadataExtractor = MusicMetaData.MetadataExtractor(url: directory.url)
         
         metadataExtractor.getAudioFiles()
     
@@ -280,22 +280,22 @@ final class MetadataExtractorTests: XCTestCase {
         expectedDuration[12] = 260
         expectedDuration[13] = 289
         var expectedFilename: [Int: String] = [:]
-        expectedFilename[1] = "Karrin Allyson/In Blue/01 Moanin'.mp3"
-        expectedFilename[2] = "Karrin Allyson/In Blue/02 Everybody's Cryin' Mercy.mp3"
-        expectedFilename[3] = "Karrin Allyson/In Blue/03 Long as You're Livin'.mp3"
-        expectedFilename[4] = "Karrin Allyson/In Blue/04 The Meaning of the Blues.mp3"
-        expectedFilename[5] = "Karrin Allyson/In Blue/05 The Bluebird.mp3"
-        expectedFilename[6] = "Karrin Allyson/In Blue/06 Hum Drum Blues.mp3"
-        expectedFilename[7] = "Karrin Allyson/In Blue/07 How Long Has This Been Going On_.mp3"
-        expectedFilename[8] = "Karrin Allyson/In Blue/08 West Coast Blues.mp3"
-        expectedFilename[9] = "Karrin Allyson/In Blue/09 Evil Gal Blues.mp3"
-        expectedFilename[10] = "Karrin Allyson/In Blue/10 Blue Motel Room.mp3"
-        expectedFilename[11] = "Karrin Allyson/In Blue/11 Bye Bye Country Boy.mp3"
-        expectedFilename[12] = "Karrin Allyson/In Blue/12 Love Me Like a Man.mp3"
-        expectedFilename[13] = "Karrin Allyson/In Blue/13 Angel Eyes.mp3"
+        expectedFilename[1] = "01 Moanin'.mp3"
+        expectedFilename[2] = "02 Everybody's Cryin' Mercy.mp3"
+        expectedFilename[3] = "03 Long as You're Livin'.mp3"
+        expectedFilename[4] = "04 The Meaning of the Blues.mp3"
+        expectedFilename[5] = "05 The Bluebird.mp3"
+        expectedFilename[6] = "06 Hum Drum Blues.mp3"
+        expectedFilename[7] = "07 How Long Has This Been Going On_.mp3"
+        expectedFilename[8] = "08 West Coast Blues.mp3"
+        expectedFilename[9] = "09 Evil Gal Blues.mp3"
+        expectedFilename[10] = "10 Blue Motel Room.mp3"
+        expectedFilename[11] = "11 Bye Bye Country Boy.mp3"
+        expectedFilename[12] = "12 Love Me Like a Man.mp3"
+        expectedFilename[13] = "13 Angel Eyes.mp3"
 
         let directory = try Resource(relativePath: dname)
-        var metadataExtractor = MusicMetaData.MetadataExtractor(dir: dname, relativeTo: directory.baseURL)
+        var metadataExtractor = MusicMetaData.MetadataExtractor(url: directory.url)
         
         metadataExtractor.getAudioFiles()
     
@@ -356,15 +356,15 @@ final class MetadataExtractorTests: XCTestCase {
         expectedTitle[103] = "III. Rondo. Allegro"
 
         var expectedFilename: [Int: String] = [:]
-        expectedFilename[1] = "Mozart/Clarinet Concerto/first_movement__allegro__concerto_for_clarinet_and_orchestra_in_a_k622.flac"
-        expectedFilename[2] = "Mozart/Clarinet Concerto/second_movement__adagio__concerto_for_clarinet_and_orchestra_in_a_k622.flac"
-        expectedFilename[3] = "Mozart/Clarinet Concerto/third_movement__rondo_allegro__concerto_for_clarinet_and_orchestrain_a_k622.flac"
-        expectedFilename[101] = "Mozart/Clarinet Concerto/first_movement__allegro__concerto_for_flute_harp_and_orchestra_in_c_k299.flac"
-        expectedFilename[102] = "Mozart/Clarinet Concerto/second_movement__andantino__concerto_for_flute_harp_and_orchestra_in_c_k299.flac"
-        expectedFilename[103] = "Mozart/Clarinet Concerto/third_movement__rondo_allegro__concerto_for_flute_harp_and_orchestra_in_c_k299.flac"
+        expectedFilename[1] = "first_movement__allegro__concerto_for_clarinet_and_orchestra_in_a_k622.flac"
+        expectedFilename[2] = "second_movement__adagio__concerto_for_clarinet_and_orchestra_in_a_k622.flac"
+        expectedFilename[3] = "third_movement__rondo_allegro__concerto_for_clarinet_and_orchestrain_a_k622.flac"
+        expectedFilename[101] = "first_movement__allegro__concerto_for_flute_harp_and_orchestra_in_c_k299.flac"
+        expectedFilename[102] = "second_movement__andantino__concerto_for_flute_harp_and_orchestra_in_c_k299.flac"
+        expectedFilename[103] = "third_movement__rondo_allegro__concerto_for_flute_harp_and_orchestra_in_c_k299.flac"
 
         let directory = try Resource(relativePath: dname)
-        var metadataExtractor = MusicMetaData.MetadataExtractor(dir: dname, relativeTo: directory.baseURL)
+        var metadataExtractor = MusicMetaData.MetadataExtractor(url: directory.url)
         
         metadataExtractor.getAudioFiles()
     

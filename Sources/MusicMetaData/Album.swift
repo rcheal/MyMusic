@@ -32,10 +32,13 @@ public struct AlbumContent: Codable, Identifiable, Hashable {
 public struct Album: Codable, Identifiable {
     public var id: String
     public var title: String
+    public var sortTitle: String?
     public var subtitle: String?
     public var artist: String?
-    public var supportingArtists: [String]?
+    public var sortArtist: String?
+    public var supportingArtists: String?
     public var composer: String?
+    public var sortComposer: String?
     public var conductor: String?
     public var orchestra: String?
     public var lyricist: String?
