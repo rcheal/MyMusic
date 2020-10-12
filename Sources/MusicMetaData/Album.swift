@@ -29,7 +29,7 @@ public struct AlbumContent: Codable, Identifiable, Hashable {
     }
 }
 
-public struct Album: Codable, Identifiable {
+public struct Album: Codable, Identifiable, Hashable {
     public var id: String
     public var title: String
     public var sortTitle: String?
