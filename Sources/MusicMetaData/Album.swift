@@ -70,6 +70,14 @@ public struct Album: Codable, Identifiable, Hashable {
         }
     }
     
+    public mutating func removeAllContents() {
+        contents.removeAll()
+    }
+    
+    public mutating func removeAllContents(where shouldBeRemoved: (AlbumContent) throws -> Bool) rethrows {
+        try contents.removeAll(where: shouldBeRemoved)
+    }
+    
     public mutating func replaceComposition(_ composition: Composition) {
         let compIndex = contents.firstIndex(where:
             { (c) in
