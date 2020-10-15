@@ -78,6 +78,10 @@ public struct Album: Codable, Identifiable, Hashable {
         try contents.removeAll(where: shouldBeRemoved)
     }
     
+    public mutating func sortContents() {
+        contents = contents.sorted { $0.track < $1.track }
+    }
+    
     public mutating func replaceComposition(_ composition: Composition) {
         let compIndex = contents.firstIndex(where:
             { (c) in
