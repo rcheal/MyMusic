@@ -69,6 +69,13 @@ public struct Composition: Codable, Identifiable, Hashable {
         }
     }
     
+    public mutating func updateTrack() {
+        if let single = contents.first {
+            startDisk = single.disk
+            startTrack = single.track
+        }
+    }
+    
     public mutating func updateDuration() {
         duration = 0
         for single in contents {

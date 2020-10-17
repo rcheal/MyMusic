@@ -123,6 +123,14 @@ public struct Album: Codable, Identifiable, Hashable {
         }
     }
     
+    public mutating func updateTracks() {
+        for content in contents {
+            if var composition = content.composition {
+                composition.updateTrack()
+            }
+        }
+    }
+    
     public mutating func updateDuration() {
         duration = 0
         for content in contents {
