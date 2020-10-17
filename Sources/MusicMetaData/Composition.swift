@@ -47,6 +47,18 @@ public struct Composition: Codable, Identifiable, Hashable {
         duration += content.duration
     }
     
+    public mutating func removeAllContents() {
+        contents.removeAll()
+    }
+    
+    public mutating func removeAllContents(where shouldBeRemoved: (Single) throws -> Bool) rethrows {
+        try contents.removeAll(where: shouldBeRemoved)
+    }
+    
+    public mutating func sortContents() {
+        contents = contents.sorted { $0.track < $1.track }
+    }
+    
     public mutating func replaceSingle(_ single: Single) {
         let singleIndex = contents.firstIndex(where:
             { (s) in

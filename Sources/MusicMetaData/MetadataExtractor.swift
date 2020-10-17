@@ -42,6 +42,11 @@ public struct MetadataExtractor {
         directory = self.url.path
     }
     
+    /**
+     Scan through files in directory - url - and extract metadata tags to
+     properties in audioFile (FlacExtractor or ID3Extractor) and store in audioFiles.
+     Finally call normalize() to clean up date in audioFiles.
+     */
     mutating public func getAudioFiles() {
         let fm = FileManager.default
         do {
@@ -102,6 +107,8 @@ public struct MetadataExtractor {
         var compositionCount = 0
         var startTrack = 0
         var startDisk = 0
+        var startGenre = ""
+        // Sort audio files by album title, [disk], track; in the process deliniate compositions by populating compositionFileCounts
         for file in audioFiles.sorted(by: {
             let diska = $0.getDataItem(.disk)?.contentsInt ?? 0
             let diskb = $0.getDataItem(.disk)?.contentsInt ?? 0
@@ -116,33 +123,31 @@ public struct MetadataExtractor {
                     return albuma < albumb
                 }
             } else {
-                if albuma == albumb {
-                    return tracka < trackb
-                } else {
-                    return albuma < albumb
-                }
+                return diska < diskb
             }
         }) {
+            // Sorted iteration of audioFiles
             let currentAlbumBlock = file.getDataItem(.album) ?? MetadataItem(type: .album, contentsString: "")
             let currentCompositionBlock = file.getDataItem(.composition) ?? MetadataItem(type: .composition, contentsString: "")
             let currentTrack = file.getDataItem(.track)?.contentsInt ?? 1
             let currentDisk = file.getDataItem(.disk)?.contentsInt ?? 0
-            
+            logger.debug("\(currentDisk):\(currentTrack) - \(currentAlbumBlock.contentsString ?? ""), \(currentCompositionBlock.contentsString ?? "")")
+
+            // Extraction compositions from change in composition title or  album title
             if firstAlbumBlock == nil  {
+                // record info about first composition
                 firstAlbumBlock = currentAlbumBlock
                 firstCompositionBlock = currentCompositionBlock
                 compositionCount = 1
                 startDisk = currentDisk
                 startTrack = currentTrack
+                startGenre = file.getDataItem(.genre)?.contentsString ?? ""
             } else {
                 if (currentAlbumBlock != firstAlbumBlock) ||
                     (currentCompositionBlock != firstCompositionBlock) {
                     if compositionCount >= 2 {
                         let key = (firstAlbumBlock?.contentsString ?? "") + ":\(startDisk):\(startTrack)"
                         compositionFileCounts[key] = compositionCount
-                        logger.debug("normalize() Key: \(key)")
-                        logger.debug("normalize() Composition count: \(compositionCount)")
-
                     }
                     firstAlbumBlock = currentAlbumBlock
                     firstCompositionBlock = currentCompositionBlock
@@ -155,15 +160,21 @@ public struct MetadataExtractor {
             }
             
         }
+        
         if compositionCount >= 2 {
             let key = (firstAlbumBlock?.contentsString ?? "") + ":\(startDisk):\(startTrack)"
             compositionFileCounts[key] = compositionCount
-            logger.debug("normalize() Key: \(key)")
-            logger.debug("normalize() Composition count: \(compositionCount)")
-
+        } else {
+            // Create composition of all tracks if genre is Classical and there are no compositions
+            if startGenre == "Classical" && compositionFileCounts.isEmpty {
+                let key = (firstAlbumBlock?.contentsString ?? "") + ":\(startDisk):\(startTrack)"
+                compositionFileCounts[key] = audioFiles.count
+            }
         }
 
         
+        // Normalize by by moving values (blocks) that match in all files to
+        // album level (items[type]) and remove from tracks (audioFiles)
         for type in MetadataType.allCases {
             var matches = true
             
