@@ -124,9 +124,14 @@ public struct Album: Codable, Identifiable, Hashable {
     }
     
     public mutating func updateTracks() {
-        for content in contents {
+        for var content in contents {
             if var composition = content.composition {
                 composition.updateTrack()
+                content.disk = composition.startDisk
+                content.track = composition.startTrack
+            } else if let single = content.single {
+                content.disk = single.disk
+                content.track = single.track
             }
         }
     }
