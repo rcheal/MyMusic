@@ -140,7 +140,7 @@ public struct Album: Codable, Identifiable, Hashable {
             // Remove 'A', 'An' or 'The'
             value = Album.sortedTitle(value)
             // Remove (birthyear-deathyear) from end of value
-            let pattern = " *(\\d{4}-\\d{4}) *"
+            let pattern = " *\\(\\d{4}-\\d{4}\\) *"
             if let dateRange = value.range(of: pattern, options:.regularExpression) {
                 value.removeSubrange(dateRange)
             }
