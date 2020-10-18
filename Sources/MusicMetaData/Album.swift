@@ -139,7 +139,11 @@ public struct Album: Codable, Identifiable, Hashable {
         if var value = person {
             // Remove 'A', 'An' or 'The'
             value = Album.sortedTitle(value)
-            // TODO: Remove (birthyear-deathyear) from end of value
+            // Remove (birthyear-deathyear) from end of value
+            let pattern = " *(\\d{4}-\\d{4}) *"
+            if let dateRange = value.range(of: pattern, options:.regularExpression) {
+                value.removeSubrange(dateRange)
+            }
             value = value.trimmingCharacters(in: .whitespaces)
             // if person does not contain comma, strip last word and insert at front followed by ', ' and the rest of the field
             if !value.contains(",") {
