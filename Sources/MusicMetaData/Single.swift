@@ -43,4 +43,13 @@ public struct Single: Codable, Identifiable, Hashable {
         self.title = title
         self.audiofileRef = filename
     }
+    
+    public mutating func update(_ album: Album?, composition: Composition? = nil) {
+        sortTitle = Album.sortedTitle(title).lowercased()
+        sortArtist = Album.sortedPerson(artist)?.lowercased()
+        sortComposer = Album.sortedPerson(composer)?.lowercased()
+        compositionId = composition?.id
+        albumId = album?.id
+    }
+
 }

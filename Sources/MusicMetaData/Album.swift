@@ -123,7 +123,61 @@ public struct Album: Codable, Identifiable, Hashable {
         }
     }
     
-    public mutating func updateTracks() {
+    static func sortedTitle(_ title: String) -> String {
+        var value = title
+        if title.lowercased().hasPrefix("the ") {
+            value = String(value.dropFirst(4))
+        } else if title.lowercased().hasPrefix("a ") {
+            value = String(value.dropFirst(2))
+        } else if title.lowercased().hasPrefix("an ") {
+            value = String(value.dropFirst(3))
+        }
+        return value
+    }
+    
+    static func sortedPerson(_ person: String?) -> String? {
+        if var value = person {
+            // Remove 'A', 'An' or 'The'
+            value = Album.sortedTitle(value)
+            // TODO: Remove (birthyear-deathyear) from end of value
+            value = value.trimmingCharacters(in: .whitespaces)
+            // if person does not contain comma, strip last word and insert at front followed by ', ' and the rest of the field
+            if !value.contains(",") {
+                if let index = value.lastIndex(of: " ") {
+                    let startIndex = value.startIndex
+                    let endIndex = value.endIndex
+                    let first = String(value[startIndex..<index])
+                    let last = String(value[index..<endIndex].dropFirst())
+                    value = last + ", " + first
+                }
+            }
+            return value
+        }
+        return nil
+    }
+    
+    public mutating func update() {
+        sortTitle = Album.sortedTitle(title).lowercased()
+        sortArtist = Album.sortedPerson(artist)?.lowercased()
+        sortComposer = Album.sortedPerson(composer)?.lowercased()
+        
+        for index in contents.indices {
+            if var composition = contents[index].composition {
+                composition.update(self)
+                contents[index].composition = composition
+                
+            } else if var single = contents[index].single {
+                single.update(self)
+                contents[index].single = single
+            }
+        }
+        
+        updateTracks()
+        updateDuration()
+
+    }
+    
+    mutating func updateTracks() {
         for index in contents.indices {
             if var composition = contents[index].composition {
                 composition.updateTrack()
@@ -136,7 +190,7 @@ public struct Album: Codable, Identifiable, Hashable {
         }
     }
     
-    public mutating func updateDuration() {
+    mutating func updateDuration() {
         duration = 0
         for content in contents {
             if let single = content.single {

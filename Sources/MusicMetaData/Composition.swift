@@ -69,14 +69,27 @@ public struct Composition: Codable, Identifiable, Hashable {
         }
     }
     
-    public mutating func updateTrack() {
+    public mutating func update(_ album: Album) {
+        sortTitle = Album.sortedTitle(title).lowercased()
+        sortArtist = Album.sortedPerson(artist ?? album.artist)?.lowercased()
+        sortComposer = Album.sortedPerson(composer ?? album.composer)?.lowercased()
+        albumId = album.id
+        for index in contents.indices {
+            contents[index].update(album, composition: self)
+        }
+        updateTrack()
+        updateDuration()
+
+    }
+    
+    mutating func updateTrack() {
         if let single = contents.first {
             startDisk = single.disk
             startTrack = single.track
         }
     }
     
-    public mutating func updateDuration() {
+    mutating func updateDuration() {
         duration = 0
         for single in contents {
             duration += single.duration
