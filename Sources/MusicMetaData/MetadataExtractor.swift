@@ -237,6 +237,7 @@ public struct MetadataExtractor {
 
             var compositionCount = 0
             var composition: Composition?
+            var computedTrack = 0
             for file in audioFiles.sorted(by: {
                     let tracka = $0.getDataItem(.track)?.contentsInt ?? 0
                     let trackb = $1.getDataItem(.track)?.contentsInt ?? 0
@@ -249,9 +250,10 @@ public struct MetadataExtractor {
                     }
 
                 }) {
+                computedTrack += 1
                 let filename = file.relativeFilename
-                if let track = file.getDataItem(.track)?.contentsInt,
-                   let title = file.getDataItem(.title)?.contentsString {
+                let track = file.getDataItem(.track)?.contentsInt ?? computedTrack
+                if let title = file.getDataItem(.title)?.contentsString {
                     let disk = file.getDataItem(.disk)?.contentsInt ?? 0
                     var single = Single(track: track, title: title, filename: filename)
                     single.disk = (disk > 0) ? disk : nil
