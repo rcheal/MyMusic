@@ -175,7 +175,7 @@ public struct MetadataExtractor {
         
         // Normalize by by moving values (blocks) that match in all files to
         // album level (items[type]) and remove from tracks (audioFiles)
-        for type in MetadataType.allCases {
+        for type in MetadataType.allSharedCases {
             var matches = true
             
             var firstBlock: MetadataItem?

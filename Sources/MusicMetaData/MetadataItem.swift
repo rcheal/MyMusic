@@ -37,6 +37,25 @@ extension MetadataType: CaseIterable {
             .audiofileRef
         ]
     }
+    
+    public static var allSharedCases: [MetadataType] {
+        [   .album,
+            .composition,
+            .artist,
+            .supportingArtists,
+            .composer,
+            .conductor,
+            .lyricist,
+            .genre,
+            .publisher,
+            .copyright,
+            .encodedBy,
+            .encoderSettings,
+            .recordingYear,
+            .disk,
+            .coverArtRef,
+        ]
+    }
 
 }
 
