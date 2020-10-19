@@ -94,7 +94,7 @@ public struct MetadataExtractor {
             normalize()
             
         } catch {
-            logger.debug("\(error.localizedDescription)")
+            logger.error("\(error.localizedDescription)")
         }
     }
     
@@ -131,7 +131,7 @@ public struct MetadataExtractor {
             let currentCompositionBlock = file.getDataItem(.composition) ?? MetadataItem(type: .composition, contentsString: "")
             let currentTrack = file.getDataItem(.track)?.contentsInt ?? 1
             let currentDisk = file.getDataItem(.disk)?.contentsInt ?? 0
-            logger.debug("\(currentDisk):\(currentTrack) - \(currentAlbumBlock.contentsString ?? ""), \(currentCompositionBlock.contentsString ?? "")")
+//            logger.debug("\(currentDisk):\(currentTrack) - \(currentAlbumBlock.contentsString ?? ""), \(currentCompositionBlock.contentsString ?? "")")
 
             // Extraction compositions from change in composition title or  album title
             if firstAlbumBlock == nil  {
@@ -205,11 +205,11 @@ public struct MetadataExtractor {
                 if items[.album] == nil {
                     items[type] = firstBlock
                     logger.warning("Files are not from the same album")
-                    for file in audioFiles {
-                        let fname = file.relativeFilename
-                        let albumTitle = file.getDataItem(.album)?.contentsString ?? ""
-                        logger.info("\(fname): \(albumTitle)")
-                    }
+//                    for file in audioFiles {
+//                        let fname = file.relativeFilename
+//                        let albumTitle = file.getDataItem(.album)?.contentsString ?? ""
+//                        logger.info("\(fname): \(albumTitle)")
+//                    }
                 }
             }
         }
@@ -252,7 +252,8 @@ public struct MetadataExtractor {
                 }) {
                 computedTrack += 1
                 let filename = file.relativeFilename
-                let track = file.getDataItem(.track)?.contentsInt ?? computedTrack
+                let tempTrack = file.getDataItem(.track)?.contentsInt ?? computedTrack
+                let track = (tempTrack > 0) ? tempTrack : computedTrack
                 if let title = file.getDataItem(.title)?.contentsString {
                     let disk = file.getDataItem(.disk)?.contentsInt ?? 0
                     var single = Single(track: track, title: title, filename: filename)
@@ -262,11 +263,11 @@ public struct MetadataExtractor {
                     single.genre = file.getDataItem(.genre)?.contentsString
                     single.recordingYear = file.getDataItem(.recordingYear)?.contentsInt
                     single.duration = file.getDataItem(.duration)?.contentsInt ?? 0
-                    logger.debug("Duration for \(title): \(single.duration )")
+//                    logger.debug("Duration for \(title): \(single.duration )")
                     let key = (file.getDataItem(.album)?.contentsString ?? "") + ":\(disk):\(track)"
                     if let compositionFileCount = compositionFileCounts[key] {
-                        logger.debug("getAlbum() Key: \(key)")
-                        logger.debug("getAlbum() composition file count: \(compositionFileCount)")
+//                        logger.debug("getAlbum() Key: \(key)")
+//                        logger.debug("getAlbum() composition file count: \(compositionFileCount)")
                         if composition != nil {
                             let content = AlbumContent(track: composition!.startTrack, composition: composition!, disk: composition!.startDisk)
                             album.addContent(content)

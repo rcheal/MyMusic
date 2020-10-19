@@ -114,8 +114,8 @@ struct FlacExtractor : ExtractorProtocol {
         let vendorLength = Int(Data(blockData[0...3]).littleEndian32())
         var start = 4
         var end = start + vendorLength
-        let vendorString = String(bytes: blockData[start..<end], encoding: .utf8) ?? ""
-        logger.info("VendorString: \(vendorString, privacy: .public)")
+//        let vendorString = String(bytes: blockData[start..<end], encoding: .utf8) ?? ""
+//        logger.info("VendorString: \(vendorString, privacy: .public)")
         start = end
         end += 4
         let userCommentCount = Int(Data([UInt8](blockData[start..<end])).littleEndian32())
@@ -230,7 +230,7 @@ struct FlacExtractor : ExtractorProtocol {
         var totalSamples = Data([UInt8](headerEndBuf[3...7])).bigEndian40()
         totalSamples &= 0x0fffffffff
         let elapsedTime = totalSamples / sampleRate
-        logger.debug("Duration: \(elapsedTime)")
+//        logger.debug("Duration: \(elapsedTime)")
         let metadataItem = MetadataItem(type: .duration, contentsInt: elapsedTime)
         metadataItems[.duration] = metadataItem
     }
