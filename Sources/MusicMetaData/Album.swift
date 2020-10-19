@@ -80,6 +80,12 @@ public struct Album: Codable, Identifiable, Hashable {
     
     public mutating func sortContents() {
         contents = contents.sorted { $0.track < $1.track }
+        for index in contents.indices {
+            if var composition = contents[index].composition {
+                composition.sortContents()
+                contents[index].composition = composition
+            }
+        }
     }
     
     public mutating func replaceComposition(_ composition: Composition) {
