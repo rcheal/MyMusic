@@ -32,7 +32,7 @@ public struct Composition: Codable, Identifiable, Hashable {
     public var recordingYear: Int?
     public var duration: Int       /// duration in seconds
 
-    public private(set) var contents: [Single] = []
+    public internal(set) var contents: [Single] = []
     
     public init(track: Int, title: String, disk: Int? = nil) {
         id = UUID().uuidString
@@ -42,57 +42,4 @@ public struct Composition: Codable, Identifiable, Hashable {
         self.startDisk = disk
     }
     
-    public mutating func addContent(_ content: Single) {
-        contents.append(content)
-        duration += content.duration
-    }
-    
-    public mutating func removeAllContents() {
-        contents.removeAll()
-    }
-    
-    public mutating func removeAllContents(where shouldBeRemoved: (Single) throws -> Bool) rethrows {
-        try contents.removeAll(where: shouldBeRemoved)
-    }
-    
-    public mutating func sortContents() {
-        contents = contents.sorted { $0.track < $1.track }
-    }
-    
-    public mutating func replaceSingle(_ single: Single) {
-        let singleIndex = contents.firstIndex(where:
-            { (s) in
-                s.id == single.id
-            }) ?? -1
-        if singleIndex >= 0 {
-            contents[singleIndex] = single
-        }
-    }
-    
-    public mutating func update(_ album: Album) {
-        sortTitle = Album.sortedTitle(title).lowercased()
-        sortArtist = Album.sortedPerson(artist ?? album.artist)?.lowercased()
-        sortComposer = Album.sortedPerson(composer ?? album.composer)?.lowercased()
-        albumId = album.id
-        for index in contents.indices {
-            contents[index].update(album, composition: self)
-        }
-        updateTrack()
-        updateDuration()
-
-    }
-    
-    mutating func updateTrack() {
-        if let single = contents.first {
-            startDisk = single.disk
-            startTrack = single.track
-        }
-    }
-    
-    mutating func updateDuration() {
-        duration = 0
-        for single in contents {
-            duration += single.duration
-        }
-    }
 }
