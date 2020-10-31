@@ -1,4 +1,4 @@
-# MusicMetaData
+# MusicMetadata
 
 Extracts metadata from audiofiles.
 
