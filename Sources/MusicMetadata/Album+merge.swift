@@ -26,7 +26,7 @@ extension Album {
         return result
     }
     
-    mutating func merge(_ album: Album) {
+    public mutating func merge(_ album: Album) {
          
         // Merge Album metadata
         title = mergeStrings(title, album.title)!
