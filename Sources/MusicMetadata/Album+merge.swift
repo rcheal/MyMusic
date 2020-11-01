@@ -15,12 +15,16 @@ extension Album {
             result = b
         } else if b == nil {
             result = a
-        } else {
+        } else if a != b {
             let prefix = a!.commonPrefix(with: b!)
             if prefix.isEmpty {
                 result = a! + "$" + b!
             } else {
-                result = prefix + "$" + a! + "$" + b!
+                var a2 = a!
+                var b2 = b!
+                a2.removeSubrange(a2.range(of: prefix)!)
+                b2.removeSubrange(b2.range(of: prefix)!)
+                result = prefix + "$" + a2 + "$" + b2
             }
         }
         return result
@@ -61,9 +65,16 @@ extension Album {
         }
         let lastDisk = contents.last?.disk ?? 1
         for var content in album.contents {
-            content.disk = lastDisk + 1
-            content.composition?.startDisk = content.disk
-            content.single?.disk = content.disk
+            if let composition = content.composition {
+                for index in composition.contents.indices {
+                    var single = composition.contents[index]
+                    single.disk = lastDisk + 1
+                    content.composition?.contents[index] = single
+                }
+            } else if var single = content.single {
+                single.disk = lastDisk + 1
+                content.single = single
+            }
             addContent(content)
         }
         
