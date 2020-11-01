@@ -41,3 +41,9 @@ public struct Album: Codable, Identifiable, Hashable {
     }
         
 }
+
+public enum MetadataImageType {
+    case frontCover
+    case backCover
+}
+
