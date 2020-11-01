@@ -9,7 +9,16 @@ import Foundation
 
 extension Album {
     public mutating func sortContents() {
-        contents = contents.sorted { $0.track < $1.track }
+        contents = contents.sorted {
+            let diska = $0.disk ?? 1
+            let diskb = $1.disk ?? 1
+            if diska == diskb {
+                return $0.track < $1.track
+            } else {
+                return diska < diskb
+            }
+        }
+        
         for index in contents.indices {
             if var composition = contents[index].composition {
                 composition.sortContents()
