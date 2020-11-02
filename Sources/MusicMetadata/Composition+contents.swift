@@ -18,7 +18,7 @@ extension Composition {
         contents.removeAll()
     }
     
-    public mutating func removeAllContents(where shouldBeRemoved: (Single) throws -> Bool) rethrows {
+    public mutating func removeContents(where shouldBeRemoved: (Single) throws -> Bool) rethrows {
         try contents.removeAll(where: shouldBeRemoved)
     }
 
