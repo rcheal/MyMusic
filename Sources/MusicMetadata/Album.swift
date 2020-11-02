@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Album: Codable, Identifiable, Hashable {
+public struct Album: Identifiable, Hashable {
     
     public var id: String
     public var title: String
@@ -40,6 +40,31 @@ public struct Album: Codable, Identifiable, Hashable {
         self.title = title
     }
         
+}
+
+extension Album: Codable {
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case subtitle
+        case artist
+        case supportingArtists
+        case composer
+        case conductor
+        case orchestra
+        case lyricist
+        case genre
+        case publisher
+        case copyright
+        case encodedBy
+        case encoderSettings
+        case recordingYear
+        case duration
+        case frontCoverArtRef
+        case backCoverArtRef
+        case contents
+    }
 }
 
 public enum MetadataImageType {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Single: Codable, Identifiable, Hashable {
+public struct Single: Identifiable, Hashable {
     public var id: String
     public var compositionId: String?
     public var albumId: String?
@@ -35,7 +35,6 @@ public struct Single: Codable, Identifiable, Hashable {
 
     public var audiofileRef: String?
 
-    
     public init(track: Int, title: String, filename: String) {
         id = UUID().uuidString
         duration = 0
@@ -44,4 +43,30 @@ public struct Single: Codable, Identifiable, Hashable {
         self.audiofileRef = filename
     }
     
+}
+
+extension Single: Codable {
+    enum CodingKeys: String, CodingKey {
+        case id
+        case compositionId
+        case albumId
+        case disk
+        case track
+        case title
+        case subtitle
+        case artist
+        case supportingArtists
+        case composer
+        case conductor
+        case orchestra
+        case lyricist
+        case genre
+        case publisher
+        case copyright
+        case encodedBy
+        case encoderSettings
+        case recordingYear
+        case duration
+        case audiofileRef
+    }
 }

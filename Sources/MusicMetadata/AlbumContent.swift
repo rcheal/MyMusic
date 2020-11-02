@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct AlbumContent: Codable, Identifiable, Hashable {
+public struct AlbumContent: Identifiable, Hashable {
     public var id: String  // Copy of composition.id or single.id
     public var disk: Int?
     public var track: Int
@@ -27,5 +27,9 @@ public struct AlbumContent: Codable, Identifiable, Hashable {
         self.single = single
         self.disk = disk
     }
+}
+
+extension AlbumContent: Codable {
+    
 }
 

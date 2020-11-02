@@ -9,12 +9,12 @@ import Foundation
 
 extension Single {
     
-    public mutating func update(_ album: Album?, composition: Composition? = nil) {
+    public mutating func update(_ album: Album, composition: Composition? = nil) {
         sortTitle = Album.sortedTitle(title).lowercased()
-        sortArtist = Album.sortedPerson(artist)?.lowercased()
-        sortComposer = Album.sortedPerson(composer)?.lowercased()
+        sortArtist = Album.sortedPerson(artist ?? album.artist)?.lowercased()
+        sortComposer = Album.sortedPerson(composer ?? album.composer)?.lowercased()
         compositionId = composition?.id
-        albumId = album?.id
+        albumId = album.id
     }
 
 }

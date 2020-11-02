@@ -22,7 +22,7 @@ extension Album {
         contents.removeAll()
     }
     
-    public mutating func removeAllContents(where shouldBeRemoved: (AlbumContent) throws -> Bool) rethrows {
+    public mutating func removeContents(where shouldBeRemoved: (AlbumContent) throws -> Bool) rethrows {
         try contents.removeAll(where: shouldBeRemoved)
     }
     

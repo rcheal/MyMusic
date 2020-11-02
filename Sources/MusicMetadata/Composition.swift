@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Composition: Codable, Identifiable, Hashable {
+public struct Composition: Identifiable, Hashable {
     public var id: String
     public var albumId: String?
     public var startDisk: Int?
@@ -42,4 +42,30 @@ public struct Composition: Codable, Identifiable, Hashable {
         self.startDisk = disk
     }
     
+}
+
+extension Composition: Codable {
+    enum CodingKeys: String, CodingKey {
+        case id
+        case albumId
+        case startDisk
+        case startTrack
+        case title
+        case subtitle
+        case artist
+        case supportingArtists
+        case composer
+        case conductor
+        case orchestra
+        case lyricist
+        case genre
+        case publisher
+        case copyright
+        case encodedBy
+        case encoderSettings
+        case recordingYear
+        case duration
+        case contents
+    }
+
 }
