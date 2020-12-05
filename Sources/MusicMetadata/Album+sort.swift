@@ -27,7 +27,7 @@ extension Album {
         }
     }
     
-    static func sortedTitle(_ title: String) -> String {
+    public static func sortedTitle(_ title: String) -> String {
         var value = title
         if title.lowercased().hasPrefix("the ") {
             value = String(value.dropFirst(4))
@@ -39,7 +39,7 @@ extension Album {
         return value
     }
     
-    static func sortedPerson(_ person: String?) -> String? {
+    public static func sortedPerson(_ person: String?) -> String? {
         if var value = person {
             // Remove 'A', 'An' or 'The'
             value = Album.sortedTitle(value)
