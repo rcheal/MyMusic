@@ -36,7 +36,7 @@ public struct AlbumListItem: Identifiable, Hashable {
         sortComposer = Album.sortedPerson(album.composer)
         genre = album.genre
         recordingYear = album.recordingYear
-        frontArtRef = album.albumArtRef[0]
+        frontArtRef = album.frontArtRef()
     }
         
 }

@@ -39,7 +39,7 @@ final class MusicMetadataFieldTests: XCTestCase {
         let json = String(bytes: jsonData, encoding: String.Encoding.utf8) ?? ""
         let jsonRef =
 """
-{"id":"1DFC13CC-BE33-4CED-96D9-CDC3508C6522","composer":"Composer","encodedBy":"EncodedBy","subtitle":"Subtitle","contents":[],"supportingArtists":"Artist1;Artist2;Artist3","lyricist":"Lyricist","encoderSettings":"EncoderSettings","orchestra":"Orchestra","title":"Test Album","publisher":"Publisher","recordingYear":2020,"conductor":"Conductor","duration":1800,"albumArtRef":[{"type":0,"format":1},{"type":1,"format":1}],"artist":"Artist","genre":"Genre","copyright":"Copyright"}
+{"id":"1DFC13CC-BE33-4CED-96D9-CDC3508C6522","composer":"Composer","encodedBy":"EncodedBy","subtitle":"Subtitle","supportingArtists":"Artist1;Artist2;Artist3","lyricist":"Lyricist","encoderSettings":"EncoderSettings","orchestra":"Orchestra","title":"Test Album","publisher":"Publisher","recordingYear":2020,"albumArt":{"albumArtRef":[{"type":0,"format":1},{"type":1,"format":1}]},"conductor":"Conductor","duration":1800,"contents":[],"artist":"Artist","genre":"Genre","copyright":"Copyright"}
 """
         
         XCTAssertEqual(json, jsonRef)

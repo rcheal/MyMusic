@@ -29,7 +29,7 @@ public struct Album: Identifiable, Hashable {
     public var recordingYear: Int?
     public var duration: Int       /// sumation of contents durations
 
-    internal var albumArtRef: [AlbumArtRef] = []
+    internal var albumArt: AlbumArtwork = AlbumArtwork()
 
     public internal(set) var contents: [AlbumContent] = []
     
@@ -60,7 +60,7 @@ extension Album: Codable {
         case encoderSettings
         case recordingYear
         case duration
-        case albumArtRef
+        case albumArt
         case contents
     }
 }
