@@ -22,9 +22,13 @@ extension Single {
     public mutating func update(_ album: Album, composition: Composition? = nil) {
         sortTitle = Album.sortedTitle(title).lowercased()
         if let composition = composition {
-            sortArtist = Album.sortedPerson(artist ?? composition.artist ?? album.artist)?.lowercased()
-            sortComposer = Album.sortedPerson(composer ?? composition.composer ?? album.composer)?.lowercased()
+            sortArtist = Album.sortedPerson((artist ?? composition.artist) ?? album.artist)?.lowercased()
+            sortComposer = Album.sortedPerson((composer ?? composition.composer) ?? album.composer)?.lowercased()
             compositionId = composition.id
+        } else {
+            sortArtist = Album.sortedPerson(artist ?? album.artist)?.lowercased()
+            sortComposer = Album.sortedPerson(composer ?? album.composer)?.lowercased()
+            compositionId = nil
         }
         albumId = album.id
     }

@@ -23,6 +23,12 @@ public struct AlbumArtRef: Hashable, Codable {
     public var format: AlbumArtFormat
     public var seq: Int?
     
+    public init(type: AlbumArtType, format: AlbumArtFormat, seq: Int? = nil) {
+        self.type = type
+        self.format = format
+        self.seq = seq
+    }
+    
     public var filename: String {
         get {
             var name: String
