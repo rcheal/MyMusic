@@ -9,7 +9,11 @@ import Foundation
 
 public struct AlbumArtwork: Hashable, Codable {
     
-    internal var items: [AlbumArtRef] = []
+    internal var items: [AlbumArtRef]
+    
+    public init() {
+        items = []
+    }
     
     public func frontArtRef() -> AlbumArtRef? {
         for artRef in items {

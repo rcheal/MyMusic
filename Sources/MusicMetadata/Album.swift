@@ -29,7 +29,7 @@ public struct Album: Identifiable, Hashable {
     public var recordingYear: Int?
     public var duration: Int       /// sumation of contents durations
 
-    internal var albumArt: AlbumArtwork = AlbumArtwork()
+    internal var albumArt: AlbumArtwork
 
     public internal(set) var contents: [AlbumContent] = []
     
@@ -37,6 +37,7 @@ public struct Album: Identifiable, Hashable {
         id = UUID().uuidString
         duration = 0
         self.title = title
+        albumArt = AlbumArtwork()
     }
         
 }
