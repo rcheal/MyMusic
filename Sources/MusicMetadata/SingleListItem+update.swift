@@ -1,24 +1,20 @@
 //
-//  Single+update.swift
+//  File.swift
 //  
 //
-//  Created by Robert Cheal on 10/31/20.
+//  Created by Robert Cheal on 12/6/20.
 //
 
 import Foundation
 
-extension Single {
+extension SingleListItem {
     
     public mutating func update() {
         sortTitle = Album.sortedTitle(title).lowercased()
-        if let artist = artist {
-            sortArtist = Album.sortedPerson(artist)?.lowercased()
-        }
-        if let composer = composer {
-            sortComposer = Album.sortedPerson(composer)?.lowercased()
-        }
+        sortArtist = Album.sortedPerson(artist)?.lowercased()
+        sortComposer = Album.sortedPerson(composer)?.lowercased()
     }
-    
+
     public mutating func update(_ album: Album, composition: Composition? = nil) {
         sortTitle = Album.sortedTitle(title).lowercased()
         if let composition = composition {
@@ -28,5 +24,4 @@ extension Single {
         }
         albumId = album.id
     }
-
 }

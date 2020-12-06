@@ -29,9 +29,8 @@ public struct Album: Identifiable, Hashable {
     public var recordingYear: Int?
     public var duration: Int       /// sumation of contents durations
 
-    public var frontCoverArtRef: String?
-    public var backCoverArtRef: String?
-    
+    internal var albumArtRef: [AlbumArtRef] = []
+
     public internal(set) var contents: [AlbumContent] = []
     
     public init(title: String) {
@@ -61,8 +60,7 @@ extension Album: Codable {
         case encoderSettings
         case recordingYear
         case duration
-        case frontCoverArtRef
-        case backCoverArtRef
+        case albumArtRef
         case contents
     }
 }

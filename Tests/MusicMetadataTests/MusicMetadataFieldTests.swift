@@ -32,14 +32,14 @@ final class MusicMetadataFieldTests: XCTestCase {
         album.encoderSettings = "EncoderSettings"
         album.recordingYear = 2020
         album.duration = 1800
-        album.frontCoverArtRef = "front.png"
-        album.backCoverArtRef = "back.png"
+        album.addArt(AlbumArtRef(type: .front, format: .png))
+        album.addArt(AlbumArtRef(type: .back, format: .png))
         
         let jsonData = album.json ?? Data()
         let json = String(bytes: jsonData, encoding: String.Encoding.utf8) ?? ""
         let jsonRef =
 """
-{"id":"1DFC13CC-BE33-4CED-96D9-CDC3508C6522","composer":"Composer","encodedBy":"EncodedBy","subtitle":"Subtitle","contents":[],"supportingArtists":"Artist1;Artist2;Artist3","lyricist":"Lyricist","encoderSettings":"EncoderSettings","orchestra":"Orchestra","title":"Test Album","publisher":"Publisher","recordingYear":2020,"backCoverArtRef":"back.png","conductor":"Conductor","duration":1800,"frontCoverArtRef":"front.png","artist":"Artist","genre":"Genre","copyright":"Copyright"}
+{"id":"1DFC13CC-BE33-4CED-96D9-CDC3508C6522","composer":"Composer","encodedBy":"EncodedBy","subtitle":"Subtitle","contents":[],"supportingArtists":"Artist1;Artist2;Artist3","lyricist":"Lyricist","encoderSettings":"EncoderSettings","orchestra":"Orchestra","title":"Test Album","publisher":"Publisher","recordingYear":2020,"conductor":"Conductor","duration":1800,"albumArtRef":[{"type":0,"format":1},{"type":1,"format":1}],"artist":"Artist","genre":"Genre","copyright":"Copyright"}
 """
         
         XCTAssertEqual(json, jsonRef)
@@ -63,8 +63,8 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(album.encoderSettings, album2?.encoderSettings)
         XCTAssertEqual(album.recordingYear, album2?.recordingYear)
         XCTAssertEqual(album.duration, album2?.duration)
-        XCTAssertEqual(album.frontCoverArtRef, album2?.frontCoverArtRef)
-        XCTAssertEqual(album.backCoverArtRef, album2?.backCoverArtRef)
+        XCTAssertEqual(album.frontArtRef(), album2?.frontArtRef())
+        XCTAssertEqual(album.backArtRef(), album2?.backArtRef())
         
         
     }
@@ -89,9 +89,9 @@ final class MusicMetadataFieldTests: XCTestCase {
         album.encoderSettings = "EncoderSettings"
         album.recordingYear = 2020
         album.duration = 1800
-        album.frontCoverArtRef = "front.png"
-        album.backCoverArtRef = "back.png"
-        
+        album.addArt(AlbumArtRef(type: .front, format: .png))
+        album.addArt(AlbumArtRef(type: .back, format: .png))
+
         var composition = Composition(track: 1, title: "Composition 1", disk: 1)
 //        composition.id = ""
         composition.sortTitle = "SortTitle"
@@ -182,8 +182,8 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(album.encoderSettings, album2?.encoderSettings)
         XCTAssertEqual(album.recordingYear, album2?.recordingYear)
         XCTAssertEqual(album.duration, album2?.duration)
-        XCTAssertEqual(album.frontCoverArtRef, album2?.frontCoverArtRef)
-        XCTAssertEqual(album.backCoverArtRef, album2?.backCoverArtRef)
+        XCTAssertEqual(album.frontArtRef(), album2?.frontArtRef())
+        XCTAssertEqual(album.backArtRef(), album2?.backArtRef())
         
         let content = album.contents[0]
         let content2 = album2?.contents[0]

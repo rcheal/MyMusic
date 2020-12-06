@@ -31,6 +31,6 @@ public struct CompositionListItem: Identifiable, Hashable {
         artist = composition.artist
         sortArtist = Album.sortedPerson(composition.artist)
         composer = composition.composer
-        sortComposer = Album.sortedPerson(composition.composer)
+        sortComposer = composition.sortComposer
     }
 }

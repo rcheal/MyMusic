@@ -9,6 +9,7 @@ import Foundation
 
 public struct SingleListItem: Identifiable, Hashable {
     public var id: String
+    public var compositionId: String?
     public var albumId: String?
     public var title: String
     public var sortTitle: String?
@@ -25,6 +26,7 @@ public struct SingleListItem: Identifiable, Hashable {
     
     public init(_ single: Single) {
         id = single.id
+        compositionId = single.compositionId
         albumId = single.albumId
         title = single.title
         sortTitle = Album.sortedTitle(single.title)
