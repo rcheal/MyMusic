@@ -23,17 +23,17 @@ public struct AlbumListItem: Identifiable, Hashable {
     public init(_ id: String, title: String) {
         self.id = id
         self.title = title
-        self.sortTitle = Album.sortedTitle(title)
+        self.sortTitle = Album.sortedTitle(title).lowercased()
     }
     
     public init(_ album: Album) {
         id = album.id
         title = album.title
-        sortTitle = Album.sortedTitle(album.title)
+        sortTitle = Album.sortedTitle(album.title).lowercased()
         artist = album.artist
-        sortArtist = Album.sortedPerson(album.artist)
+        sortArtist = Album.sortedPerson(album.artist)?.lowercased()
         composer = album.composer
-        sortComposer = Album.sortedPerson(album.composer)
+        sortComposer = Album.sortedPerson(album.composer)?.lowercased()
         genre = album.genre
         recordingYear = album.recordingYear
         frontArtRef = album.frontArtRef()

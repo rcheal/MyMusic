@@ -20,17 +20,17 @@ public struct CompositionListItem: Identifiable, Hashable {
     public init(_ id: String, title: String) {
         self.id = id
         self.title = title
-        self.sortTitle = Album.sortedTitle(title)
+        self.sortTitle = Album.sortedTitle(title).lowercased()
     }
     
     public init(_ composition: Composition) {
         id = composition.id
         albumId = composition.albumId
         title = composition.title
-        sortTitle = Album.sortedTitle(composition.title)
+        sortTitle = Album.sortedTitle(composition.title).lowercased()
         artist = composition.artist
-        sortArtist = Album.sortedPerson(composition.artist)
+        sortArtist = Album.sortedPerson(composition.artist)?.lowercased()
         composer = composition.composer
-        sortComposer = composition.sortComposer
+        sortComposer = Album.sortedPerson(composition.sortComposer)?.lowercased()
     }
 }

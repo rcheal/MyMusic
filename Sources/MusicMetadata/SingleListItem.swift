@@ -22,6 +22,7 @@ public struct SingleListItem: Identifiable, Hashable {
     public init(_ id: String, title: String) {
         self.id = id
         self.title = title
+        self.sortTitle = Album.sortedTitle(title).lowercased()
     }
     
     public init(_ single: Single) {
@@ -29,11 +30,11 @@ public struct SingleListItem: Identifiable, Hashable {
         compositionId = single.compositionId
         albumId = single.albumId
         title = single.title
-        sortTitle = Album.sortedTitle(single.title)
+        sortTitle = Album.sortedTitle(single.title).lowercased()
         artist = single.artist
-        sortArtist = Album.sortedPerson(single.artist)
+        sortArtist = Album.sortedPerson(single.artist)?.lowercased()
         composer = single.composer
-        sortComposer = Album.sortedPerson(single.composer)
+        sortComposer = Album.sortedPerson(single.composer)?.lowercased()
         genre = single.genre
     }
     

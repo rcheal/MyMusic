@@ -11,17 +11,17 @@ import XCTest
 
 @available(OSX 11.0, *)
 final class MusicMetadataFieldTests: XCTestCase {
-
-    func testAlbumFields1() throws {
-        var album = Album(title: "Test Album")
+    
+    func createAlbum(withContents: Bool = true, withArt: Bool = true) -> Album {
+        var album = Album(title: "The Title")
         album.id = "1DFC13CC-BE33-4CED-96D9-CDC3508C6522"
-        album.sortTitle = "Sort Title"
+        album.sortTitle = "Title"
         album.subtitle = "Subtitle"
-        album.artist = "Artist"
-        album.sortArtist = "SortArtist"
+        album.artist = "The Artist"
+        album.sortArtist = "Artist"
         album.supportingArtists = "Artist1;Artist2;Artist3"
-        album.composer = "Composer"
-        album.sortComposer = "SortComposer"
+        album.composer = "The Composer"
+        album.sortComposer = "Composer"
         album.conductor = "Conductor"
         album.orchestra = "Orchestra"
         album.lyricist = "Lyricist"
@@ -32,18 +32,83 @@ final class MusicMetadataFieldTests: XCTestCase {
         album.encoderSettings = "EncoderSettings"
         album.recordingYear = 2020
         album.duration = 1800
-        album.addArt(AlbumArtRef(type: .front, format: .png))
-        album.addArt(AlbumArtRef(type: .back, format: .png))
-        album.addArt(AlbumArtRef(type: .page, format: .jpg))
-        album.addArt(AlbumArtRef(type: .page, format: .jpg))
+        if withArt {
+            album.addArt(AlbumArtRef(type: .front, format: .png))
+            album.addArt(AlbumArtRef(type: .back, format: .png))
+            album.addArt(AlbumArtRef(type: .page, format: .jpg))
+            album.addArt(AlbumArtRef(type: .page, format: .jpg))
+        }
+        if withContents {
+            let composition = createComposition()
+            album.addComposition(composition)
+            let single = createSingle(track: 2, title: "Single 1", filename: "Single1.flac")
+            album.addSingle(single)
+        }
+        
+        return album
+    }
+    
+    func createComposition() -> Composition {
+        var composition = Composition(track: 1, title: "Composition 1", disk: 1)
+        composition.sortTitle = "SortTitle"
+        composition.subtitle = "SubTitle"
+        composition.artist = "Artist"
+        composition.sortArtist = "SortArtist"
+        composition.supportingArtists = "Artist1;Artist2;Artist3"
+        composition.composer = "Composer"
+        composition.sortComposer = "SortComposer"
+        composition.conductor = "Conductor"
+        composition.orchestra = "Orchestra"
+        composition.lyricist = "Lyricist"
+        composition.genre = "Genre"
+        composition.publisher = "Publisher"
+        composition.copyright = "Copyright"
+        composition.encodedBy = "EncodedBy"
+        composition.encoderSettings = "EncoderSettings"
+        composition.recordingYear = 2020
+        composition.duration = 1800
+
+        let movement = createSingle(track: 1, title: "Component 1", filename: "Component1.flac")
+
+        composition.addSingle(movement)
+        
+        return composition
+    }
+    
+    func createSingle(track: Int, title: String, filename: String) -> Single {
+        var single = Single(track: track, title: title, filename: filename)
+        single.disk = 1
+        single.sortTitle = "SortTitle"
+        single.subtitle = "SubTitle"
+        single.artist = "Artist"
+        single.sortArtist = "SortArtist"
+        single.supportingArtists = "Artist1;Artist2;Artist3"
+        single.composer = "Composer"
+        single.sortComposer = "SortComposer"
+        single.conductor = "Conductor"
+        single.orchestra = "Orchestra"
+        single.lyricist = "Lyricist"
+        single.genre = "Genre"
+        single.publisher = "Publisher"
+        single.copyright = "Copyright"
+        single.encodedBy = "EncodedBy"
+        single.encoderSettings = "EncoderSettings"
+        single.recordingYear = 2020
+        single.duration = 1800
+
+        return single
+    }
+
+    func testAlbumFields1() throws {
+        let album = createAlbum(withContents: false, withArt: false)
 
         let jsonData = album.json ?? Data()
         let json = String(bytes: jsonData, encoding: String.Encoding.utf8) ?? ""
         let jsonRef =
 """
-{"id":"1DFC13CC-BE33-4CED-96D9-CDC3508C6522","composer":"Composer","encodedBy":"EncodedBy","subtitle":"Subtitle","supportingArtists":"Artist1;Artist2;Artist3","lyricist":"Lyricist","encoderSettings":"EncoderSettings","orchestra":"Orchestra","title":"Test Album","publisher":"Publisher","recordingYear":2020,"albumArt":{"items":[{"type":0,"format":1},{"type":1,"format":1},{"type":2,"format":0,"seq":1},{"type":2,"format":0,"seq":2}],"pageCount":2},"conductor":"Conductor","duration":1800,"contents":[],"artist":"Artist","genre":"Genre","copyright":"Copyright"}
+{"id":"1DFC13CC-BE33-4CED-96D9-CDC3508C6522","composer":"The Composer","encodedBy":"EncodedBy","subtitle":"Subtitle","supportingArtists":"Artist1;Artist2;Artist3","lyricist":"Lyricist","encoderSettings":"EncoderSettings","orchestra":"Orchestra","title":"The Title","publisher":"Publisher","recordingYear":2020,"albumArt":{"items":[],"pageCount":0},"conductor":"Conductor","duration":1800,"contents":[],"artist":"The Artist","genre":"Genre","copyright":"Copyright"}
 """
-        
+                
         XCTAssertEqual(json, jsonRef)
         
         let album2 = Album.decodeFrom(json: jsonData)
@@ -81,96 +146,9 @@ final class MusicMetadataFieldTests: XCTestCase {
     }
     
     func testFields2() throws {
-        var album = Album(title: "Test Album")
-        album.id = "1DFC13CC-BE33-4CED-96D9-CDC3508C6522"
-        album.sortTitle = "Sort Title"
-        album.subtitle = "Subtitle"
-        album.artist = "Artist"
-        album.sortArtist = "SortArtist"
-        album.supportingArtists = "Artist1\nArtist2\nArtist3"
-        album.composer = "Composer"
-        album.sortComposer = "SortComposer"
-        album.conductor = "Conductor"
-        album.orchestra = "Orchestra"
-        album.lyricist = "Lyricist"
-        album.genre = "Genre"
-        album.publisher = "Publisher"
-        album.copyright = "Copyright"
-        album.encodedBy = "EncodedBy"
-        album.encoderSettings = "EncoderSettings"
-        album.recordingYear = 2020
-        album.duration = 1800
-
-        var composition = Composition(track: 1, title: "Composition 1", disk: 1)
-//        composition.id = ""
-        composition.sortTitle = "SortTitle"
-        composition.subtitle = "SubTitle"
-        composition.artist = "Artist"
-        composition.sortArtist = "SortArtist"
-        composition.supportingArtists = "Artist1;Artist2;Artist3"
-        composition.composer = "Composer"
-        composition.sortComposer = "SortComposer"
-        composition.conductor = "Conductor"
-        composition.orchestra = "Orchestra"
-        composition.lyricist = "Lyricist"
-        composition.genre = "Genre"
-        composition.publisher = "Publisher"
-        composition.copyright = "Copyright"
-        composition.encodedBy = "EncodedBy"
-        composition.encoderSettings = "EncoderSettings"
-        composition.recordingYear = 2020
-        composition.duration = 1800
-
-        var component = Single(track: 1, title: "Component 1", filename: "Component1.flac")
-//        component.id = ""
-        component.disk = 1
-        component.sortTitle = "SortTitle"
-        component.subtitle = "SubTitle"
-        component.artist = "Artist"
-        component.sortArtist = "SortArtist"
-        component.supportingArtists = "Artist1;Artist2;Artist3"
-        component.composer = "Composer"
-        component.sortComposer = "SortComposer"
-        component.conductor = "Conductor"
-        component.orchestra = "Orchestra"
-        component.lyricist = "Lyricist"
-        component.genre = "Genre"
-        component.publisher = "Publisher"
-        component.copyright = "Copyright"
-        component.encodedBy = "EncodedBy"
-        component.encoderSettings = "EncoderSettings"
-        component.recordingYear = 2020
-        component.duration = 1800
-
-        composition.addSingle(component)
-        album.addComposition(composition)
-        
-        var single = Single(track: 2, title: "Single 1", filename: "Single1.flac")
-//        single.id = ""
-        single.disk = 1
-        single.sortTitle = "SortTitle"
-        single.subtitle = "SubTitle"
-        single.artist = "Artist"
-        single.sortArtist = "SortArtist"
-        single.supportingArtists = "Artist1;Artist2;Artist3"
-        single.composer = "Composer"
-        single.sortComposer = "SortComposer"
-        single.conductor = "Conductor"
-        single.orchestra = "Orchestra"
-        single.lyricist = "Lyricist"
-        single.genre = "Genre"
-        single.publisher = "Publisher"
-        single.copyright = "Copyright"
-        single.encodedBy = "EncodedBy"
-        single.encoderSettings = "EncoderSettings"
-        single.recordingYear = 2020
-        single.duration = 1800
-
-        album.addSingle(single)
+        let album = createAlbum()
 
         let jsonData = album.jsonp ?? Data()
-//        let json = String(bytes: jsonData, encoding: String.Encoding.utf8) ?? ""
-//        print(json)
 
         let album2 = Album.decodeFrom(json: jsonData)
         XCTAssertEqual(album.title, album2?.title)
@@ -191,9 +169,12 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(album.encoderSettings, album2?.encoderSettings)
         XCTAssertEqual(album.recordingYear, album2?.recordingYear)
         XCTAssertEqual(album.duration, album2?.duration)
-        XCTAssertNil(album.frontArtRef())
-        XCTAssertNil(album.backArtRef())
-        
+        XCTAssertEqual(album.frontArtRef(), album2?.frontArtRef())
+        XCTAssertEqual(album.backArtRef(), album2?.backArtRef())
+        XCTAssertEqual(album.albumArt.pageCount, 2)
+        XCTAssertEqual(album.pageArtRef(1), album2?.pageArtRef(1))
+        XCTAssertEqual(album.pageArtRef(2), album2?.pageArtRef(2))
+
         let content = album.contents[0]
         let content2 = album2?.contents[0]
         XCTAssertEqual(content.disk, content2?.disk)
@@ -270,6 +251,106 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(singleA?.audiofileRef, singleA2?.audiofileRef)
     }
 
+    func testAlbumListItem() throws {
+        var album = createAlbum(withContents: false, withArt: false)
+        album.update()
+        
+        let albumListItem = AlbumListItem(album)
+        
+        XCTAssertEqual(albumListItem.id, album.id)
+        XCTAssertEqual(albumListItem.title, album.title)
+        XCTAssertEqual(albumListItem.sortTitle, album.sortTitle)
+        XCTAssertEqual(albumListItem.artist, album.artist)
+        XCTAssertEqual(albumListItem.sortArtist, album.sortArtist)
+        XCTAssertEqual(albumListItem.composer, album.composer)
+        XCTAssertEqual(albumListItem.sortComposer, album.sortComposer)
+        XCTAssertEqual(albumListItem.genre, album.genre)
+        XCTAssertEqual(albumListItem.recordingYear, album.recordingYear)
+        XCTAssertEqual(albumListItem.frontArtRef,album.frontArtRef())
+    }
+    
+    func testAlbumListItemUpdate() throws {
+        let album = createAlbum(withContents: false, withArt: false)
+        
+        var albumListItem = AlbumListItem(album)
+        albumListItem.title = "A New Title"
+        albumListItem.artist = "The Beatles"
+        albumListItem.composer = "Ludwig van Beethoven (1789-1823)"
+        albumListItem.update()
+        
+        XCTAssertEqual(albumListItem.sortTitle, "new title")
+        XCTAssertEqual(albumListItem.sortArtist, "beatles")
+        XCTAssertEqual(albumListItem.sortComposer, "beethoven, ludwig van")
+
+    }
+    
+    func testCompositionListItem() throws {
+        var album = createAlbum()
+        album.update()
+        
+        let composition = album.contents[0].composition!
+        
+        let compositionListItem = CompositionListItem(composition)
+        
+        XCTAssertEqual(compositionListItem.id, composition.id)
+        XCTAssertEqual(compositionListItem.albumId, album.id)
+        XCTAssertEqual(compositionListItem.title, composition.title)
+        XCTAssertEqual(compositionListItem.sortTitle, composition.sortTitle)
+        XCTAssertEqual(compositionListItem.artist, composition.artist)
+        XCTAssertEqual(compositionListItem.sortArtist, composition.sortArtist)
+        XCTAssertEqual(compositionListItem.composer, composition.composer)
+        XCTAssertEqual(compositionListItem.sortComposer, composition.sortComposer)
+        
+    }
+    
+    func testCompositionListItemUpdate() throws {
+        let composition = createComposition()
+        
+        var compositionListItem = CompositionListItem(composition)
+        compositionListItem.title = "A New Title"
+        compositionListItem.artist = "The Doors"
+        compositionListItem.composer = "Ludwig van Beethoven(1020-3829)"
+        compositionListItem.update()
+        
+        XCTAssertEqual(compositionListItem.sortTitle, "new title")
+        XCTAssertEqual(compositionListItem.sortArtist, "doors")
+        XCTAssertEqual(compositionListItem.sortComposer, "beethoven, ludwig van")
+        
+    }
+    
+    func testSingleListItem() throws {
+        var album = createAlbum()
+        album.update()
+        
+        let single = album.contents[1].single!
+        
+        let singleListItem = SingleListItem(single)
+        
+        XCTAssertEqual(singleListItem.id, single.id)
+        XCTAssertEqual(singleListItem.albumId, album.id)
+        XCTAssertEqual(singleListItem.title, single.title)
+        XCTAssertEqual(singleListItem.sortTitle, single.sortTitle)
+        XCTAssertEqual(singleListItem.artist, single.artist)
+        XCTAssertEqual(singleListItem.sortArtist, single.sortArtist)
+        XCTAssertEqual(singleListItem.composer, single.composer)
+        XCTAssertEqual(singleListItem.sortComposer, single.sortComposer)
+
+    }
+    
+    func testSingleListItemUpdate() throws {
+        let single = createSingle(track: 1, title: "An apple a day", filename: "apple.flac")
+        
+        var singleListItem = SingleListItem(single)
+        singleListItem.title = "an apricot a week"
+        singleListItem.artist = "The Strawberry AlarmClock"
+        singleListItem.composer = "John Lennon"
+        singleListItem.update()
+        
+        XCTAssertEqual(singleListItem.sortTitle, "apricot a week")
+        XCTAssertEqual(singleListItem.sortArtist, "alarmclock, strawberry")
+        XCTAssertEqual(singleListItem.sortComposer, "lennon, john")
+    }
+    
     static var allTests = [
         ("testAlbumFields1", testAlbumFields1),
         ("testFields2", testFields2)
