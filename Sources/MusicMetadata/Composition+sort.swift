@@ -15,9 +15,8 @@ extension Composition {
             let diskb = $1.disk ?? 1
             if diska == diskb {
                 return $0.track < $1.track
-            } else {
-                return diska < diskb
             }
+            return diska < diskb
         }
     }
     

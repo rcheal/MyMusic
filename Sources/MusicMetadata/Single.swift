@@ -35,9 +35,10 @@ public struct Single: Identifiable, Hashable {
 
     public var audiofileRef: String?
 
-    public init(track: Int, title: String, filename: String) {
+    public init(track: Int, title: String, filename: String, disk: Int? = nil) {
         id = UUID().uuidString
         duration = 0
+        self.disk = disk
         self.track = track
         self.title = title
         self.audiofileRef = filename

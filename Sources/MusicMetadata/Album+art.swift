@@ -16,7 +16,7 @@ extension Album {
         return albumArt.backArtRef()
     }
 
-    public func pageArtRef(_ seq: Int?) -> AlbumArtRef? {
+    public func pageArtRef(_ seq: Int) -> AlbumArtRef? {
         return albumArt.pageArtRef(seq)
     }
     
@@ -24,7 +24,20 @@ extension Album {
         albumArt.addArt(artRef)
     }
     
-    mutating public func deleteArt(_ artRef: AlbumArtRef) {
-        albumArt.deleteArt(artRef)
+    mutating public func removeAllArt() {
+        albumArt.removeAll()
     }
+    
+    mutating public func removeFrontArt() {
+        albumArt.removeFront()
+    }
+
+    mutating public func removeBackArt() {
+        albumArt.removeBack()
+    }
+    
+    mutating public func removePagesArt() {
+        albumArt.removePages()
+    }
+    
 }

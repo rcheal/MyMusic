@@ -14,18 +14,18 @@ public struct AlbumContent: Identifiable, Hashable {
     public var composition: Composition?
     public var single: Single?
     
-    public init(track: Int, composition: Composition, disk: Int? = nil) {
+    public init(composition: Composition) {
         id = composition.id
-        self.track = track
+        self.track = composition.startTrack
+        self.disk = composition.startDisk
         self.composition = composition
-        self.disk = disk
     }
     
-    public init(track: Int, single: Single, disk: Int? = nil) {
+    public init(single: Single) {
         id = single.id
-        self.track = track
+        self.track = single.track
+        self.disk = single.disk
         self.single = single
-        self.disk = disk
     }
 }
 

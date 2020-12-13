@@ -9,6 +9,8 @@ import XCTest
 #if !canImport(ObjectiveC)
 public func allTests() -> [XCTestCaseEntry] {
     return [
+        testCase(MusicMetadataAlbumArtTests.allTests),
+        testCase(MusicMetadataContentTests.allTests),
         testCase(MusicMetadataFieldTests.allTests),
         testCase(MusicMetadataSortTests.allTests),
         testCase(MusicMetadataUpdateTests.allTests)

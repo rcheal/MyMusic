@@ -22,6 +22,18 @@ extension Composition {
 
     }
     
+    public mutating func update() {
+        sortTitle = Album.sortedTitle(title).lowercased()
+        sortArtist = Album.sortedPerson(artist)?.lowercased()
+        sortComposer = Album.sortedPerson(composer)?.lowercased()
+        for index in contents.indices {
+            contents[index].update(composition: self)
+        }
+        updateTrack()
+        updateDuration()
+
+    }
+    
     mutating func updateTrack() {
         if let single = contents.first {
             startDisk = single.disk

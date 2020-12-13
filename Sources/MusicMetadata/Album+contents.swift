@@ -8,8 +8,9 @@
 import Foundation
 
 extension Album {
-    
-    public mutating func addContent(_ content: AlbumContent) {
+
+    // Used by Album.merge()
+    internal mutating func addContent(_ content: AlbumContent) {
         contents.append(content)
         if let composition = content.composition {
             duration += composition.duration
@@ -18,11 +19,53 @@ extension Album {
         }
     }
     
+    public mutating func addComposition(_ composition: Composition) {
+        let content = AlbumContent(composition: composition)
+        contents.append(content)
+        duration += composition.duration
+    }
+    
+    public mutating func addSingle(_ single: Single) {
+        let content = AlbumContent(single: single)
+        contents.append(content)
+        duration += single.duration
+    }
+    
     public mutating func removeAllContents() {
         contents.removeAll()
     }
     
-    public mutating func removeContents(where shouldBeRemoved: (AlbumContent) throws -> Bool) rethrows {
+    public mutating func removeAllSingles() {
+        removeAllContents() { (content) -> Bool in
+            content.single != nil
+        }
+    }
+    
+    public mutating func removeAllSingles(where shouldBeRemoved: (Single) throws -> Bool) rethrows {
+        try removeAllContents() { (content) -> Bool in
+            if let single = content.single {
+                return  try shouldBeRemoved(single)
+            }
+            return false
+        }
+    }
+    
+    public mutating func removeAllCompositions() {
+        removeAllContents() { (content) -> Bool in
+            content.composition != nil
+        }
+    }
+
+    public mutating func removeAllCompositions(where shouldBeRemoved: (Composition) throws -> Bool) rethrows {
+        try removeAllContents() { (content) -> Bool in
+            if let composition = content.composition {
+                return try shouldBeRemoved(composition)
+            }
+            return false
+        }
+    }
+    
+    private mutating func removeAllContents(where shouldBeRemoved: (AlbumContent) throws -> Bool) rethrows {
         try contents.removeAll(where: shouldBeRemoved)
     }
     
@@ -32,10 +75,10 @@ extension Album {
                 c.id == composition.id
             }) ?? -1
         if compIndex >= 0 {
-            var content = contents[compIndex]
-            content.composition = composition
+            let content = AlbumContent(composition: composition)
             contents[compIndex] = content
             updateDuration()
+            sortContents()
         }
     }
     
@@ -45,25 +88,22 @@ extension Album {
                 s.id == single.id
             }) ?? -1
         if singleIndex >= 0 {
-            var content = contents[singleIndex]
-            content.single = single
+            let content = AlbumContent(single: single)
             contents[singleIndex] = content
             updateDuration()
+            sortContents()
         }
     }
     
-    public mutating func replaceSingle(_ single: Single, composition: Composition) {
+    public mutating func replaceSingle(single: Single, compositionId: String) {
         let compIndex = contents.firstIndex(where:
             { (c) in
-                c.id == composition.id
+                c.id == compositionId
             }) ?? -1
         if compIndex >= 0 {
-            var comp = composition
-            comp.replaceSingle(single)
-            var content = contents[compIndex]
-            content.composition = comp
-            contents[compIndex] = content
+            contents[compIndex].composition?.replaceSingle(single)
             updateDuration()
+            sortContents()
         }
     }
     

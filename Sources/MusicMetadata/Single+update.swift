@@ -9,13 +9,19 @@ import Foundation
 
 extension Single {
     
-    public mutating func update() {
+    public mutating func update(composition: Composition? = nil) {
         sortTitle = Album.sortedTitle(title).lowercased()
-        if let artist = artist {
-            sortArtist = Album.sortedPerson(artist)?.lowercased()
-        }
-        if let composer = composer {
-            sortComposer = Album.sortedPerson(composer)?.lowercased()
+        if let composition = composition {
+            sortArtist = Album.sortedPerson((artist ?? composition.artist)?.lowercased())
+            sortComposer = Album.sortedPerson((composer ?? composition.composer)?.lowercased())
+            compositionId = composition.id
+        } else {
+            if let artist = artist {
+                sortArtist = Album.sortedPerson(artist)?.lowercased()
+            }
+            if let composer = composer {
+                sortComposer = Album.sortedPerson(composer)?.lowercased()
+            }
         }
     }
     

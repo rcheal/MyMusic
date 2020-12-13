@@ -22,11 +22,12 @@ public struct AlbumArtRef: Hashable, Codable {
     public var type: AlbumArtType
     public var format: AlbumArtFormat
     public var seq: Int?
+    public var name: String?
     
-    public init(type: AlbumArtType, format: AlbumArtFormat, seq: Int? = nil) {
+    public init(type: AlbumArtType, format: AlbumArtFormat, name: String? = nil) {
         self.type = type
         self.format = format
-        self.seq = seq
+        self.name = name
     }
     
     public var filename: String {

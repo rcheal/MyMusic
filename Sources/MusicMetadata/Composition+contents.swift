@@ -9,7 +9,7 @@ import Foundation
 
 extension Composition {
     
-    public mutating func addContent(_ content: Single) {
+    public mutating func addSingle(_ content: Single) {
         contents.append(content)
         duration += content.duration
     }
@@ -29,6 +29,8 @@ extension Composition {
             }) ?? -1
         if singleIndex >= 0 {
             contents[singleIndex] = single
+            updateDuration()
+            sortContents()
         }
     }
     
