@@ -10,7 +10,7 @@ import Foundation
 public struct AlbumArtwork: Hashable, Codable {
     
     internal var items: [AlbumArtRef]
-    private(set) var pageCount: Int
+    public private(set) var pageCount: Int
     public var count: Int {
         items.count
     }
