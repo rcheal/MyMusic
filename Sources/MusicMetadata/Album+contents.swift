@@ -9,7 +9,6 @@ import Foundation
 
 extension Album {
 
-    // Used by Album.merge()
     internal mutating func addContent(_ content: AlbumContent) {
         contents.append(content)
         if let composition = content.composition {

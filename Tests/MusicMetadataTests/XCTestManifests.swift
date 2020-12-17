@@ -12,6 +12,7 @@ public func allTests() -> [XCTestCaseEntry] {
         testCase(MusicMetadataAlbumArtTests.allTests),
         testCase(MusicMetadataContentTests.allTests),
         testCase(MusicMetadataFieldTests.allTests),
+        testCase(MusicMetadataMergeTests.allTests),
         testCase(MusicMetadataSortTests.allTests),
         testCase(MusicMetadataUpdateTests.allTests)
     ]

@@ -99,7 +99,7 @@ final class MusicMetadataFieldTests: XCTestCase {
         return single
     }
 
-    func testAlbumFields1() throws {
+    func testAlbumFields() throws {
         let album = createAlbum(withContents: false, withArt: false)
 
         let jsonData = album.json ?? Data()
@@ -145,7 +145,7 @@ final class MusicMetadataFieldTests: XCTestCase {
         
     }
     
-    func testFields2() throws {
+    func testFields() throws {
         let album = createAlbum()
 
         let jsonData = album.jsonp ?? Data()
@@ -352,7 +352,13 @@ final class MusicMetadataFieldTests: XCTestCase {
     }
     
     static var allTests = [
-        ("testAlbumFields1", testAlbumFields1),
-        ("testFields2", testFields2)
+        ("testAlbumFields", testAlbumFields),
+        ("testFields", testFields),
+        ("testAlbumListItem", testAlbumListItem),
+        ("testAlbumListItemUpdate", testAlbumListItemUpdate),
+        ("testCompositionListItem", testCompositionListItem),
+        ("testCompositionListItemUpdate", testCompositionListItemUpdate),
+        ("testSingleListItem", testSingleListItem),
+        ("testSingleListItemUpdate", testSingleListItemUpdate),
     ]
 }

@@ -65,9 +65,3 @@ extension Album: Codable {
         case contents
     }
 }
-
-public enum MetadataImageType {
-    case frontCover
-    case backCover
-}
-

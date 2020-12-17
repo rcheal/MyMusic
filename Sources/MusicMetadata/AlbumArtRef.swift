@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AlbumArtRef.swift
 //  
 //
 //  Created by Robert Cheal on 12/6/20.

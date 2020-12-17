@@ -12,7 +12,7 @@ import XCTest
 @available(OSX 11.0, *)
 final class MusicMetadataAlbumArtTests: XCTestCase {
 
-    func testAlbumArtRef1() throws {
+    func testAlbumArtRef() throws {
         
         let ref1 = AlbumArtRef(type: .front, format: .png)
         XCTAssertEqual(ref1.filename, "front.png")
@@ -77,7 +77,7 @@ final class MusicMetadataAlbumArtTests: XCTestCase {
 
     }
     
-    func testInvalidAddArt1() throws {
+    func testInvalidAddArt() throws {
         
         var albumArt = AlbumArtwork()
         
@@ -318,12 +318,19 @@ final class MusicMetadataAlbumArtTests: XCTestCase {
 
     }
 
-   static var allTests = [
-        ("testAlbumArtRef1", testAlbumArtRef1),
+    static var allTests = [
+        ("testAlbumArtRef", testAlbumArtRef),
         ("testValidAddArt1", testValidAddArt1),
         ("testValidAddArt2", testValidAddArt2),
-        ("testInvalidAddArt1", testInvalidAddArt1),
+        ("testInvalidAddArt", testInvalidAddArt),
         ("testInbalidPageSeq", testInvalidPageSeq),
         ("testRemoveAll", testRemoveAll),
+        ("testRemoveFront", testRemoveFront),
+        ("testRemoveBack", testRemoveBack),
+        ("testRemovePages", testRemovePages),
+        ("testAlbumRemoveAllArt", testAlbumRemoveAllArt),
+        ("testAlbumRemoveBack", testAlbumRemoveBack),
+        ("testAlbumRemoveFront", testAlbumRemoveFront),
+        ("testAlbumRemovePages", testAlbumRemovePages),
     ]
 }

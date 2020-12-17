@@ -399,7 +399,7 @@ final class MusicMetadataContentTests: XCTestCase {
         XCTAssertEqual(compositionCount, 1)
     }
     
-    // MARK Album replace content tests
+    // MARK: Album replace content tests
     func testAlbumReplaceSingle() throws {
         var album = createSinglesAlbum()
         
@@ -812,11 +812,15 @@ final class MusicMetadataContentTests: XCTestCase {
         ("testAlbumRemoveAllCompositions2", testAlbumRemoveAllCompositions2),
         ("testAlbumRemoveCompositions", testAlbumRemoveCompositions),
         ("testAlbumRemoveCompositions2", testAlbumRemoveCompositions2),
+        ("testAlbumReplaceSingle", testAlbumReplaceSingle),
+        ("testAlbumReplaceSingle2", testAlbumReplaceSingle2),
+        ("testAlbumReplaceComposition", testAlbumReplaceComposition),
         ("testCompositionAdd", testCompositionAdd),
         ("testCompositionRemoveAll", testCompositionRemoveAll),
         ("testCompositionRemove", testCompositionRemove),
         ("testCompositionRemove2", testCompositionRemove2),
         ("testCompositionRemove3", testCompositionRemove3),
+        ("testCompositionReplace", testCommpositionReplace),
     ]
 
 }

@@ -105,21 +105,6 @@ final class MusicMetadataUpdateTests: XCTestCase {
         
     }
     
-    func testSingleUpdate() throws {
-        
-        var single = Single(track: 1, title: "The Girl from Ipanema", filename: "girl_from_ipanema.flac")
-        single.artist = "Stan Getz"
-        single.composer = "Antonio Carlos Jobim"
-
-        single.update()
-        
-        XCTAssertNil(single.albumId)
-        XCTAssertNil(single.compositionId)
-        XCTAssertEqual(single.sortTitle, "girl from ipanema")
-        XCTAssertEqual(single.sortArtist, "getz, stan")
-        XCTAssertEqual(single.sortComposer, "jobim, antonio carlos")
-     }
-    
     func testCompositionUpdate() throws {
         var single1 = Single(track: 1, title: "Allegro non troppo", filename: "allegro_non_troppo.flac")
         single1.duration = 1126
@@ -175,8 +160,25 @@ final class MusicMetadataUpdateTests: XCTestCase {
 
     }
 
+    func testSingleUpdate() throws {
+        
+        var single = Single(track: 1, title: "The Girl from Ipanema", filename: "girl_from_ipanema.flac")
+        single.artist = "Stan Getz"
+        single.composer = "Antonio Carlos Jobim"
+
+        single.update()
+        
+        XCTAssertNil(single.albumId)
+        XCTAssertNil(single.compositionId)
+        XCTAssertEqual(single.sortTitle, "girl from ipanema")
+        XCTAssertEqual(single.sortArtist, "getz, stan")
+        XCTAssertEqual(single.sortComposer, "jobim, antonio carlos")
+     }
+    
     static var allTests = [
         ("testAlbumUpdate1", testAlbumUpdate1),
-        ("testAlbumUpdate2", testAlbumUpdate2)
+        ("testAlbumUpdate2", testAlbumUpdate2),
+        ("testCompositionUpdate", testCompositionUpdate),
+        ("testSingleUpdate", testSingleUpdate),
     ]
 }
