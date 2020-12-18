@@ -11,13 +11,10 @@ public struct Album: Identifiable, Hashable {
     
     public var id: String
     public var title: String
-    public var sortTitle: String?
     public var subtitle: String?
     public var artist: String?
-    public var sortArtist: String?
     public var supportingArtists: String?
     public var composer: String?
-    public var sortComposer: String?
     public var conductor: String?
     public var orchestra: String?
     public var lyricist: String?
@@ -28,7 +25,13 @@ public struct Album: Identifiable, Hashable {
     public var encoderSettings: String?
     public var recordingYear: Int?
     public var duration: Int       /// sumation of contents durations
+    public var directory: String?
 
+    // Sort fields
+    public var sortTitle: String?
+    public var sortArtist: String?
+    public var sortComposer: String?
+    
     internal var albumArt: AlbumArtwork
 
     public internal(set) var contents: [AlbumContent] = []
@@ -61,6 +64,7 @@ extension Album: Codable {
         case encoderSettings
         case recordingYear
         case duration
+        case directory
         case albumArt
         case contents
     }
