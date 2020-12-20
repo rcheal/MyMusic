@@ -69,11 +69,20 @@ final class MusicMetadataFieldTests: XCTestCase {
         composition.recordingYear = 2020
         composition.duration = 1800
 
-        let movement = createSingle(track: 1, title: "Component 1", filename: "Component1.flac")
+        let movement = createMovement(track: 1, title: "Component 1", filename: "Component1.flac")
 
-        composition.addSingle(movement)
+        composition.addMovement(movement)
         
         return composition
+    }
+    
+    func createMovement(track: Int, title: String, filename: String) -> Movement {
+        var movement = Movement(track: track, title: title, filename: filename)
+        movement.disk = 1
+        movement.subtitle = "SubTitle"
+        movement.duration = 1800
+
+        return movement
     }
     
     func createSingle(track: Int, title: String, filename: String) -> Single {
@@ -202,27 +211,12 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(compositionA?.recordingYear, compositionA2?.recordingYear)
         XCTAssertEqual(compositionA?.duration, compositionA2?.duration)
 
-        let componentA = compositionA?.contents[0]
-        let componentA2 = compositionA2?.contents[0]
-        XCTAssertEqual(componentA?.title, componentA2?.title)
-        XCTAssertNil(componentA2?.sortTitle)
-        XCTAssertEqual(componentA?.subtitle, componentA2?.subtitle)
-        XCTAssertEqual(componentA?.artist, componentA2?.artist)
-        XCTAssertNil(componentA2?.sortArtist)
-        XCTAssertEqual(componentA?.supportingArtists, componentA2?.supportingArtists)
-        XCTAssertEqual(componentA?.composer, componentA2?.composer)
-        XCTAssertNil(componentA2?.sortComposer)
-        XCTAssertEqual(componentA?.conductor, componentA2?.conductor)
-        XCTAssertEqual(componentA?.orchestra, componentA2?.orchestra)
-        XCTAssertEqual(componentA?.lyricist, componentA2?.lyricist)
-        XCTAssertEqual(componentA?.genre, componentA2?.genre)
-        XCTAssertEqual(componentA?.publisher, componentA2?.publisher)
-        XCTAssertEqual(componentA?.copyright, componentA2?.copyright)
-        XCTAssertEqual(componentA?.encodedBy, componentA2?.encodedBy)
-        XCTAssertEqual(componentA?.encoderSettings, componentA2?.encoderSettings)
-        XCTAssertEqual(componentA?.recordingYear, componentA2?.recordingYear)
-        XCTAssertEqual(componentA?.duration, componentA2?.duration)
-        XCTAssertEqual(componentA?.audiofileRef, componentA2?.audiofileRef)
+        let movementA = compositionA?.movements[0]
+        let movementA2 = compositionA2?.movements[0]
+        XCTAssertEqual(movementA?.title, movementA2?.title)
+        XCTAssertEqual(movementA?.subtitle, movementA2?.subtitle)
+        XCTAssertEqual(movementA?.duration, movementA2?.duration)
+        XCTAssertEqual(movementA?.audiofileRef, movementA2?.audiofileRef)
 
         let contentA = album.contents[1]
         let contentA2 = album2?.contents[1]
@@ -267,7 +261,7 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(albumListItem.sortComposer, album.sortComposer)
         XCTAssertEqual(albumListItem.genre, album.genre)
         XCTAssertEqual(albumListItem.recordingYear, album.recordingYear)
-        XCTAssertEqual(albumListItem.frontArtRef,album.frontArtRef())
+        XCTAssertEqual(albumListItem.frontArtFilename,album.frontArtRef()?.filename)
     }
     
     func testAlbumListItemUpdate() throws {
@@ -301,6 +295,7 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(compositionListItem.sortArtist, composition.sortArtist)
         XCTAssertEqual(compositionListItem.composer, composition.composer)
         XCTAssertEqual(compositionListItem.sortComposer, composition.sortComposer)
+        XCTAssertEqual(compositionListItem.genre, composition.genre)
         
     }
     
@@ -335,6 +330,7 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(singleListItem.sortArtist, single.sortArtist)
         XCTAssertEqual(singleListItem.composer, single.composer)
         XCTAssertEqual(singleListItem.sortComposer, single.sortComposer)
+        XCTAssertEqual(singleListItem.genre, single.genre)
 
     }
     

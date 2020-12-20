@@ -94,13 +94,13 @@ extension Album {
         }
     }
     
-    public mutating func replaceSingle(single: Single, compositionId: String) {
+    public mutating func replaceMovement(movement: Movement, compositionId: String) {
         let compIndex = contents.firstIndex(where:
             { (c) in
                 c.id == compositionId
             }) ?? -1
         if compIndex >= 0 {
-            contents[compIndex].composition?.replaceSingle(single)
+            contents[compIndex].composition?.replaceMovement(movement)
             updateDuration()
             sortContents()
         }

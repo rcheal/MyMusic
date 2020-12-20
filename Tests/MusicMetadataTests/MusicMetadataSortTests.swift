@@ -57,36 +57,36 @@ final class MusicMetadataSortTests: XCTestCase {
     
     func testSortCompositionContents() throws {
         var composition = Composition(track: 1, title: "Test Composition")
-        composition.addSingle(Single(track: 5, title: "Track 5", filename: "five.mp3"))
-        composition.addSingle(Single(track: 3, title: "Track 3", filename: "three.mp3"))
-        composition.addSingle(Single(track: 4, title: "Track 4", filename: "four.mp3"))
-        composition.addSingle(Single(track: 2, title: "Track 2", filename: "two.mp3"))
+        composition.addMovement(Movement(track: 5, title: "Track 5", filename: "five.mp3"))
+        composition.addMovement(Movement(track: 3, title: "Track 3", filename: "three.mp3"))
+        composition.addMovement(Movement(track: 4, title: "Track 4", filename: "four.mp3"))
+        composition.addMovement(Movement(track: 2, title: "Track 2", filename: "two.mp3"))
         
         composition.sortContents()
         
         var index = 0
-        for single in composition.contents {
+        for movement in composition.movements {
             switch index {
             case 0:
-                XCTAssertNil(single.disk)
-                XCTAssertEqual(single.track, 2)
-                XCTAssertEqual(single.title, "Track 2")
-                XCTAssertEqual(single.audiofileRef, "two.mp3")
+                XCTAssertNil(movement.disk)
+                XCTAssertEqual(movement.track, 2)
+                XCTAssertEqual(movement.title, "Track 2")
+                XCTAssertEqual(movement.audiofileRef, "two.mp3")
             case 1:
-                XCTAssertNil(single.disk)
-                XCTAssertEqual(single.track, 3)
-                XCTAssertEqual(single.title, "Track 3")
-                XCTAssertEqual(single.audiofileRef, "three.mp3")
+                XCTAssertNil(movement.disk)
+                XCTAssertEqual(movement.track, 3)
+                XCTAssertEqual(movement.title, "Track 3")
+                XCTAssertEqual(movement.audiofileRef, "three.mp3")
             case 2:
-                XCTAssertNil(single.disk)
-                XCTAssertEqual(single.track, 4)
-                XCTAssertEqual(single.title, "Track 4")
-                XCTAssertEqual(single.audiofileRef, "four.mp3")
+                XCTAssertNil(movement.disk)
+                XCTAssertEqual(movement.track, 4)
+                XCTAssertEqual(movement.title, "Track 4")
+                XCTAssertEqual(movement.audiofileRef, "four.mp3")
             case 3:
-                XCTAssertNil(single.disk)
-                XCTAssertEqual(single.track, 5)
-                XCTAssertEqual(single.title, "Track 5")
-                XCTAssertEqual(single.audiofileRef, "five.mp3")
+                XCTAssertNil(movement.disk)
+                XCTAssertEqual(movement.track, 5)
+                XCTAssertEqual(movement.title, "Track 5")
+                XCTAssertEqual(movement.audiofileRef, "five.mp3")
             default:
                 XCTFail("Unexpected contents: \(index)")
             }
@@ -97,36 +97,36 @@ final class MusicMetadataSortTests: XCTestCase {
     
     func testSortCompositionContents2() throws {
         var composition = Composition(track: 1, title: "Test Composition", disk: 1)
-        composition.addSingle(Single(track: 5, title: "Track 5", filename: "five.mp3", disk: 1))
-        composition.addSingle(Single(track: 3, title: "Track 3", filename: "three.mp3", disk: 1))
-        composition.addSingle(Single(track: 4, title: "Track 4", filename: "four.mp3", disk: 2))
-        composition.addSingle(Single(track: 2, title: "Track 2", filename: "two.mp3", disk: 2))
+        composition.addMovement(Movement(track: 5, title: "Track 5", filename: "five.mp3", disk: 1))
+        composition.addMovement(Movement(track: 3, title: "Track 3", filename: "three.mp3", disk: 1))
+        composition.addMovement(Movement(track: 4, title: "Track 4", filename: "four.mp3", disk: 2))
+        composition.addMovement(Movement(track: 2, title: "Track 2", filename: "two.mp3", disk: 2))
         
         composition.sortContents()
         
         var index = 0
-        for single in composition.contents {
+        for movement in composition.movements {
             switch index {
             case 0:
-                XCTAssertEqual(single.disk, 1)
-                XCTAssertEqual(single.track, 3)
-                XCTAssertEqual(single.title, "Track 3")
-                XCTAssertEqual(single.audiofileRef, "three.mp3")
+                XCTAssertEqual(movement.disk, 1)
+                XCTAssertEqual(movement.track, 3)
+                XCTAssertEqual(movement.title, "Track 3")
+                XCTAssertEqual(movement.audiofileRef, "three.mp3")
             case 1:
-                XCTAssertEqual(single.disk, 1)
-                XCTAssertEqual(single.track, 5)
-                XCTAssertEqual(single.title, "Track 5")
-                XCTAssertEqual(single.audiofileRef, "five.mp3")
+                XCTAssertEqual(movement.disk, 1)
+                XCTAssertEqual(movement.track, 5)
+                XCTAssertEqual(movement.title, "Track 5")
+                XCTAssertEqual(movement.audiofileRef, "five.mp3")
             case 2:
-                XCTAssertEqual(single.disk, 2)
-                XCTAssertEqual(single.track, 2)
-                XCTAssertEqual(single.title, "Track 2")
-                XCTAssertEqual(single.audiofileRef, "two.mp3")
+                XCTAssertEqual(movement.disk, 2)
+                XCTAssertEqual(movement.track, 2)
+                XCTAssertEqual(movement.title, "Track 2")
+                XCTAssertEqual(movement.audiofileRef, "two.mp3")
             case 3:
-                XCTAssertEqual(single.disk, 2)
-                XCTAssertEqual(single.track, 4)
-                XCTAssertEqual(single.title, "Track 4")
-                XCTAssertEqual(single.audiofileRef, "four.mp3")
+                XCTAssertEqual(movement.disk, 2)
+                XCTAssertEqual(movement.track, 4)
+                XCTAssertEqual(movement.title, "Track 4")
+                XCTAssertEqual(movement.audiofileRef, "four.mp3")
             default:
                 XCTFail("Unexpected contents: \(index)")
             }
@@ -139,14 +139,14 @@ final class MusicMetadataSortTests: XCTestCase {
         var album = Album(title: "Test Album")
         
         var composition2 = Composition(track: 2, title: "Composition 2", disk: 2)
-        composition2.addSingle(Single(track: 4, title: "Movement 3", filename: "fourb.mp3", disk: 2))
-        composition2.addSingle(Single(track: 2, title: "Movement 1", filename: "twob.mp3", disk: 2))
-        composition2.addSingle(Single(track: 3, title: "Movement 2", filename: "threeb.mp3", disk: 2))
+        composition2.addMovement(Movement(track: 4, title: "Movement 3", filename: "fourb.mp3", disk: 2))
+        composition2.addMovement(Movement(track: 2, title: "Movement 1", filename: "twob.mp3", disk: 2))
+        composition2.addMovement(Movement(track: 3, title: "Movement 2", filename: "threeb.mp3", disk: 2))
         album.addComposition(composition2)
         var composition = Composition(track: 2, title: "Composition 1")
-        composition.addSingle(Single(track: 4, title: "Movement 3", filename: "four.mp3", disk: 1))
-        composition.addSingle(Single(track: 2, title: "Movement 1", filename: "two.mp3", disk: 1))
-        composition.addSingle(Single(track: 3, title: "Movement 2", filename: "three.mp3", disk: 1))
+        composition.addMovement(Movement(track: 4, title: "Movement 3", filename: "four.mp3", disk: 1))
+        composition.addMovement(Movement(track: 2, title: "Movement 1", filename: "two.mp3", disk: 1))
+        composition.addMovement(Movement(track: 3, title: "Movement 2", filename: "three.mp3", disk: 1))
         album.addContent(AlbumContent(composition: composition))
         album.addSingle(Single(track: 1, title: "Single 2", filename: "oneb.mp3", disk: 2))
         album.addSingle(Single(track: 1, title: "Single 1", filename: "one.mp3", disk: 1))
@@ -173,23 +173,23 @@ final class MusicMetadataSortTests: XCTestCase {
                 if let composition = content.composition {
                     XCTAssertEqual(composition.title, "Composition 1")
                     var cIndex = 0
-                    for single in composition.contents {
+                    for movement in composition.movements {
                         switch cIndex {
                         case 0:
-                            XCTAssertEqual(single.disk, 1)
-                            XCTAssertEqual(single.track, 2)
-                            XCTAssertEqual(single.title, "Movement 1")
-                            XCTAssertEqual(single.audiofileRef, "two.mp3")
+                            XCTAssertEqual(movement.disk, 1)
+                            XCTAssertEqual(movement.track, 2)
+                            XCTAssertEqual(movement.title, "Movement 1")
+                            XCTAssertEqual(movement.audiofileRef, "two.mp3")
                         case 1:
-                            XCTAssertEqual(single.disk, 1)
-                            XCTAssertEqual(single.track, 3)
-                            XCTAssertEqual(single.title, "Movement 2")
-                            XCTAssertEqual(single.audiofileRef, "three.mp3")
+                            XCTAssertEqual(movement.disk, 1)
+                            XCTAssertEqual(movement.track, 3)
+                            XCTAssertEqual(movement.title, "Movement 2")
+                            XCTAssertEqual(movement.audiofileRef, "three.mp3")
                         case 2:
-                            XCTAssertEqual(single.disk, 1)
-                            XCTAssertEqual(single.track, 4)
-                            XCTAssertEqual(single.title, "Movement 3")
-                            XCTAssertEqual(single.audiofileRef, "four.mp3")
+                            XCTAssertEqual(movement.disk, 1)
+                            XCTAssertEqual(movement.track, 4)
+                            XCTAssertEqual(movement.title, "Movement 3")
+                            XCTAssertEqual(movement.audiofileRef, "four.mp3")
                         default:
                             XCTFail("Extra content in composition - \(composition.title), \(index)/\(cIndex)")
                         }
@@ -215,23 +215,23 @@ final class MusicMetadataSortTests: XCTestCase {
                 if let composition = content.composition {
                     XCTAssertEqual(composition.title, "Composition 2")
                     var cIndex = 0
-                    for single in composition.contents {
+                    for movement in composition.movements {
                         switch cIndex {
                         case 0:
-                            XCTAssertEqual(single.disk, 2)
-                            XCTAssertEqual(single.track, 2)
-                            XCTAssertEqual(single.title, "Movement 1")
-                            XCTAssertEqual(single.audiofileRef, "twob.mp3")
+                            XCTAssertEqual(movement.disk, 2)
+                            XCTAssertEqual(movement.track, 2)
+                            XCTAssertEqual(movement.title, "Movement 1")
+                            XCTAssertEqual(movement.audiofileRef, "twob.mp3")
                         case 1:
-                            XCTAssertEqual(single.disk, 2)
-                            XCTAssertEqual(single.track, 3)
-                            XCTAssertEqual(single.title, "Movement 2")
-                            XCTAssertEqual(single.audiofileRef, "threeb.mp3")
+                            XCTAssertEqual(movement.disk, 2)
+                            XCTAssertEqual(movement.track, 3)
+                            XCTAssertEqual(movement.title, "Movement 2")
+                            XCTAssertEqual(movement.audiofileRef, "threeb.mp3")
                         case 2:
-                            XCTAssertEqual(single.disk, 2)
-                            XCTAssertEqual(single.track, 4)
-                            XCTAssertEqual(single.title, "Movement 3")
-                            XCTAssertEqual(single.audiofileRef, "fourb.mp3")
+                            XCTAssertEqual(movement.disk, 2)
+                            XCTAssertEqual(movement.track, 4)
+                            XCTAssertEqual(movement.title, "Movement 3")
+                            XCTAssertEqual(movement.audiofileRef, "fourb.mp3")
                         default:
                             XCTFail("Extra content in composition - \(composition.title), \(index)/\(cIndex)")
                         }

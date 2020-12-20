@@ -41,21 +41,21 @@ final class MusicMetadataUpdateTests: XCTestCase {
     }
     
     func testAlbumUpdate2() throws {
-        var single1 = Single(track: 1, title: "Allegro non troppo", filename: "allegro_non_troppo.flac")
-        single1.duration = 1126
-        var single2 = Single(track: 2, title: "Allegro appassionato", filename: "allegro_appassionato.flac")
-        single2.duration = 572
-        var single3 = Single(track: 3, title: "Andante", filename: "andante.flac")
-        single3.duration = 788
-        var single4 = Single(track: 4, title: "Allegretto graziioso", filename: "allegro_appassionato.flac")
-        single4.duration = 569
+        var movement1 = Movement(track: 1, title: "Allegro non troppo", filename: "allegro_non_troppo.flac")
+        movement1.duration = 1126
+        var movement2 = Movement(track: 2, title: "Allegro appassionato", filename: "allegro_appassionato.flac")
+        movement2.duration = 572
+        var movement3 = Movement(track: 3, title: "Andante", filename: "andante.flac")
+        movement3.duration = 788
+        var movement4 = Movement(track: 4, title: "Allegretto graziioso", filename: "allegro_appassionato.flac")
+        movement4.duration = 569
         
         var composition = Composition(track: 1, title: "Piano Concerto No. 2 in B flat, Op. 83")
         // Added in random order to test sortContents()
-        composition.addSingle(single4)
-        composition.addSingle(single2)
-        composition.addSingle(single1)
-        composition.addSingle(single3)
+        composition.addMovement(movement4)
+        composition.addMovement(movement2)
+        composition.addMovement(movement1)
+        composition.addMovement(movement3)
         
         var album = Album(title: "Brahms: Piano Concerto No. 2 in B flat, Op. 83")
         album.artist = "Vladimir Ashkenazy"
@@ -81,39 +81,35 @@ final class MusicMetadataUpdateTests: XCTestCase {
         XCTAssertEqual(composition.sortComposer, "brahms, johannes")
         XCTAssertEqual(composition.duration, 3055)
         
-        XCTAssertEqual(composition.contents.count, 4)
-        single1 = composition.contents[0]
-        XCTAssertEqual(single1.sortTitle, "allegro non troppo")
-        XCTAssertEqual(single1.sortArtist, "ashkenazy, vladimir")
-        XCTAssertEqual(single1.sortComposer, "brahms, johannes")
+        XCTAssertEqual(composition.movements.count, 4)
+        movement1 = composition.movements[0]
+        XCTAssertEqual(movement1.track, 1)
+        XCTAssertEqual(movement1.title, "Allegro non troppo")
 
-        single2 = composition.contents[1]
-        XCTAssertEqual(single2.sortTitle, "allegro appassionato")
-        XCTAssertEqual(single2.sortArtist, "ashkenazy, vladimir")
-        XCTAssertEqual(single2.sortComposer, "brahms, johannes")
+        movement2 = composition.movements[1]
+        XCTAssertEqual(movement2.track, 2)
+        XCTAssertEqual(movement2.title, "Allegro appassionato")
         
-        single3 = composition.contents[2]
-        XCTAssertEqual(single3.sortTitle, "andante")
-        XCTAssertEqual(single3.sortArtist, "ashkenazy, vladimir")
-        XCTAssertEqual(single3.sortComposer, "brahms, johannes")
+        movement3 = composition.movements[2]
+        XCTAssertEqual(movement3.track, 3)
+        XCTAssertEqual(movement3.title, "Andante")
         
-        single4 = composition.contents[3]
-        XCTAssertEqual(single4.sortTitle, "allegretto graziioso")
-        XCTAssertEqual(single4.sortArtist, "ashkenazy, vladimir")
-        XCTAssertEqual(single4.sortComposer, "brahms, johannes")
+        movement4 = composition.movements[3]
+        XCTAssertEqual(movement4.track, 4)
+        XCTAssertEqual(movement4.title, "Allegretto graziioso")
 
         
     }
     
     func testCompositionUpdate() throws {
-        var single1 = Single(track: 1, title: "Allegro non troppo", filename: "allegro_non_troppo.flac")
-        single1.duration = 1126
-        var single2 = Single(track: 2, title: "Allegro appassionato", filename: "allegro_appassionato.flac")
-        single2.duration = 572
-        var single3 = Single(track: 3, title: "Andante", filename: "andante.flac")
-        single3.duration = 788
-        var single4 = Single(track: 4, title: "Allegretto graziioso", filename: "allegro_appassionato.flac")
-        single4.duration = 569
+        var movement1 = Movement(track: 1, title: "Allegro non troppo", filename: "allegro_non_troppo.flac")
+        movement1.duration = 1126
+        var movement2 = Movement(track: 2, title: "Allegro appassionato", filename: "allegro_appassionato.flac")
+        movement2.duration = 572
+        var movement3 = Movement(track: 3, title: "Andante", filename: "andante.flac")
+        movement3.duration = 788
+        var movement4 = Movement(track: 4, title: "Allegretto graziioso", filename: "allegro_appassionato.flac")
+        movement4.duration = 569
         
         var composition = Composition(track: 1, title: "Piano Concerto No. 2 in B flat, Op. 83")
         composition.artist = "Vladimir Ashkenazy"
@@ -123,10 +119,10 @@ final class MusicMetadataUpdateTests: XCTestCase {
         composition.genre = "Classical"
         composition.recordingYear = 1984
         // Added in random order to test sortContents()
-        composition.addSingle(single4)
-        composition.addSingle(single2)
-        composition.addSingle(single1)
-        composition.addSingle(single3)
+        composition.addMovement(movement4)
+        composition.addMovement(movement2)
+        composition.addMovement(movement1)
+        composition.addMovement(movement3)
         
         composition.sortContents()
         composition.update()
@@ -136,26 +132,22 @@ final class MusicMetadataUpdateTests: XCTestCase {
         XCTAssertEqual(composition.sortComposer, "brahms, johannes")
         XCTAssertEqual(composition.duration, 3055)
         
-        XCTAssertEqual(composition.contents.count, 4)
-        single1 = composition.contents[0]
-        XCTAssertEqual(single1.sortTitle, "allegro non troppo")
-        XCTAssertEqual(single1.sortArtist, "ashkenazy, vladimir")
-        XCTAssertEqual(single1.sortComposer, "brahms, johannes")
+        XCTAssertEqual(composition.movements.count, 4)
+        movement1 = composition.movements[0]
+        XCTAssertEqual(movement1.track, 1)
+        XCTAssertEqual(movement1.title, "Allegro non troppo")
 
-        single2 = composition.contents[1]
-        XCTAssertEqual(single2.sortTitle, "allegro appassionato")
-        XCTAssertEqual(single2.sortArtist, "ashkenazy, vladimir")
-        XCTAssertEqual(single2.sortComposer, "brahms, johannes")
+        movement2 = composition.movements[1]
+        XCTAssertEqual(movement2.track, 2)
+        XCTAssertEqual(movement2.title, "Allegro appassionato")
         
-        single3 = composition.contents[2]
-        XCTAssertEqual(single3.sortTitle, "andante")
-        XCTAssertEqual(single3.sortArtist, "ashkenazy, vladimir")
-        XCTAssertEqual(single3.sortComposer, "brahms, johannes")
+        movement3 = composition.movements[2]
+        XCTAssertEqual(movement3.track, 3)
+        XCTAssertEqual(movement3.title, "Andante")
         
-        single4 = composition.contents[3]
-        XCTAssertEqual(single4.sortTitle, "allegretto graziioso")
-        XCTAssertEqual(single4.sortArtist, "ashkenazy, vladimir")
-        XCTAssertEqual(single4.sortComposer, "brahms, johannes")
+        movement4 = composition.movements[3]
+        XCTAssertEqual(movement4.track, 4)
+        XCTAssertEqual(movement4.title, "Allegretto graziioso")
 
 
     }

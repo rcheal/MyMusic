@@ -18,7 +18,8 @@ public struct AlbumListItem: Identifiable, Hashable {
     public var sortComposer: String?
     public var genre: String?
     public var recordingYear: Int?
-    public var frontArtRef: AlbumArtRef?
+    public var frontArtFilename: String?
+    public var directory: String?
     
     public init(_ id: String, title: String) {
         self.id = id
@@ -36,7 +37,8 @@ public struct AlbumListItem: Identifiable, Hashable {
         sortComposer = Album.sortedPerson(album.composer)?.lowercased()
         genre = album.genre
         recordingYear = album.recordingYear
-        frontArtRef = album.frontArtRef()
+        frontArtFilename = album.frontArtRef()?.filename
+        directory = album.directory
     }
         
 }

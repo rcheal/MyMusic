@@ -14,9 +14,6 @@ extension Composition {
         sortArtist = Album.sortedPerson(artist ?? album.artist)?.lowercased()
         sortComposer = Album.sortedPerson(composer ?? album.composer)?.lowercased()
         albumId = album.id
-        for index in contents.indices {
-            contents[index].update(album, composition: self)
-        }
         updateTrack()
         updateDuration()
 
@@ -26,25 +23,22 @@ extension Composition {
         sortTitle = Album.sortedTitle(title).lowercased()
         sortArtist = Album.sortedPerson(artist)?.lowercased()
         sortComposer = Album.sortedPerson(composer)?.lowercased()
-        for index in contents.indices {
-            contents[index].update(composition: self)
-        }
         updateTrack()
         updateDuration()
 
     }
     
     mutating func updateTrack() {
-        if let single = contents.first {
-            startDisk = single.disk
-            startTrack = single.track
+        if let movement = movements.first {
+            startDisk = movement.disk
+            startTrack = movement.track
         }
     }
     
     mutating func updateDuration() {
         duration = 0
-        for single in contents {
-            duration += single.duration
+        for movement in movements {
+            duration += movement.duration
         }
     }
     

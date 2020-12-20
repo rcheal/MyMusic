@@ -63,25 +63,25 @@ final class MusicMetadataMergeTests: XCTestCase {
                         single.disk = argIndex
                     }
                     single.duration = 200
-                    var singlea = Single(track: 2, title: "Movement1", filename: "file2.mp3")
+                    var movementa = Movement(track: 2, title: "Movement1", filename: "file2.mp3")
                     if argIndex > 1 {
-                        singlea.disk = argIndex
+                        movementa.disk = argIndex
                     }
-                    singlea.duration = 380
-                    var singleb = Single(track: 3, title: "Movement2", filename: "file3.mp3")
+                    movementa.duration = 380
+                    var movementb = Movement(track: 3, title: "Movement2", filename: "file3.mp3")
                     if argIndex > 1 {
-                        singleb.disk = argIndex
+                        movementb.disk = argIndex
                     }
-                    singleb.duration = 270
-                    var singlec = Single(track: 4, title: "Movement3", filename: "file4.mp3")
+                    movementb.duration = 270
+                    var movementc = Movement(track: 4, title: "Movement3", filename: "file4.mp3")
                     if argIndex > 1 {
-                        singlec.disk = argIndex
+                        movementc.disk = argIndex
                     }
-                    singlec.duration = 210
+                    movementc.duration = 210
                     var composition = Composition(track: 2, title: "Composition1")
-                    composition.addSingle(singlea)
-                    composition.addSingle(singleb)
-                    composition.addSingle(singlec)
+                    composition.addMovement(movementa)
+                    composition.addMovement(movementb)
+                    composition.addMovement(movementc)
                     
                     album.addSingle(single)
                     album.addComposition(composition)
@@ -96,25 +96,25 @@ final class MusicMetadataMergeTests: XCTestCase {
                         single2.disk = argIndex
                     }
                     single2.duration = 200
-                    var singlea = Single(track: 3, title: "Movement31", filename: "file2.mp3")
+                    var movementa = Movement(track: 3, title: "Movement31", filename: "file2.mp3")
                     if argIndex > 1 {
-                        singlea.disk = argIndex
+                        movementa.disk = argIndex
                     }
-                    singlea.duration = 380
-                    var singleb = Single(track: 4, title: "Movement32", filename: "file3.mp3")
+                    movementa.duration = 380
+                    var movementb = Movement(track: 4, title: "Movement32", filename: "file3.mp3")
                     if argIndex > 1 {
-                        singleb.disk = argIndex
+                        movementb.disk = argIndex
                     }
-                    singleb.duration = 270
-                    var singlec = Single(track: 5, title: "Movement33", filename: "file4.mp3")
+                    movementb.duration = 270
+                    var movementc = Movement(track: 5, title: "Movement33", filename: "file4.mp3")
                     if argIndex > 1 {
-                        singlec.disk = argIndex
+                        movementc.disk = argIndex
                     }
-                    singlec.duration = 210
+                    movementc.duration = 210
                     var composition = Composition(track: 3, title: "Composition2")
-                    composition.addSingle(singlea)
-                    composition.addSingle(singleb)
-                    composition.addSingle(singlec)
+                    composition.addMovement(movementa)
+                    composition.addMovement(movementb)
+                    composition.addMovement(movementc)
 
                     album.addSingle(single1)
                     album.addSingle(single2)
@@ -198,20 +198,20 @@ final class MusicMetadataMergeTests: XCTestCase {
                     XCTAssertEqual(composition.startDisk, 1)
                     XCTAssertEqual(composition.startTrack, 2)
                     XCTAssertEqual(composition.title, "Composition1")
-                    XCTAssertEqual(composition.contents.count, 3)
+                    XCTAssertEqual(composition.movements.count, 3)
                     var cIndex = 0
                     
-                    for single in composition.contents {
+                    for movement in composition.movements {
                         switch cIndex {
                         case 0:
-                            XCTAssertEqual(single.disk, 1)
-                            XCTAssertEqual(single.track, 2)
+                            XCTAssertEqual(movement.disk, 1)
+                            XCTAssertEqual(movement.track, 2)
                         case 1:
-                            XCTAssertEqual(single.disk, 1)
-                            XCTAssertEqual(single.track, 3)
+                            XCTAssertEqual(movement.disk, 1)
+                            XCTAssertEqual(movement.track, 3)
                         case 2:
-                            XCTAssertEqual(single.disk, 1)
-                            XCTAssertEqual(single.track, 4)
+                            XCTAssertEqual(movement.disk, 1)
+                            XCTAssertEqual(movement.track, 4)
                         default:
                             XCTFail("Unexpected content, index = \(index)/\(cIndex)")
                         }
@@ -246,20 +246,20 @@ final class MusicMetadataMergeTests: XCTestCase {
                     XCTAssertEqual(composition.startDisk, 2)
                     XCTAssertEqual(composition.startTrack, 3)
                     XCTAssertEqual(composition.title, "Composition2")
-                    XCTAssertEqual(composition.contents.count, 3)
+                    XCTAssertEqual(composition.movements.count, 3)
                     var cIndex = 0
                     
-                    for single in composition.contents {
+                    for movement in composition.movements {
                         switch cIndex {
                         case 0:
-                            XCTAssertEqual(single.disk, 2)
-                            XCTAssertEqual(single.track, 3)
+                            XCTAssertEqual(movement.disk, 2)
+                            XCTAssertEqual(movement.track, 3)
                         case 1:
-                            XCTAssertEqual(single.disk, 2)
-                            XCTAssertEqual(single.track, 4)
+                            XCTAssertEqual(movement.disk, 2)
+                            XCTAssertEqual(movement.track, 4)
                         case 2:
-                            XCTAssertEqual(single.disk, 2)
-                            XCTAssertEqual(single.track, 5)
+                            XCTAssertEqual(movement.disk, 2)
+                            XCTAssertEqual(movement.track, 5)
                         default:
                             XCTFail("Unexpected content, index = \(index)/\(cIndex)")
                         }

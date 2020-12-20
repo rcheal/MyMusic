@@ -10,7 +10,7 @@ import Foundation
 extension Composition {
     
     public mutating func sortContents() {
-        contents = contents.sorted {
+        movements = movements.sorted {
             let diska = $0.disk ?? 1
             let diskb = $1.disk ?? 1
             if diska == diskb {

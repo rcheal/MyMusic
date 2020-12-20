@@ -16,6 +16,7 @@ public struct CompositionListItem: Identifiable, Hashable {
     public var sortArtist: String?
     public var composer: String?
     public var sortComposer: String?
+    public var genre: String?
     
     public init(_ id: String, title: String) {
         self.id = id
@@ -32,5 +33,6 @@ public struct CompositionListItem: Identifiable, Hashable {
         sortArtist = Album.sortedPerson(composition.artist)?.lowercased()
         composer = composition.composer
         sortComposer = Album.sortedPerson(composition.sortComposer)?.lowercased()
+        genre = composition.genre
     }
 }

@@ -9,26 +9,26 @@ import Foundation
 
 extension Composition {
     
-    public mutating func addSingle(_ content: Single) {
-        contents.append(content)
-        duration += content.duration
+    public mutating func addMovement(_ movement: Movement) {
+        movements.append(movement)
+        duration += movement.duration
     }
     
-    public mutating func removeAllContents() {
-        contents.removeAll()
+    public mutating func removeAllMovements() {
+        movements.removeAll()
     }
     
-    public mutating func removeContents(where shouldBeRemoved: (Single) throws -> Bool) rethrows {
-        try contents.removeAll(where: shouldBeRemoved)
+    public mutating func removeMovements(where shouldBeRemoved: (Movement) throws -> Bool) rethrows {
+        try movements.removeAll(where: shouldBeRemoved)
     }
 
-    public mutating func replaceSingle(_ single: Single) {
-        let singleIndex = contents.firstIndex(where:
+    public mutating func replaceMovement(_ movement: Movement) {
+        let movementIndex = movements.firstIndex(where:
             { (s) in
-                s.id == single.id
+                s.id == movement.id
             }) ?? -1
-        if singleIndex >= 0 {
-            contents[singleIndex] = single
+        if movementIndex >= 0 {
+            movements[movementIndex] = movement
             updateDuration()
             sortContents()
         }

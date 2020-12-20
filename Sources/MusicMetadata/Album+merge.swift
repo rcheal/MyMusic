@@ -168,10 +168,10 @@ extension Album {
         // Merge contents
         for index in contents.indices {
             if let composition = contents[index].composition {
-                for index2 in composition.contents.indices {
-                    let single = composition.contents[index2]
-                    if single.disk == nil {
-                        contents[index].composition?.contents[index2].disk = 1
+                for index2 in composition.movements.indices {
+                    let movement = composition.movements[index2]
+                    if movement.disk == nil {
+                        contents[index].composition?.movements[index2].disk = 1
                     }
                 }
             } else if let single = contents[index].single {
@@ -183,10 +183,10 @@ extension Album {
         let lastDisk = contents.last?.disk ?? 1
         for var content in album.contents {
             if let composition = content.composition {
-                for index in composition.contents.indices {
-                    var single = composition.contents[index]
-                    single.disk = lastDisk + 1
-                    content.composition?.contents[index] = single
+                for index in composition.movements.indices {
+                    var movement = composition.movements[index]
+                    movement.disk = lastDisk + 1
+                    content.composition?.movements[index] = movement
                 }
             } else if var single = content.single {
                 single.disk = lastDisk + 1
@@ -204,10 +204,10 @@ extension Album {
     private mutating func setDisk(_ disk: Int?) {
         for index in contents.indices {
             if let composition = contents[index].composition {
-                for index2 in composition.contents.indices {
-                    var single = composition.contents[index2]
-                    single.disk = disk
-                    contents[index].composition?.contents[index2] = single
+                for index2 in composition.movements.indices {
+                    var movement = composition.movements[index2]
+                    movement.disk = disk
+                    contents[index].composition?.movements[index2] = movement
                 }
             } else if var single = contents[index].single {
                 single.disk = disk

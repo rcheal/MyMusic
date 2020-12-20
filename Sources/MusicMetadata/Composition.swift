@@ -32,7 +32,7 @@ public struct Composition: Identifiable, Hashable {
     public var recordingYear: Int?
     public var duration: Int       /// duration in seconds
 
-    public internal(set) var contents: [Single] = []
+    public internal(set) var movements: [Movement] = []
     
     public init(track: Int, title: String, disk: Int? = nil) {
         id = UUID().uuidString
@@ -65,7 +65,7 @@ extension Composition: Codable {
         case encoderSettings
         case recordingYear
         case duration
-        case contents
+        case movements
     }
 
 }
