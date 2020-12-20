@@ -14,6 +14,13 @@ extension Composition {
         duration += movement.duration
     }
     
+    public mutating func addMovement(from single: Single) {
+        var movement = Movement(track: single.track, title: single.title, filename: single.audiofileRef ?? "", disk: single.disk)
+        movement.duration = single.duration
+        movement.subtitle = single.subtitle
+        addMovement(movement)
+    }
+    
     public mutating func removeAllMovements() {
         movements.removeAll()
     }
