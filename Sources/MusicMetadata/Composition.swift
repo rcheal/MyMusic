@@ -45,7 +45,7 @@ public struct Composition: Identifiable, Hashable {
 }
 
 extension Composition: Codable {
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case id
         case albumId
         case startDisk

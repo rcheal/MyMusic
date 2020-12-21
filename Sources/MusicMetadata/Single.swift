@@ -47,7 +47,7 @@ public struct Single: Identifiable, Hashable {
 }
 
 extension Single: Codable {
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case id
         case compositionId
         case albumId

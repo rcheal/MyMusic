@@ -36,7 +36,7 @@ extension PlaylistItem: Codable {
 
 extension Playlist: Codable {
     
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case id
         case title
         case nextItemIndex

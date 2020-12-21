@@ -47,7 +47,7 @@ public struct Album: Identifiable, Hashable {
 
 extension Album: Codable {
     
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case id
         case title
         case subtitle

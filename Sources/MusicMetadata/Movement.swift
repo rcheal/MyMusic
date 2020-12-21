@@ -31,7 +31,7 @@ public struct Movement: Identifiable, Hashable {
 }
 
 extension Movement: Codable {
-    enum CodingKeys: String, CodingKey {
+    public enum CodingKeys: String, CodingKey {
         case id
         case compositionId
         case albumId
