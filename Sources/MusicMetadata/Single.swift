@@ -15,13 +15,10 @@ public struct Single: Identifiable, Hashable {
     public var track: Int
     
     public var title: String
-    public var sortTitle: String?
     public var subtitle: String?
     public var artist: String?
-    public var sortArtist: String?
     public var supportingArtists: String?
     public var composer: String?
-    public var sortComposer: String?
     public var conductor: String?
     public var orchestra: String?
     public var lyricist: String?
@@ -32,6 +29,11 @@ public struct Single: Identifiable, Hashable {
     public var encoderSettings: String?
     public var recordingYear: Int?
     public var duration: Int       /// duration in seconds
+
+    // Sort fields
+    public var sortTitle: String?
+    public var sortArtist: String?
+    public var sortComposer: String?
 
     public var audiofileRef: String?
 

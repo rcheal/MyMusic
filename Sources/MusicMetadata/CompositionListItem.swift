@@ -11,13 +11,15 @@ public struct CompositionListItem: Identifiable, Hashable {
     public var id: String
     public var albumId: String?
     public var title: String
-    public var sortTitle: String?
     public var artist: String?
-    public var sortArtist: String?
     public var composer: String?
-    public var sortComposer: String?
     public var genre: String?
     
+    // Sort fields
+    public var sortTitle: String?
+    public var sortArtist: String?
+    public var sortComposer: String?
+
     public init(_ id: String, title: String) {
         self.id = id
         self.title = title
@@ -38,5 +40,12 @@ public struct CompositionListItem: Identifiable, Hashable {
 }
 
 extension CompositionListItem: Codable {
-    
+    public enum CodingKeys: String, CodingKey {
+        case id
+        case albumId
+        case title
+        case artist
+        case composer
+        case genre
+    }
 }
