@@ -40,3 +40,6 @@ public struct SingleListItem: Identifiable, Hashable {
     
 }
 
+extension SingleListItem: Codable {
+    
+}

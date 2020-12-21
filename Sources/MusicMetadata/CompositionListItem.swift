@@ -36,3 +36,7 @@ public struct CompositionListItem: Identifiable, Hashable {
         genre = composition.genre
     }
 }
+
+extension CompositionListItem: Codable {
+    
+}

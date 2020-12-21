@@ -43,3 +43,6 @@ public struct AlbumListItem: Identifiable, Hashable {
         
 }
 
+extension AlbumListItem: Codable {
+    
+}
