@@ -48,5 +48,8 @@ extension SingleListItem: Codable {
         case artist
         case composer
         case genre
+        case sortTitle
+        case sortArtist
+        case sortComposer
     }
 }
