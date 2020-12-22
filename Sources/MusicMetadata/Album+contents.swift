@@ -21,13 +21,13 @@ extension Album {
     public mutating func addComposition(_ composition: Composition) {
         let content = AlbumContent(composition: composition)
         contents.append(content)
-        duration += composition.duration
+        update()
     }
     
     public mutating func addSingle(_ single: Single) {
         let content = AlbumContent(single: single)
         contents.append(content)
-        duration += single.duration
+        update()
     }
     
     public mutating func removeAllContents() {

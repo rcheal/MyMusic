@@ -9,6 +9,15 @@ import Foundation
 
 extension Album {
     public mutating func sortContents() {
+        for index in contents.indices {
+            if var composition = contents[index].composition {
+                composition.sortContents()
+                contents[index].composition = composition
+                contents[index].disk = composition.startDisk
+                contents[index].track = composition.startTrack
+            }
+        }
+        
         contents = contents.sorted {
             let diska = $0.disk ?? 1
             let diskb = $1.disk ?? 1
@@ -18,12 +27,6 @@ extension Album {
             return diska < diskb
         }
         
-        for index in contents.indices {
-            if var composition = contents[index].composition {
-                composition.sortContents()
-                contents[index].composition = composition
-            }
-        }
     }
     
     public static func sortedTitle(_ title: String) -> String {

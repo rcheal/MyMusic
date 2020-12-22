@@ -14,6 +14,11 @@ extension Composition {
         sortArtist = Album.sortedPerson(artist ?? album.artist)?.lowercased()
         sortComposer = Album.sortedPerson(composer ?? album.composer)?.lowercased()
         albumId = album.id
+        
+        for index in movements.indices {
+            movements[index].update(album, composition: self)
+        }
+        
         updateTrack()
         updateDuration()
 

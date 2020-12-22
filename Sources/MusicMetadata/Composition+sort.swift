@@ -18,6 +18,7 @@ extension Composition {
             }
             return diska < diskb
         }
+        updateTrack()
     }
     
 }

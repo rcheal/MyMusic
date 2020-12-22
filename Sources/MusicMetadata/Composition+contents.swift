@@ -11,7 +11,8 @@ extension Composition {
     
     public mutating func addMovement(_ movement: Movement) {
         movements.append(movement)
-        duration += movement.duration
+        update()
+//        duration += movement.duration
     }
     
     public mutating func addMovement(from single: Single) {
