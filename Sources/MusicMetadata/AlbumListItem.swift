@@ -55,5 +55,8 @@ extension AlbumListItem: Codable {
         case recordingYear
         case frontArtFilename
         case directory
+        case sortTitle
+        case sortArtist
+        case sortComposer
     }
 }

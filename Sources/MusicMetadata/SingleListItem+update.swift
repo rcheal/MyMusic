@@ -9,19 +9,15 @@ import Foundation
 
 extension SingleListItem {
     
-    public mutating func update() {
+    public mutating func update(_ album: Album? = nil) {
         sortTitle = Album.sortedTitle(title).lowercased()
-        sortArtist = Album.sortedPerson(artist)?.lowercased()
-        sortComposer = Album.sortedPerson(composer)?.lowercased()
+        if let album = album {
+            sortArtist = Album.sortedPerson(artist ?? album.artist)?.lowercased()
+            sortComposer = Album.sortedPerson(composer ?? album.composer)?.lowercased()
+        } else {
+            sortArtist = Album.sortedPerson(artist)?.lowercased()
+            sortComposer = Album.sortedPerson(composer)?.lowercased()
+        }
     }
 
-    public mutating func update(_ album: Album, composition: Composition? = nil) {
-        sortTitle = Album.sortedTitle(title).lowercased()
-        if let composition = composition {
-            sortArtist = Album.sortedPerson(artist ?? composition.artist ?? album.artist)?.lowercased()
-            sortComposer = Album.sortedPerson(composer ?? composition.composer ?? album.composer)?.lowercased()
-            compositionId = composition.id
-        }
-        albumId = album.id
-    }
 }

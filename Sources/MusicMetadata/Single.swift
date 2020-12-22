@@ -70,6 +70,9 @@ extension Single: Codable {
         case encoderSettings
         case recordingYear
         case duration
+        case sortTitle
+        case sortArtist
+        case sortComposer
         case audiofileRef
     }
 }

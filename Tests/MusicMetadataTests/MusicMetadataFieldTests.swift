@@ -226,13 +226,13 @@ final class MusicMetadataFieldTests: XCTestCase {
         let singleA = contentA.single
         let singleA2 = contentA2?.single
         XCTAssertEqual(singleA?.title, singleA2?.title)
-        XCTAssertNil(singleA2?.sortTitle)
+        XCTAssertEqual(singleA?.sortTitle, singleA2?.sortTitle)
         XCTAssertEqual(singleA?.subtitle, singleA2?.subtitle)
         XCTAssertEqual(singleA?.artist, singleA2?.artist)
-        XCTAssertNil(singleA2?.sortArtist)
+        XCTAssertEqual(singleA?.sortArtist, singleA2?.sortArtist)
         XCTAssertEqual(singleA?.supportingArtists, singleA2?.supportingArtists)
         XCTAssertEqual(singleA?.composer, singleA2?.composer)
-        XCTAssertNil(singleA2?.sortComposer)
+        XCTAssertEqual(singleA?.sortComposer, singleA2?.sortComposer)
         XCTAssertEqual(singleA?.conductor, singleA2?.conductor)
         XCTAssertEqual(singleA?.orchestra, singleA2?.orchestra)
         XCTAssertEqual(singleA?.lyricist, singleA2?.lyricist)
