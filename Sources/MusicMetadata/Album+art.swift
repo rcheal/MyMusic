@@ -15,6 +15,10 @@ extension Album {
     public func backArtRef() -> AlbumArtRef? {
         return albumArt.backArtRef()
     }
+    
+    public func artworkPageCount() -> Int {
+        return albumArt.pageCount
+    }
 
     public func pageArtRef(_ seq: Int) -> AlbumArtRef? {
         return albumArt.pageArtRef(seq)
