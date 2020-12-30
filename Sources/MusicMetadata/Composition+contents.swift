@@ -9,6 +9,15 @@ import Foundation
 
 extension Composition {
     
+    public func getMovement(_ id: String) -> Movement? {
+        for movement in movements {
+            if movement.id == id {
+                return movement
+            }
+        }
+        return nil
+    }
+    
     public mutating func addMovement(_ movement: Movement) {
         movements.append(movement)
         update()

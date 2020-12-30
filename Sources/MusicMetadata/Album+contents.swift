@@ -9,6 +9,34 @@ import Foundation
 
 extension Album {
 
+    public func getComposition(_ id: String) -> Composition? {
+        for content in contents {
+            if let composition = content.composition, composition.id == id {
+                return composition
+            }
+        }
+        return nil
+    }
+    
+    public func getSingle(_ id: String) -> Single? {
+        for content in contents {
+            if let single = content.single, single.id == id {
+                return single
+            }
+        }
+        return nil
+    }
+    
+    public func getMovement(_ id: String) -> Movement? {
+        for content in contents {
+            if let composition = content.composition,
+               let movement = composition.getMovement(id) {
+                return movement
+            }
+        }
+        return nil
+    }
+    
     internal mutating func addContent(_ content: AlbumContent) {
         contents.append(content)
         if let composition = content.composition {
