@@ -29,6 +29,7 @@ public struct Single: Identifiable, Hashable {
     public var encoderSettings: String?
     public var recordingYear: Int?
     public var duration: Int       /// duration in seconds
+    public var directory: String?   /// for orphaned singles only
 
     // Sort fields
     public var sortTitle: String?
@@ -70,6 +71,7 @@ extension Single: Codable {
         case encoderSettings
         case recordingYear
         case duration
+        case directory
         case sortTitle
         case sortArtist
         case sortComposer

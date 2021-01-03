@@ -14,6 +14,7 @@ public struct SingleListItem: Identifiable, Hashable {
     public var artist: String?
     public var composer: String?
     public var genre: String?
+    public var recordingYear: Int?
     
     // Sort fields
     public var sortTitle: String?
@@ -36,6 +37,7 @@ public struct SingleListItem: Identifiable, Hashable {
         composer = single.composer
         sortComposer = Album.sortedPerson(single.composer)?.lowercased()
         genre = single.genre
+        recordingYear = single.recordingYear
     }
     
 }
@@ -48,6 +50,7 @@ extension SingleListItem: Codable {
         case artist
         case composer
         case genre
+        case recordingYear
         case sortTitle
         case sortArtist
         case sortComposer
