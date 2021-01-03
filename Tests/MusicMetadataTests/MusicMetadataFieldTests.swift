@@ -109,6 +109,48 @@ final class MusicMetadataFieldTests: XCTestCase {
         return single
     }
 
+    func testSingleFields() throws {
+        var single = createSingle(track: 1, title: "Song1", filename: "song1.mp3")
+        single.id = "A6B0C134-72A9-472D-A6BC-9501CD3847CA"
+        single.track = 1
+        single.disk = nil
+        single.directory = "Diretory"
+        let jsonData = single.json ?? Data()
+        let json = String(bytes: jsonData, encoding: String.Encoding.utf8) ?? ""
+        let jsonRef =
+"""
+{"composer":"Composer","publisher":"Publisher","title":"Song1","supportingArtists":"Artist1;Artist2;Artist3","lyricist":"Lyricist","orchestra":"Orchestra","directory":"Diretory","duration":1800,"encodedBy":"EncodedBy","sortTitle":"SortTitle","audiofileRef":"song1.mp3","sortArtist":"SortArtist","encoderSettings":"EncoderSettings","track":1,"id":"A6B0C134-72A9-472D-A6BC-9501CD3847CA","conductor":"Conductor","subtitle":"SubTitle","artist":"Artist","sortComposer":"SortComposer","genre":"Genre","recordingYear":2020,"copyright":"Copyright"}
+"""
+        
+        XCTAssertEqual(json, jsonRef)
+        
+        let single2 = Single.decodeFrom(json: jsonData)
+        XCTAssertNotNil(single2)
+        if let single2 = single2 {
+            XCTAssertNil(single.disk)
+            XCTAssertEqual(single.track,1)
+            XCTAssertEqual(single.title, single2.title)
+            XCTAssertEqual(single.subtitle, single2.subtitle)
+            XCTAssertEqual(single.artist, single2.artist)
+            XCTAssertEqual(single.composer, single2.composer)
+            XCTAssertEqual(single.conductor, single2.conductor)
+            XCTAssertEqual(single.orchestra, single2.orchestra)
+            XCTAssertEqual(single.sortTitle, single2.sortTitle)
+            XCTAssertEqual(single.sortArtist, single2.sortArtist)
+            XCTAssertEqual(single.sortComposer, single2.sortComposer)
+            XCTAssertEqual(single.supportingArtists, single2.supportingArtists)
+            XCTAssertEqual(single.lyricist, single2.lyricist)
+            XCTAssertEqual(single.genre, single2.genre)
+            XCTAssertEqual(single.publisher, single2.publisher)
+            XCTAssertEqual(single.copyright, single2.copyright)
+            XCTAssertEqual(single.encodedBy, single2.encodedBy)
+            XCTAssertEqual(single.encoderSettings, single2.encoderSettings)
+            XCTAssertEqual(single.recordingYear, single2.recordingYear)
+            XCTAssertEqual(single.duration, single2.duration)
+            XCTAssertEqual(single.directory, single2.directory)
+        }
+    }
+    
     func testAlbumFields() throws {
         let album = createAlbum(withContents: false, withArt: false)
 
