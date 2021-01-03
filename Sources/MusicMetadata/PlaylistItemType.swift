@@ -1,5 +1,5 @@
 //
-//  MetadataType.swift
+//  PlaylistItemType.swift
 //  
 //
 //  Created by Robert Cheal on 12/21/20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum MetadataType: String, Codable {
+public enum PlaylistItemType: String, Codable {
     case album
     case composition
     case movement

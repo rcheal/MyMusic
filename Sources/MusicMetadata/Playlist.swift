@@ -9,7 +9,7 @@ import Foundation
 
 public struct PlaylistItem: Identifiable, Hashable {
     public var id: String
-    public var playlistType: MetadataType
+    public var playlistType: PlaylistItemType
 }
 
 public struct Playlist: Identifiable, Hashable {
