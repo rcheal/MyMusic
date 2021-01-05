@@ -8,12 +8,20 @@
 import Foundation
 
 extension Album {
+    public func artRef(_ index: Int) -> AlbumArtRef? {
+        return albumArt.artRef(index)
+    }
+    
     public func frontArtRef() -> AlbumArtRef? {
         return albumArt.frontArtRef()
     }
 
     public func backArtRef() -> AlbumArtRef? {
         return albumArt.backArtRef()
+    }
+    
+    public func artworkCount() -> Int {
+        return albumArt.count
     }
     
     public func artworkPageCount() -> Int {
