@@ -20,6 +20,14 @@ public struct AlbumArtwork: Hashable, Codable {
         items = []
     }
     
+    public func artRef(_ index: Int) -> AlbumArtRef? {
+        if index < 0 || index >= count {
+            return nil
+        } else {
+            return items[index]
+        }
+    }
+    
     public func frontArtRef() -> AlbumArtRef? {
         if let artRef = items.first, artRef.type == .front {
             return artRef
