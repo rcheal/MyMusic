@@ -22,12 +22,26 @@ public struct AlbumArtRef: Hashable, Codable {
     public var type: AlbumArtType
     public var format: AlbumArtFormat
     public var seq: Int?
-    public var name: String?
     
-    public init(type: AlbumArtType, format: AlbumArtFormat, name: String? = nil) {
+    public init(type: AlbumArtType, format: AlbumArtFormat) {
         self.type = type
         self.format = format
-        self.name = name
+    }
+    
+    public var name: String {
+        get {
+            var name: String
+            switch type {
+            case .front:
+                name = "front"
+            case .back:
+                name = "back"
+            case .page:
+                name = "page\(seq ?? 0)"
+            }
+            return name.capitalized
+        }
+
     }
     
     public var filename: String {

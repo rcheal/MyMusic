@@ -26,9 +26,9 @@ final class MusicMetadataMergeTests: XCTestCase {
             album.lyricist = "Lyricist1"
             album.genre = "Classical"
             album.recordingYear = 1992
-            album.addArt(AlbumArtRef(type: .front, format: .jpg, name: "folder.jpg"))
-            album.addArt(AlbumArtRef(type: .back, format: .png, name: "back.png"))
-            album.addArt(AlbumArtRef(type: .page, format: .png, name: "page1a.png"))
+            album.addArt(AlbumArtRef(type: .front, format: .jpg))
+            album.addArt(AlbumArtRef(type: .back, format: .png))
+            album.addArt(AlbumArtRef(type: .page, format: .png))
         } else {
             album.title += " [Disk 2]"
             album.subtitle = "BSubtitle"
@@ -41,9 +41,9 @@ final class MusicMetadataMergeTests: XCTestCase {
             album.genre = "Clasical"
             album.copyright = "Copyright"
             album.recordingYear = 2013
-            album.addArt(AlbumArtRef(type: .front, format: .png, name: "folder.png"))
-            album.addArt(AlbumArtRef(type: .back, format: .jpg, name: "back.jpg"))
-            album.addArt(AlbumArtRef(type: .page, format: .png, name: "page2a.png"))
+            album.addArt(AlbumArtRef(type: .front, format: .png))
+            album.addArt(AlbumArtRef(type: .back, format: .jpg))
+            album.addArt(AlbumArtRef(type: .page, format: .png))
         }
         
         
@@ -152,8 +152,8 @@ final class MusicMetadataMergeTests: XCTestCase {
         XCTAssertEqual(album1.copyright, "Copyright")
         XCTAssertEqual(album1.recordingYear, 2013)
         XCTAssertEqual(album1.duration, duration1 + duration2)
-        XCTAssertEqual(album1.frontArtRef(), AlbumArtRef(type: .front, format: .jpg, name: "folder.jpg"))
-        XCTAssertEqual(album1.backArtRef(), AlbumArtRef(type: .back, format: .png, name: "back.png"))
+        XCTAssertEqual(album1.frontArtRef(), AlbumArtRef(type: .front, format: .jpg))
+        XCTAssertEqual(album1.backArtRef(), AlbumArtRef(type: .back, format: .png))
         XCTAssertEqual(album1.albumArt.pageCount, 4)
         for seq in 1...4 {
             XCTAssertEqual(album1.pageArtRef(seq)?.type, .page)
@@ -161,16 +161,16 @@ final class MusicMetadataMergeTests: XCTestCase {
             switch seq {
             case 1:
                 XCTAssertEqual(album1.pageArtRef(seq)?.format, .png)
-                XCTAssertEqual(album1.pageArtRef(seq)?.name, "folder.png")
+                XCTAssertEqual(album1.pageArtRef(seq)?.filename, "page1.png")
             case 2:
                 XCTAssertEqual(album1.pageArtRef(seq)?.format, .png)
-                XCTAssertEqual(album1.pageArtRef(seq)?.name, "page1a.png")
+                XCTAssertEqual(album1.pageArtRef(seq)?.filename, "page2.png")
             case 3:
                 XCTAssertEqual(album1.pageArtRef(seq)?.format, .png)
-                XCTAssertEqual(album1.pageArtRef(seq)?.name, "page2a.png")
+                XCTAssertEqual(album1.pageArtRef(seq)?.filename, "page3.png")
             case 4:
                 XCTAssertEqual(album1.pageArtRef(seq)?.format, .jpg)
-                XCTAssertEqual(album1.pageArtRef(seq)?.name, "back.jpg")
+                XCTAssertEqual(album1.pageArtRef(seq)?.filename, "page4.jpg")
             default:
                 break
             }
@@ -302,13 +302,13 @@ final class MusicMetadataMergeTests: XCTestCase {
         XCTAssertEqual(album1.copyright, "Copyright")
         XCTAssertEqual(album1.recordingYear, 1992)
         XCTAssertEqual(album1.duration, duration1 + duration2)
-        XCTAssertEqual(album1.frontArtRef(), AlbumArtRef(type: .front, format: .jpg, name: "folder.jpg"))
-        XCTAssertEqual(album1.backArtRef(), AlbumArtRef(type: .back, format: .png, name: "back.png"))
+        XCTAssertEqual(album1.frontArtRef(), AlbumArtRef(type: .front, format: .jpg))
+        XCTAssertEqual(album1.backArtRef(), AlbumArtRef(type: .back, format: .png))
         XCTAssertEqual(album1.albumArt.pageCount, 1)
         XCTAssertEqual(album1.pageArtRef(1)?.type, .page)
         XCTAssertEqual(album1.pageArtRef(1)?.seq, 1)
         XCTAssertEqual(album1.pageArtRef(1)?.format, .png)
-        XCTAssertEqual(album1.pageArtRef(1)?.name, "page1a.png")
+        XCTAssertEqual(album1.pageArtRef(1)?.name, "Page1")
 
     }
 
@@ -338,13 +338,13 @@ final class MusicMetadataMergeTests: XCTestCase {
         XCTAssertEqual(album1.copyright, "Copyright")
         XCTAssertEqual(album1.recordingYear, 1952)
         XCTAssertEqual(album1.duration, duration1 + duration2)
-        XCTAssertEqual(album1.frontArtRef(), AlbumArtRef(type: .front, format: .png, name: "folder.png"))
-        XCTAssertEqual(album1.backArtRef(), AlbumArtRef(type: .back, format: .jpg, name: "back.jpg"))
+        XCTAssertEqual(album1.frontArtRef(), AlbumArtRef(type: .front, format: .png))
+        XCTAssertEqual(album1.backArtRef(), AlbumArtRef(type: .back, format: .jpg))
         XCTAssertEqual(album1.albumArt.pageCount, 1)
         XCTAssertEqual(album1.pageArtRef(1)?.type, .page)
         XCTAssertEqual(album1.pageArtRef(1)?.seq, 1)
         XCTAssertEqual(album1.pageArtRef(1)?.format, .png)
-        XCTAssertEqual(album1.pageArtRef(1)?.name, "page2a.png")
+        XCTAssertEqual(album1.pageArtRef(1)?.name, "Page1")
 
     }
     
@@ -374,17 +374,17 @@ final class MusicMetadataMergeTests: XCTestCase {
         XCTAssertEqual(album1.copyright, "Copyright")
         XCTAssertEqual(album1.recordingYear, 1992)
         XCTAssertEqual(album1.duration, duration1 + duration2)
-        XCTAssertEqual(album1.frontArtRef(), AlbumArtRef(type: .front, format: .jpg, name: "folder.jpg"))
-        XCTAssertEqual(album1.backArtRef(), AlbumArtRef(type: .back, format: .jpg, name: "back.jpg"))
+        XCTAssertEqual(album1.frontArtRef(), AlbumArtRef(type: .front, format: .jpg))
+        XCTAssertEqual(album1.backArtRef(), AlbumArtRef(type: .back, format: .jpg))
         XCTAssertEqual(album1.albumArt.pageCount, 2)
         XCTAssertEqual(album1.pageArtRef(1)?.type, .page)
         XCTAssertEqual(album1.pageArtRef(1)?.seq, 1)
         XCTAssertEqual(album1.pageArtRef(1)?.format, .png)
-        XCTAssertEqual(album1.pageArtRef(1)?.name, "page1a.png")
+        XCTAssertEqual(album1.pageArtRef(1)?.name, "Page1")
         XCTAssertEqual(album1.pageArtRef(2)?.type, .page)
         XCTAssertEqual(album1.pageArtRef(2)?.seq, 2)
         XCTAssertEqual(album1.pageArtRef(2)?.format, .png)
-        XCTAssertEqual(album1.pageArtRef(2)?.name, "page2a.png")
+        XCTAssertEqual(album1.pageArtRef(2)?.name, "Page2")
 
     }
 
@@ -414,17 +414,17 @@ final class MusicMetadataMergeTests: XCTestCase {
         XCTAssertEqual(album1.copyright, "Copyright")
         XCTAssertEqual(album1.recordingYear, 1992)
         XCTAssertEqual(album1.duration, duration1 + duration2)
-        XCTAssertEqual(album1.frontArtRef(), AlbumArtRef(type: .front, format: .png, name: "folder.png"))
-        XCTAssertEqual(album1.backArtRef(), AlbumArtRef(type: .back, format: .png, name: "back.png"))
+        XCTAssertEqual(album1.frontArtRef(), AlbumArtRef(type: .front, format: .png))
+        XCTAssertEqual(album1.backArtRef(), AlbumArtRef(type: .back, format: .png))
         XCTAssertEqual(album1.albumArt.pageCount, 2)
         XCTAssertEqual(album1.pageArtRef(1)?.type, .page)
         XCTAssertEqual(album1.pageArtRef(1)?.seq, 1)
         XCTAssertEqual(album1.pageArtRef(1)?.format, .png)
-        XCTAssertEqual(album1.pageArtRef(1)?.name, "page1a.png")
+        XCTAssertEqual(album1.pageArtRef(1)?.name, "Page1")
         XCTAssertEqual(album1.pageArtRef(2)?.type, .page)
         XCTAssertEqual(album1.pageArtRef(2)?.seq, 2)
         XCTAssertEqual(album1.pageArtRef(2)?.format, .png)
-        XCTAssertEqual(album1.pageArtRef(2)?.name, "page2a.png")
+        XCTAssertEqual(album1.pageArtRef(2)?.name, "Page2")
 
 
     }
