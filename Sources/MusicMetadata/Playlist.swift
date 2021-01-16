@@ -31,7 +31,7 @@ public struct Playlist: Identifiable, Hashable {
     public var items: [PlaylistItem]
     public var orderedItems: [PlaylistItem]?
     
-    init(_ title: String, shared: Bool = false) {
+    public init(_ title: String, shared: Bool = false) {
         id = UUID().uuidString
         self.title = title
         self.shared = shared
