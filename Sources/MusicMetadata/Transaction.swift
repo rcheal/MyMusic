@@ -15,7 +15,7 @@ public struct Transaction: Identifiable, Hashable {
     public var method: String
     public var entity: String
     
-    init(method: String, entity: String, id: String) {
+    public init(method: String, entity: String, id: String) {
         self.method = method
         self.entity = entity
         self.id = id
