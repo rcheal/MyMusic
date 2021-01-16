@@ -1,13 +1,13 @@
 //
-//  Single+jsonFile..swift
+//  Transaction+json.swift
 //  
 //
-//  Created by Robert Cheal on 1/3/21.
+//  Created by Robert Cheal on 1/16/21.
 //
 
 import Foundation
 
-extension Single {
+extension Transaction {
     public var json: Data? {
         let encoder = JSONEncoder()
         return try? encoder.encode(self)
@@ -19,10 +19,10 @@ extension Single {
         return try? encoder.encode(self)
     }
     
-    public static func decodeFrom(json: Data) -> Single? {
+    public static func decodeFrom(json: Data) -> Transaction? {
         let decoder = JSONDecoder()
-        if let jsonSingle = try? decoder.decode(Single.self, from: json) {
-            return jsonSingle
+        if let jsonTransaction = try? decoder.decode(Transaction.self, from: json) {
+            return jsonTransaction
         }
         return nil
     }

@@ -1,5 +1,5 @@
 //
-//  SingleListItem.swift
+//  SingleSummary.swift
 //  
 //
 //  Created by Robert Cheal on 12/5/20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct SingleListItem: Identifiable, Hashable {
+public struct SingleSummary: Identifiable, Hashable {
     public var id: String
     public var albumId: String?
     public var title: String
@@ -42,7 +42,7 @@ public struct SingleListItem: Identifiable, Hashable {
     
 }
 
-extension SingleListItem: Codable {
+extension SingleSummary: Codable {
     public enum CodingKeys: String, CodingKey {
         case id
         case albumId

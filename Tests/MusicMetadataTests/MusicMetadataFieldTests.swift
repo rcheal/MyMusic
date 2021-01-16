@@ -108,6 +108,18 @@ final class MusicMetadataFieldTests: XCTestCase {
 
         return single
     }
+    
+    func createPlaylist(_ title: String) -> Playlist {
+        var playlist = Playlist(title)
+        playlist.shared = true
+        var playlistItem = PlaylistItem(id: Single(track: 1, title: "Our House", filename: "").id, playlistType: .single)
+        playlist.items.append(playlistItem)
+        playlistItem = PlaylistItem(id: Composition(track: 1, title: "Beethoven Symphony No. 6").id, playlistType: .composition)
+        playlist.items.append(playlistItem)
+        
+        playlist.user = "bob"
+        return playlist
+    }
 
     func testSingleFields() throws {
         var single = createSingle(track: 1, title: "Song1", filename: "song1.mp3")
@@ -195,6 +207,35 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertNil(album.pageArtRef(9))
 
         
+    }
+    
+    func testPlaylistFields() throws {
+        let playlist = createPlaylist("60's rock")
+        
+        let jsonData = playlist.jsonp ?? Data()
+        
+        let playlist2 = Playlist.decodeFrom(json: jsonData)
+        XCTAssertEqual(playlist.id, playlist2?.id)
+        XCTAssertEqual(playlist.title, playlist2?.title)
+        XCTAssertEqual(playlist.user, playlist2?.user)
+        XCTAssertEqual(playlist.shared, playlist2?.shared)
+        XCTAssertEqual(playlist.nextItemIndex, playlist2?.nextItemIndex)
+        XCTAssertEqual(playlist.items.count, playlist2?.items.count)
+        for index in playlist.items.indices {
+            let pl1 = playlist.items[index]
+            let pl2 = playlist2!.items[index]
+            XCTAssertEqual(pl1.id, pl2.id)
+            XCTAssertEqual(pl1.playlistType, pl2.playlistType)
+        }
+    }
+    
+    func testTransactionFields() throws {
+        let id = UUID().uuidString
+        let transaction = Transaction(method: "POST", entity: "album", id: id)
+        
+        XCTAssertEqual(transaction.id, id)
+        XCTAssertEqual(transaction.method, "POST")
+        XCTAssertEqual(transaction.entity, "album")
     }
     
     func testFields() throws {
@@ -288,81 +329,81 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(singleA?.audiofileRef, singleA2?.audiofileRef)
     }
 
-    func testAlbumListItem() throws {
+    func testAlbumSummary() throws {
         var album = createAlbum(withContents: false, withArt: false)
         album.update()
         
-        let albumListItem = AlbumListItem(album)
+        let albumSummary = AlbumSummary(album)
         
-        XCTAssertEqual(albumListItem.id, album.id)
-        XCTAssertEqual(albumListItem.title, album.title)
-        XCTAssertEqual(albumListItem.sortTitle, album.sortTitle)
-        XCTAssertEqual(albumListItem.artist, album.artist)
-        XCTAssertEqual(albumListItem.sortArtist, album.sortArtist)
-        XCTAssertEqual(albumListItem.composer, album.composer)
-        XCTAssertEqual(albumListItem.sortComposer, album.sortComposer)
-        XCTAssertEqual(albumListItem.genre, album.genre)
-        XCTAssertEqual(albumListItem.recordingYear, album.recordingYear)
-        XCTAssertEqual(albumListItem.frontArtFilename,album.frontArtRef()?.filename)
+        XCTAssertEqual(albumSummary.id, album.id)
+        XCTAssertEqual(albumSummary.title, album.title)
+        XCTAssertEqual(albumSummary.sortTitle, album.sortTitle)
+        XCTAssertEqual(albumSummary.artist, album.artist)
+        XCTAssertEqual(albumSummary.sortArtist, album.sortArtist)
+        XCTAssertEqual(albumSummary.composer, album.composer)
+        XCTAssertEqual(albumSummary.sortComposer, album.sortComposer)
+        XCTAssertEqual(albumSummary.genre, album.genre)
+        XCTAssertEqual(albumSummary.recordingYear, album.recordingYear)
+        XCTAssertEqual(albumSummary.frontArtFilename,album.frontArtRef()?.filename)
     }
     
-    func testAlbumListItemUpdate() throws {
+    func testAlbumSummaryUpdate() throws {
         let album = createAlbum(withContents: false, withArt: false)
         
-        var albumListItem = AlbumListItem(album)
-        albumListItem.title = "A New Title"
-        albumListItem.artist = "The Beatles"
-        albumListItem.composer = "Ludwig van Beethoven (1789-1823)"
-        albumListItem.update()
+        var albumSummary = AlbumSummary(album)
+        albumSummary.title = "A New Title"
+        albumSummary.artist = "The Beatles"
+        albumSummary.composer = "Ludwig van Beethoven (1789-1823)"
+        albumSummary.update()
         
-        XCTAssertEqual(albumListItem.sortTitle, "new title")
-        XCTAssertEqual(albumListItem.sortArtist, "beatles")
-        XCTAssertEqual(albumListItem.sortComposer, "beethoven, ludwig van")
+        XCTAssertEqual(albumSummary.sortTitle, "new title")
+        XCTAssertEqual(albumSummary.sortArtist, "beatles")
+        XCTAssertEqual(albumSummary.sortComposer, "beethoven, ludwig van")
 
     }
     
-    func testCompositionListItem() throws {
+    func testCompositionSummary() throws {
         var album = createAlbum()
         album.update()
         
         let composition = album.contents[0].composition!
         
-        let compositionListItem = CompositionListItem(composition)
+        let compositionSummary = CompositionSummary(composition)
         
-        XCTAssertEqual(compositionListItem.id, composition.id)
-        XCTAssertEqual(compositionListItem.albumId, album.id)
-        XCTAssertEqual(compositionListItem.title, composition.title)
-        XCTAssertEqual(compositionListItem.sortTitle, composition.sortTitle)
-        XCTAssertEqual(compositionListItem.artist, composition.artist)
-        XCTAssertEqual(compositionListItem.sortArtist, composition.sortArtist)
-        XCTAssertEqual(compositionListItem.composer, composition.composer)
-        XCTAssertEqual(compositionListItem.sortComposer, composition.sortComposer)
-        XCTAssertEqual(compositionListItem.genre, composition.genre)
+        XCTAssertEqual(compositionSummary.id, composition.id)
+        XCTAssertEqual(compositionSummary.albumId, album.id)
+        XCTAssertEqual(compositionSummary.title, composition.title)
+        XCTAssertEqual(compositionSummary.sortTitle, composition.sortTitle)
+        XCTAssertEqual(compositionSummary.artist, composition.artist)
+        XCTAssertEqual(compositionSummary.sortArtist, composition.sortArtist)
+        XCTAssertEqual(compositionSummary.composer, composition.composer)
+        XCTAssertEqual(compositionSummary.sortComposer, composition.sortComposer)
+        XCTAssertEqual(compositionSummary.genre, composition.genre)
         
     }
     
-    func testCompositionListItemUpdate() throws {
+    func testCompositionSummaryUpdate() throws {
         let composition = createComposition()
         
-        var compositionListItem = CompositionListItem(composition)
-        compositionListItem.title = "A New Title"
-        compositionListItem.artist = "The Doors"
-        compositionListItem.composer = "Ludwig van Beethoven(1020-3829)"
-        compositionListItem.update()
+        var compositionSummary = CompositionSummary(composition)
+        compositionSummary.title = "A New Title"
+        compositionSummary.artist = "The Doors"
+        compositionSummary.composer = "Ludwig van Beethoven(1020-3829)"
+        compositionSummary.update()
         
-        XCTAssertEqual(compositionListItem.sortTitle, "new title")
-        XCTAssertEqual(compositionListItem.sortArtist, "doors")
-        XCTAssertEqual(compositionListItem.sortComposer, "beethoven, ludwig van")
+        XCTAssertEqual(compositionSummary.sortTitle, "new title")
+        XCTAssertEqual(compositionSummary.sortArtist, "doors")
+        XCTAssertEqual(compositionSummary.sortComposer, "beethoven, ludwig van")
         
     }
     
-    func testSingleListItem() throws {
+    func testSingleSummary() throws {
         var album = createAlbum()
         album.update()
         
         let single = album.contents[1].single!
         
-        let singleListItem = SingleListItem(single)
+        let singleListItem = SingleSummary(single)
         
         XCTAssertEqual(singleListItem.id, single.id)
         XCTAssertEqual(singleListItem.albumId, album.id)
@@ -376,10 +417,10 @@ final class MusicMetadataFieldTests: XCTestCase {
 
     }
     
-    func testSingleListItemUpdate() throws {
+    func testSingleSummaryUpdate() throws {
         let single = createSingle(track: 1, title: "An apple a day", filename: "apple.flac")
         
-        var singleListItem = SingleListItem(single)
+        var singleListItem = SingleSummary(single)
         singleListItem.title = "an apricot a week"
         singleListItem.artist = "The Strawberry AlarmClock"
         singleListItem.composer = "John Lennon"
@@ -390,14 +431,28 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(singleListItem.sortComposer, "lennon, john")
     }
     
+    func testPlaylistSummary() throws {
+        let playlist = createPlaylist("The Good Stuff")
+
+        let playlistSummary = PlaylistSummary(playlist)
+        
+        XCTAssertEqual(playlistSummary.id, playlist.id)
+        XCTAssertEqual(playlistSummary.title, playlist.title)
+        XCTAssertEqual(playlistSummary.sortTitle, "good stuff")
+
+    }
+    
     static var allTests = [
         ("testAlbumFields", testAlbumFields),
+        ("testSingleFields", testSingleFields),
+        ("testPlaylistFields", testPlaylistFields),
         ("testFields", testFields),
-        ("testAlbumListItem", testAlbumListItem),
-        ("testAlbumListItemUpdate", testAlbumListItemUpdate),
-        ("testCompositionListItem", testCompositionListItem),
-        ("testCompositionListItemUpdate", testCompositionListItemUpdate),
-        ("testSingleListItem", testSingleListItem),
-        ("testSingleListItemUpdate", testSingleListItemUpdate),
+        ("testAlbumSummary", testAlbumSummary),
+        ("testAlbumSummaryUpdate", testAlbumSummaryUpdate),
+        ("testCompositionSummary", testCompositionSummary),
+        ("testCompositionSummaryUpdate", testCompositionSummaryUpdate),
+        ("testSingleSummary", testSingleSummary),
+        ("testSingleSummaryUpdate", testSingleSummaryUpdate),
+        ("testPlaylistSummary", testPlaylistSummary),
     ]
 }

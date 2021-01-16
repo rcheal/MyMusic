@@ -1,5 +1,5 @@
 //
-//  AlbumListItem.swift
+//  AlbumSummary.swift
 //  
 //
 //  Created by Robert Cheal on 12/5/20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct AlbumListItem: Identifiable, Hashable {
+public struct AlbumSummary: Identifiable, Hashable {
     
     public var id: String
     public var title: String
@@ -45,7 +45,7 @@ public struct AlbumListItem: Identifiable, Hashable {
         
 }
 
-extension AlbumListItem: Codable {
+extension AlbumSummary: Codable {
     public enum CodingKeys: String, CodingKey {
         case id
         case title

@@ -1,5 +1,5 @@
 //
-//  CompositionListItem.swift
+//  CompositionSummary.swift
 //  
 //
 //  Created by Robert Cheal on 12/5/20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct CompositionListItem: Identifiable, Hashable {
+public struct CompositionSummary: Identifiable, Hashable {
     public var id: String
     public var albumId: String?
     public var title: String
@@ -41,7 +41,7 @@ public struct CompositionListItem: Identifiable, Hashable {
     }
 }
 
-extension CompositionListItem: Codable {
+extension CompositionSummary: Codable {
     public enum CodingKeys: String, CodingKey {
         case id
         case albumId

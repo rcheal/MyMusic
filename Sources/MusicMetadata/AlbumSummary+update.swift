@@ -1,5 +1,5 @@
 //
-//  AlbumListItem+update.swift
+//  AlbumSummary+update.swift
 //  
 //
 //  Created by Robert Cheal on 12/6/20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension AlbumListItem {
+extension AlbumSummary {
     
     public mutating func update() {
         sortTitle = Album.sortedTitle(title).lowercased()

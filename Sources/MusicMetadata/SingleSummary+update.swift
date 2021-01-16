@@ -1,5 +1,5 @@
 //
-//  SingleListItem+update.swift
+//  SingleSummary+update.swift
 //  
 //
 //  Created by Robert Cheal on 12/6/20.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension SingleListItem {
+extension SingleSummary {
     
     public mutating func update(_ album: Album? = nil) {
         sortTitle = Album.sortedTitle(title).lowercased()
