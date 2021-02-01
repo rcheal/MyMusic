@@ -24,7 +24,11 @@ public struct Album: Identifiable, Hashable {
     public var encodedBy: String?
     public var encoderSettings: String?
     public var recordingYear: Int?
-    public var duration: Int       /// sumation of contents durations
+    private var _duration: Int?       /// sumation of contents durations
+    public var duration: Int {
+        get { _duration ?? 0 }
+        set { _duration = newValue }
+    }
     public var directory: String?
 
     // Sort fields
@@ -38,7 +42,6 @@ public struct Album: Identifiable, Hashable {
     
     public init(title: String) {
         id = UUID().uuidString
-        duration = 0
         self.title = title
         albumArt = AlbumArtwork()
     }
@@ -63,7 +66,7 @@ extension Album: Codable {
         case encodedBy
         case encoderSettings
         case recordingYear
-        case duration
+        case _duration = "duration"
         case directory
         case albumArt
         case contents

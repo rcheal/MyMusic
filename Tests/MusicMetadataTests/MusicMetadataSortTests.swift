@@ -71,22 +71,22 @@ final class MusicMetadataSortTests: XCTestCase {
                 XCTAssertNil(movement.disk)
                 XCTAssertEqual(movement.track, 2)
                 XCTAssertEqual(movement.title, "Track 2")
-                XCTAssertEqual(movement.audiofileRef, "two.mp3")
+                XCTAssertEqual(movement.filename, "two.mp3")
             case 1:
                 XCTAssertNil(movement.disk)
                 XCTAssertEqual(movement.track, 3)
                 XCTAssertEqual(movement.title, "Track 3")
-                XCTAssertEqual(movement.audiofileRef, "three.mp3")
+                XCTAssertEqual(movement.filename, "three.mp3")
             case 2:
                 XCTAssertNil(movement.disk)
                 XCTAssertEqual(movement.track, 4)
                 XCTAssertEqual(movement.title, "Track 4")
-                XCTAssertEqual(movement.audiofileRef, "four.mp3")
+                XCTAssertEqual(movement.filename, "four.mp3")
             case 3:
                 XCTAssertNil(movement.disk)
                 XCTAssertEqual(movement.track, 5)
                 XCTAssertEqual(movement.title, "Track 5")
-                XCTAssertEqual(movement.audiofileRef, "five.mp3")
+                XCTAssertEqual(movement.filename, "five.mp3")
             default:
                 XCTFail("Unexpected contents: \(index)")
             }
@@ -111,22 +111,22 @@ final class MusicMetadataSortTests: XCTestCase {
                 XCTAssertEqual(movement.disk, 1)
                 XCTAssertEqual(movement.track, 3)
                 XCTAssertEqual(movement.title, "Track 3")
-                XCTAssertEqual(movement.audiofileRef, "three.mp3")
+                XCTAssertEqual(movement.filename, "three.mp3")
             case 1:
                 XCTAssertEqual(movement.disk, 1)
                 XCTAssertEqual(movement.track, 5)
                 XCTAssertEqual(movement.title, "Track 5")
-                XCTAssertEqual(movement.audiofileRef, "five.mp3")
+                XCTAssertEqual(movement.filename, "five.mp3")
             case 2:
                 XCTAssertEqual(movement.disk, 2)
                 XCTAssertEqual(movement.track, 2)
                 XCTAssertEqual(movement.title, "Track 2")
-                XCTAssertEqual(movement.audiofileRef, "two.mp3")
+                XCTAssertEqual(movement.filename, "two.mp3")
             case 3:
                 XCTAssertEqual(movement.disk, 2)
                 XCTAssertEqual(movement.track, 4)
                 XCTAssertEqual(movement.title, "Track 4")
-                XCTAssertEqual(movement.audiofileRef, "four.mp3")
+                XCTAssertEqual(movement.filename, "four.mp3")
             default:
                 XCTFail("Unexpected contents: \(index)")
             }
@@ -185,21 +185,21 @@ final class MusicMetadataSortTests: XCTestCase {
                             XCTAssertEqual(movement.albumId, album.id)
                             XCTAssertEqual(movement.compositionId, composition.id)
                             XCTAssertEqual(movement.title, "Movement 1")
-                            XCTAssertEqual(movement.audiofileRef, "two.mp3")
+                            XCTAssertEqual(movement.filename, "two.mp3")
                         case 1:
                             XCTAssertEqual(movement.disk, 1)
                             XCTAssertEqual(movement.track, 3)
                             XCTAssertEqual(movement.albumId, album.id)
                             XCTAssertEqual(movement.compositionId, composition.id)
                             XCTAssertEqual(movement.title, "Movement 2")
-                            XCTAssertEqual(movement.audiofileRef, "three.mp3")
+                            XCTAssertEqual(movement.filename, "three.mp3")
                         case 2:
                             XCTAssertEqual(movement.disk, 1)
                             XCTAssertEqual(movement.track, 4)
                             XCTAssertEqual(movement.albumId, album.id)
                             XCTAssertEqual(movement.compositionId, composition.id)
                             XCTAssertEqual(movement.title, "Movement 3")
-                            XCTAssertEqual(movement.audiofileRef, "four.mp3")
+                            XCTAssertEqual(movement.filename, "four.mp3")
                         default:
                             XCTFail("Extra content in composition - \(composition.title), \(index)/\(cIndex)")
                         }
@@ -237,21 +237,21 @@ final class MusicMetadataSortTests: XCTestCase {
                             XCTAssertEqual(movement.albumId, album.id)
                             XCTAssertEqual(movement.compositionId, composition.id)
                             XCTAssertEqual(movement.title, "Movement 1")
-                            XCTAssertEqual(movement.audiofileRef, "twob.mp3")
+                            XCTAssertEqual(movement.filename, "twob.mp3")
                         case 1:
                             XCTAssertEqual(movement.disk, 2)
                             XCTAssertEqual(movement.track, 3)
                             XCTAssertEqual(movement.albumId, album.id)
                             XCTAssertEqual(movement.compositionId, composition.id)
                             XCTAssertEqual(movement.title, "Movement 2")
-                            XCTAssertEqual(movement.audiofileRef, "threeb.mp3")
+                            XCTAssertEqual(movement.filename, "threeb.mp3")
                         case 2:
                             XCTAssertEqual(movement.disk, 2)
                             XCTAssertEqual(movement.track, 4)
                             XCTAssertEqual(movement.albumId, album.id)
                             XCTAssertEqual(movement.compositionId, composition.id)
                             XCTAssertEqual(movement.title, "Movement 3")
-                            XCTAssertEqual(movement.audiofileRef, "fourb.mp3")
+                            XCTAssertEqual(movement.filename, "fourb.mp3")
                         default:
                             XCTFail("Extra content in composition - \(composition.title), \(index)/\(cIndex)")
                         }

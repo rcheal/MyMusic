@@ -299,7 +299,7 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(movementA?.title, movementA2?.title)
         XCTAssertEqual(movementA?.subtitle, movementA2?.subtitle)
         XCTAssertEqual(movementA?.duration, movementA2?.duration)
-        XCTAssertEqual(movementA?.audiofileRef, movementA2?.audiofileRef)
+        XCTAssertEqual(movementA?.filename, movementA2?.filename)
 
         let contentA = album.contents[1]
         let contentA2 = album2?.contents[1]

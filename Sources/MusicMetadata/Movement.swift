@@ -18,7 +18,7 @@ public struct Movement: Identifiable, Hashable {
     public var subtitle: String?
     public var duration: Int       /// duration in seconds
 
-    public var audiofileRef: String?
+    public var filename: String
 
     public init(track: Int, title: String, filename: String, disk: Int? = nil) {
         id = UUID().uuidString
@@ -26,7 +26,7 @@ public struct Movement: Identifiable, Hashable {
         self.disk = disk
         self.track = track
         self.title = title
-        self.audiofileRef = filename
+        self.filename = filename
     }
 }
 
@@ -40,7 +40,7 @@ extension Movement: Codable {
         case title
         case subtitle
         case duration
-        case audiofileRef
+        case filename
     }
 }
 
