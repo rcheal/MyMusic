@@ -36,7 +36,11 @@ public struct Album: Identifiable, Hashable {
     public var sortArtist: String?
     public var sortComposer: String?
     
-    internal var albumArt: AlbumArtwork
+    internal var _albumArt: AlbumArtwork?
+    internal var albumArt: AlbumArtwork {
+        get { _albumArt ?? AlbumArtwork() }
+        set { _albumArt = newValue }
+    }
 
     public internal(set) var contents: [AlbumContent] = []
     
@@ -68,7 +72,7 @@ extension Album: Codable {
         case recordingYear
         case _duration = "duration"
         case directory
-        case albumArt
+        case _albumArt = "albumArt"
         case contents
     }
 }
