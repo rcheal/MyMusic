@@ -11,7 +11,7 @@ extension Album {
     
     public mutating func addFields(_ fields: String, from album: Album) {
 
-        let components = fields.lowercased().components(separatedBy: ", ")
+        let components = fields.lowercased().components(separatedBy: ",")
         
         for component in components {
             switch component {
