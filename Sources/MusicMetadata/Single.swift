@@ -36,7 +36,7 @@ public struct Single: Identifiable, Hashable {
     public var sortArtist: String?
     public var sortComposer: String?
 
-    public var audiofileRef: String?
+    public var filename: String
 
     public init(track: Int, title: String, filename: String, disk: Int? = nil) {
         id = UUID().uuidString
@@ -44,7 +44,7 @@ public struct Single: Identifiable, Hashable {
         self.disk = disk
         self.track = track
         self.title = title
-        self.audiofileRef = filename
+        self.filename = filename
     }
     
 }
@@ -75,6 +75,6 @@ extension Single: Codable {
         case sortTitle
         case sortArtist
         case sortComposer
-        case audiofileRef
+        case filename
     }
 }

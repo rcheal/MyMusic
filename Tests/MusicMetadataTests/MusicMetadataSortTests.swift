@@ -164,7 +164,7 @@ final class MusicMetadataSortTests: XCTestCase {
                     XCTAssertEqual(single.track, 1)
                     XCTAssertEqual(single.albumId, album.id)
                     XCTAssertEqual(single.title, "Single 1")
-                    XCTAssertEqual(single.audiofileRef, "one.mp3")
+                    XCTAssertEqual(single.filename, "one.mp3")
                 } else {
                     XCTFail("Expecting single content - \(index)")
                 }
@@ -216,7 +216,7 @@ final class MusicMetadataSortTests: XCTestCase {
                     XCTAssertEqual(single.track, 1)
                     XCTAssertEqual(single.albumId, album.id)
                     XCTAssertEqual(single.title, "Single 2")
-                    XCTAssertEqual(single.audiofileRef, "oneb.mp3")
+                    XCTAssertEqual(single.filename, "oneb.mp3")
                 } else {
                     XCTFail("Expecting single content - \(index)")
                 }

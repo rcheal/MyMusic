@@ -187,7 +187,7 @@ final class MusicMetadataMergeTests: XCTestCase {
                 XCTAssertEqual(content.track, 1)
                 if let single = content.single {
                     XCTAssertEqual(single.title, "Single1")
-                    XCTAssertEqual(single.audiofileRef, "file1.mp3")
+                    XCTAssertEqual(single.filename, "file1.mp3")
                 } else {
                     XCTFail("Single expected, index = \(index)")
                 }
@@ -226,7 +226,7 @@ final class MusicMetadataMergeTests: XCTestCase {
                 XCTAssertEqual(content.track, 1)
                 if let single = content.single {
                     XCTAssertEqual(single.title, "Single2")
-                    XCTAssertEqual(single.audiofileRef, "file21.mp3")
+                    XCTAssertEqual(single.filename, "file21.mp3")
                 } else {
                     XCTFail("Single expected, index = \(index)")
                 }
@@ -235,7 +235,7 @@ final class MusicMetadataMergeTests: XCTestCase {
                 XCTAssertEqual(content.track, 2)
                 if let single = content.single {
                     XCTAssertEqual(single.title, "Single3")
-                    XCTAssertEqual(single.audiofileRef, "file22.mp3")
+                    XCTAssertEqual(single.filename, "file22.mp3")
                 } else {
                     XCTFail("Single expected, index = \(index)")
                 }

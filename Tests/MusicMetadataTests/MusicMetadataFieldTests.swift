@@ -131,7 +131,7 @@ final class MusicMetadataFieldTests: XCTestCase {
         let json = String(bytes: jsonData, encoding: String.Encoding.utf8) ?? ""
         let jsonRef =
 """
-{"composer":"Composer","publisher":"Publisher","title":"Song1","supportingArtists":"Artist1;Artist2;Artist3","lyricist":"Lyricist","orchestra":"Orchestra","directory":"Diretory","duration":1800,"encodedBy":"EncodedBy","sortTitle":"SortTitle","audiofileRef":"song1.mp3","sortArtist":"SortArtist","encoderSettings":"EncoderSettings","track":1,"id":"A6B0C134-72A9-472D-A6BC-9501CD3847CA","conductor":"Conductor","subtitle":"SubTitle","artist":"Artist","sortComposer":"SortComposer","genre":"Genre","recordingYear":2020,"copyright":"Copyright"}
+{"composer":"Composer","publisher":"Publisher","title":"Song1","supportingArtists":"Artist1;Artist2;Artist3","lyricist":"Lyricist","orchestra":"Orchestra","directory":"Diretory","duration":1800,"encodedBy":"EncodedBy","sortTitle":"SortTitle","sortArtist":"SortArtist","encoderSettings":"EncoderSettings","track":1,"id":"A6B0C134-72A9-472D-A6BC-9501CD3847CA","filename":"song1.mp3","conductor":"Conductor","subtitle":"SubTitle","artist":"Artist","sortComposer":"SortComposer","genre":"Genre","recordingYear":2020,"copyright":"Copyright"}
 """
         
         XCTAssertEqual(json, jsonRef)
@@ -326,7 +326,7 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(singleA?.encoderSettings, singleA2?.encoderSettings)
         XCTAssertEqual(singleA?.recordingYear, singleA2?.recordingYear)
         XCTAssertEqual(singleA?.duration, singleA2?.duration)
-        XCTAssertEqual(singleA?.audiofileRef, singleA2?.audiofileRef)
+        XCTAssertEqual(singleA?.filename, singleA2?.filename)
     }
 
     func testAlbumSummary() throws {
