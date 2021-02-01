@@ -23,6 +23,11 @@ final class MusicMetadataAlbumArtTests: XCTestCase {
         let ref3 = AlbumArtRef(type: .page, format: .png)
         XCTAssertEqual(ref3.filename, "page0.png")
         
+        var album = Album(title: "Test Album")
+        XCTAssertNil(album._albumArt)
+        album.addArt(ref1)
+        XCTAssertEqual(album.frontArtRef()?.filename, "front.png")
+        
     }
     
     func testValidAddArt1() throws {

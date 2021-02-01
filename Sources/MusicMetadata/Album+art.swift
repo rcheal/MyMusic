@@ -9,27 +9,27 @@ import Foundation
 
 extension Album {
     public func artRef(_ index: Int) -> AlbumArtRef? {
-        return albumArt.artRef(index)
+        return _albumArt?.artRef(index)
     }
     
     public func frontArtRef() -> AlbumArtRef? {
-        return albumArt.frontArtRef()
+        return _albumArt?.frontArtRef()
     }
 
     public func backArtRef() -> AlbumArtRef? {
-        return albumArt.backArtRef()
+        return _albumArt?.backArtRef()
     }
     
     public func artworkCount() -> Int {
-        return albumArt.count
+        return _albumArt?.count ?? 0
     }
     
     public func artworkPageCount() -> Int {
-        return albumArt.pageCount
+        return _albumArt?.pageCount ?? 0
     }
 
     public func pageArtRef(_ seq: Int) -> AlbumArtRef? {
-        return albumArt.pageArtRef(seq)
+        return _albumArt?.pageArtRef(seq)
     }
     
     mutating public func addArt(_ artRef: AlbumArtRef) {
@@ -37,19 +37,27 @@ extension Album {
     }
     
     mutating public func removeAllArt() {
-        albumArt.removeAll()
+        if _albumArt != nil {
+            _albumArt!.removeAll()
+        }
     }
     
     mutating public func removeFrontArt() {
-        albumArt.removeFront()
+        if _albumArt != nil {
+            _albumArt!.removeFront()
+        }
     }
 
     mutating public func removeBackArt() {
-        albumArt.removeBack()
+        if _albumArt != nil {
+            _albumArt!.removeBack()
+        }
     }
     
     mutating public func removePagesArt() {
-        albumArt.removePages()
+        if _albumArt != nil {
+            _albumArt!.removePages()
+        }
     }
     
 }
