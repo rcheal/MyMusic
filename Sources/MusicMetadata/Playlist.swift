@@ -18,6 +18,11 @@ public enum PlaylistItemType: String, Codable {
 public struct PlaylistItem: Identifiable, Hashable {
     public var id: String
     public var playlistType: PlaylistItemType
+    
+    public init(id: String, playlistType: PlaylistItemType) {
+        self.id = id
+        self.playlistType = playlistType
+    }
 }
 
 public struct Playlist: Identifiable, Hashable {
