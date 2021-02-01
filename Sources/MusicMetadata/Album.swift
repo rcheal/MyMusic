@@ -47,7 +47,6 @@ public struct Album: Identifiable, Hashable {
     public init(title: String) {
         id = UUID().uuidString
         self.title = title
-        albumArt = AlbumArtwork()
     }
         
 }
