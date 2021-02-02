@@ -36,10 +36,15 @@ public struct Playlist: Identifiable, Hashable {
     public var items: [PlaylistItem]
     public var orderedItems: [PlaylistItem]?
     
-    public init(_ title: String, shared: Bool = false) {
+    public init(_ title: String, user: String? = nil, shared: Bool? = nil) {
         id = UUID().uuidString
         self.title = title
-        self.shared = shared
+        self.user = user
+        if let shared = shared {
+            self.shared = shared
+        } else {
+            self.shared = user == nil
+        }
         items = []
     }
 

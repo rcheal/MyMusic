@@ -25,7 +25,7 @@ extension Composition {
     }
     
     public mutating func addMovement(from single: Single) {
-        var movement = Movement(track: single.track, title: single.title, filename: single.filename, disk: single.disk)
+        var movement = Movement(title: single.title, filename: single.filename, track: single.track, disk: single.disk)
         movement.duration = single.duration
         movement.subtitle = single.subtitle
         addMovement(movement)

@@ -36,7 +36,7 @@ public struct Composition: Identifiable, Hashable {
 
     public internal(set) var movements: [Movement] = []
     
-    public init(track: Int, title: String, disk: Int? = nil) {
+    public init(title: String, track: Int, disk: Int? = nil) {
         id = UUID().uuidString
         duration = 0
         self.startTrack = track

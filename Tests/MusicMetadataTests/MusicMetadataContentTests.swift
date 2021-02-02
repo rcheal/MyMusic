@@ -14,26 +14,26 @@ final class MusicMetadataContentTests: XCTestCase {
 
     func createMixedAlbum() -> Album {
         var album = Album(title: "Test Album")
-        let single1 = Single(track: 1, title: "Song1", filename: "song1.mp3")
-        let single2 = Single(track: 2, title: "Song2", filename: "song2.mp3")
-        let single3 = Single(track: 6, title: "Song3", filename: "song3.mp3")
-        let single4 = Single(track: 1, title: "Song4", filename: "song4.mp3", disk: 2)
-        let single5 = Single(track: 5, title: "Song5", filename: "song5.mp3", disk: 2)
-        let single6 = Single(track: 6, title: "Song6", filename: "song6.mp3", disk: 2)
+        let single1 = Single(title: "Song1", filename: "song1.mp3", track: 1)
+        let single2 = Single(title: "Song2", filename: "song2.mp3", track: 2)
+        let single3 = Single(title: "Song3", filename: "song3.mp3", track: 6)
+        let single4 = Single(title: "Song4", filename: "song4.mp3", track: 1, disk: 2)
+        let single5 = Single(title: "Song5", filename: "song5.mp3", track: 5, disk: 2)
+        let single6 = Single(title: "Song6", filename: "song6.mp3", track: 6, disk: 2)
 
-        var composition1 = Composition(track: 3, title: "Composition1")
-        var composition2 = Composition(track: 2, title: "Composition2", disk: 2)
+        var composition1 = Composition(title: "Composition1", track: 3)
+        var composition2 = Composition(title: "Composition2", track: 2, disk: 2)
         
-        let movement1 = Movement(track: 3, title: "Movement1", filename: "file1.mp3")
-        let movement2 = Movement(track: 4, title: "Movement2", filename: "file2.mp3")
-        let movement3 = Movement(track: 5, title: "Movement3", filename: "file3.mp3")
+        let movement1 = Movement(title: "Movement1", filename: "file1.mp3", track: 3)
+        let movement2 = Movement(title: "Movement2", filename: "file2.mp3", track: 4)
+        let movement3 = Movement(title: "Movement3", filename: "file3.mp3", track: 5)
         composition1.addMovement(movement1)
         composition1.addMovement(movement2)
         composition1.addMovement(movement3)
                 
-        let movement4 = Movement(track: 2, title: "Movement1", filename: "file4.mp3", disk: 2)
-        let movement5 = Movement(track: 3, title: "Movement2", filename: "file5.mp3", disk: 2)
-        let movement6 = Movement(track: 4, title: "Movement3", filename: "file6.mp3", disk: 2)
+        let movement4 = Movement(title: "Movement1", filename: "file4.mp3", track: 2, disk: 2)
+        let movement5 = Movement(title: "Movement2", filename: "file5.mp3", track: 3, disk: 2)
+        let movement6 = Movement(title: "Movement3", filename: "file6.mp3", track: 4, disk: 2)
         
         composition2.addMovement(movement4)
         composition2.addMovement(movement5)
@@ -54,12 +54,12 @@ final class MusicMetadataContentTests: XCTestCase {
     func createSinglesAlbum() -> Album {
         var album = Album(title: "Singles Album")
         
-        var single1 = Single(track: 1, title: "Song1", filename: "song1.mp3")
-        var single2 = Single(track: 2, title: "Song2", filename: "song2.mp3")
-        var single3 = Single(track: 3, title: "Song3", filename: "song3.mp3")
-        var single4 = Single(track: 1, title: "Song4", filename: "song4.mp3", disk: 2)
-        var single5 = Single(track: 2, title: "Song5", filename: "song5.mp3", disk: 2)
-        var single6 = Single(track: 3, title: "Song6", filename: "song6.mp3", disk: 2)
+        var single1 = Single(title: "Song1", filename: "song1.mp3", track: 1)
+        var single2 = Single(title: "Song2", filename: "song2.mp3", track: 2)
+        var single3 = Single(title: "Song3", filename: "song3.mp3", track: 3)
+        var single4 = Single(title: "Song4", filename: "song4.mp3", track: 1, disk: 2)
+        var single5 = Single(title: "Song5", filename: "song5.mp3", track: 2, disk: 2)
+        var single6 = Single(title: "Song6", filename: "song6.mp3", track: 3, disk: 2)
         
         single1.duration = 240
         single2.duration = 240
@@ -80,12 +80,12 @@ final class MusicMetadataContentTests: XCTestCase {
     
     func createCompositionsAlbum() -> Album {
         var album = Album(title: "Compositions Album")
-        var composition1 = Composition(track: 1, title: "Composition1")
-        var composition2 = Composition(track: 1, title: "Composition2", disk: 2)
+        var composition1 = Composition(title: "Composition1", track: 1)
+        var composition2 = Composition(title: "Composition2", track: 1, disk: 2)
         
-        var movement1 = Movement(track: 1, title: "Movement1", filename: "file1.mp3")
-        var movement2 = Movement(track: 2, title: "Movement2", filename: "file2.mp3")
-        var movement3 = Movement(track: 3, title: "Movement3", filename: "file3.mp3")
+        var movement1 = Movement(title: "Movement1", filename: "file1.mp3", track: 1)
+        var movement2 = Movement(title: "Movement2", filename: "file2.mp3", track: 2)
+        var movement3 = Movement(title: "Movement3", filename: "file3.mp3", track: 3)
         movement1.duration = 240
         movement2.duration = 240
         movement3.duration = 240
@@ -95,9 +95,9 @@ final class MusicMetadataContentTests: XCTestCase {
         
         album.addComposition(composition1)
         
-        var movement4 = Movement(track: 1, title: "Movement1", filename: "file4.mp3", disk: 2)
-        var movement5 = Movement(track: 2, title: "Movement2", filename: "file5.mp3", disk: 2)
-        var movement6 = Movement(track: 3, title: "Movement3", filename: "file6.mp3", disk: 2)
+        var movement4 = Movement(title: "Movement1", filename: "file4.mp3", track: 1, disk: 2)
+        var movement5 = Movement(title: "Movement2", filename: "file5.mp3", track: 2, disk: 2)
+        var movement6 = Movement(title: "Movement3", filename: "file6.mp3", track: 3, disk: 2)
         movement4.duration = 240
         movement5.duration = 240
         movement6.duration = 240
@@ -112,11 +112,11 @@ final class MusicMetadataContentTests: XCTestCase {
     }
     
     func createComposition() -> Composition {
-        var composition = Composition(track: 1, title: "Composition")
+        var composition = Composition(title: "Composition", track: 1)
         
-        let movement1 = Movement(track: 1, title: "Movement1", filename: "file1.mp3")
-        let movement2 = Movement(track: 2, title: "Movement2", filename: "file2.mp3")
-        let movement3 = Movement(track: 3, title: "Movement3", filename: "file3.mp3")
+        let movement1 = Movement(title: "Movement1", filename: "file1.mp3", track: 1)
+        let movement2 = Movement(title: "Movement2", filename: "file2.mp3", track: 2)
+        let movement3 = Movement(title: "Movement3", filename: "file3.mp3", track: 3)
         composition.addMovement(movement1)
         composition.addMovement(movement2)
         composition.addMovement(movement3)
@@ -403,7 +403,7 @@ final class MusicMetadataContentTests: XCTestCase {
     func testAlbumReplaceSingle() throws {
         var album = createSinglesAlbum()
         
-        var single = Single(track: 4, title: "Song7", filename: "song7.mp3", disk: 2)
+        var single = Single(title: "Song7", filename: "song7.mp3", track: 4, disk: 2)
         single.duration = 300
         let replacedSingle = album.contents[1].single!
         single.id = replacedSingle.id
@@ -462,7 +462,7 @@ final class MusicMetadataContentTests: XCTestCase {
         let composition = album.contents[0].composition!
         let replacedMovement = composition.movements[1]
         
-        var movement = Movement(track: 4, title: "Movement7", filename: "file7.mp3", disk: 1)
+        var movement = Movement(title: "Movement7", filename: "file7.mp3", track: 4, disk: 1)
         movement.duration = 300
         movement.id = replacedMovement.id
 
@@ -552,15 +552,15 @@ final class MusicMetadataContentTests: XCTestCase {
     func testAlbumReplaceComposition() throws {
         var album = createCompositionsAlbum()
                 
-        var composition = Composition(track: 1, title: "New Composition", disk: 3)
+        var composition = Composition(title: "New Composition", track: 1, disk: 3)
         
-        var movement1 = Movement(track: 1, title: "Movement1", filename: "file10.mp3", disk: 3)
+        var movement1 = Movement(title: "Movement1", filename: "file10.mp3", track: 1, disk: 3)
         movement1.duration = 210
-        var movement2 = Movement(track: 2, title: "Movement2", filename: "file11.mp3", disk: 3)
+        var movement2 = Movement(title: "Movement2", filename: "file11.mp3", track: 2, disk: 3)
         movement2.duration = 220
-        var movement3 = Movement(track: 3, title: "Movement3", filename: "file12.mp3", disk: 3)
+        var movement3 = Movement(title: "Movement3", filename: "file12.mp3", track: 3, disk: 3)
         movement3.duration = 230
-        var movement4 = Movement(track: 4, title: "Movement4", filename: "file13.mp3", disk: 3)
+        var movement4 = Movement(title: "Movement4", filename: "file13.mp3", track: 4, disk: 3)
         movement4.duration = 300
         composition.addMovement(movement1)
         composition.addMovement(movement2)
@@ -772,7 +772,7 @@ final class MusicMetadataContentTests: XCTestCase {
     func testCommpositionReplace() throws {
         var composition = createComposition()
         
-        var movement = Movement(track: 5, title: "Movement5", filename: "file5.mp3")
+        var movement = Movement(title: "Movement5", filename: "file5.mp3", track: 5)
         let replacedMovement = composition.movements[1]
         movement.id = replacedMovement.id
         

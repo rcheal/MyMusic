@@ -56,11 +56,11 @@ final class MusicMetadataSortTests: XCTestCase {
     }
     
     func testSortCompositionContents() throws {
-        var composition = Composition(track: 1, title: "Test Composition")
-        composition.addMovement(Movement(track: 5, title: "Track 5", filename: "five.mp3"))
-        composition.addMovement(Movement(track: 3, title: "Track 3", filename: "three.mp3"))
-        composition.addMovement(Movement(track: 4, title: "Track 4", filename: "four.mp3"))
-        composition.addMovement(Movement(track: 2, title: "Track 2", filename: "two.mp3"))
+        var composition = Composition(title: "Test Composition", track: 1)
+        composition.addMovement(Movement(title: "Track 5", filename: "five.mp3", track: 5))
+        composition.addMovement(Movement(title: "Track 3", filename: "three.mp3", track: 3))
+        composition.addMovement(Movement(title: "Track 4", filename: "four.mp3", track: 4))
+        composition.addMovement(Movement(title: "Track 2", filename: "two.mp3", track: 2))
         
         composition.sortContents()
         
@@ -96,11 +96,11 @@ final class MusicMetadataSortTests: XCTestCase {
     }
     
     func testSortCompositionContents2() throws {
-        var composition = Composition(track: 1, title: "Test Composition", disk: 1)
-        composition.addMovement(Movement(track: 5, title: "Track 5", filename: "five.mp3", disk: 1))
-        composition.addMovement(Movement(track: 3, title: "Track 3", filename: "three.mp3", disk: 1))
-        composition.addMovement(Movement(track: 4, title: "Track 4", filename: "four.mp3", disk: 2))
-        composition.addMovement(Movement(track: 2, title: "Track 2", filename: "two.mp3", disk: 2))
+        var composition = Composition(title: "Test Composition", track: 1, disk: 1)
+        composition.addMovement(Movement(title: "Track 5", filename: "five.mp3", track: 5, disk: 1))
+        composition.addMovement(Movement(title: "Track 3", filename: "three.mp3", track: 3, disk: 1))
+        composition.addMovement(Movement(title: "Track 4", filename: "four.mp3", track: 4, disk: 2))
+        composition.addMovement(Movement(title: "Track 2", filename: "two.mp3", track: 2, disk: 2))
         
         composition.sortContents()
         
@@ -138,18 +138,18 @@ final class MusicMetadataSortTests: XCTestCase {
     func testSortAlbumContents() throws {
         var album = Album(title: "Test Album")
         
-        var composition2 = Composition(track: 2, title: "Composition 2", disk: 2)
-        composition2.addMovement(Movement(track: 4, title: "Movement 3", filename: "fourb.mp3", disk: 2))
-        composition2.addMovement(Movement(track: 2, title: "Movement 1", filename: "twob.mp3", disk: 2))
-        composition2.addMovement(Movement(track: 3, title: "Movement 2", filename: "threeb.mp3", disk: 2))
+        var composition2 = Composition(title: "Composition 2", track: 2, disk: 2)
+        composition2.addMovement(Movement(title: "Movement 3", filename: "fourb.mp3", track: 4, disk: 2))
+        composition2.addMovement(Movement(title: "Movement 1", filename: "twob.mp3", track: 2, disk: 2))
+        composition2.addMovement(Movement(title: "Movement 2", filename: "threeb.mp3", track: 3, disk: 2))
         album.addComposition(composition2)
-        var composition = Composition(track: 2, title: "Composition 1")
-        composition.addMovement(Movement(track: 4, title: "Movement 3", filename: "four.mp3", disk: 1))
-        composition.addMovement(Movement(track: 2, title: "Movement 1", filename: "two.mp3", disk: 1))
-        composition.addMovement(Movement(track: 3, title: "Movement 2", filename: "three.mp3", disk: 1))
+        var composition = Composition(title: "Composition 1", track: 2)
+        composition.addMovement(Movement(title: "Movement 3", filename: "four.mp3", track: 4, disk: 1))
+        composition.addMovement(Movement(title: "Movement 1", filename: "two.mp3", track: 2, disk: 1))
+        composition.addMovement(Movement(title: "Movement 2", filename: "three.mp3", track: 3, disk: 1))
         album.addContent(AlbumContent(composition: composition))
-        album.addSingle(Single(track: 1, title: "Single 2", filename: "oneb.mp3", disk: 2))
-        album.addSingle(Single(track: 1, title: "Single 1", filename: "one.mp3", disk: 1))
+        album.addSingle(Single(title: "Single 2", filename: "oneb.mp3", track: 1, disk: 2))
+        album.addSingle(Single(title: "Single 1", filename: "one.mp3", track: 1, disk: 1))
 
         album.sortContents()
 

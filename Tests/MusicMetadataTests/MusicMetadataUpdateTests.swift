@@ -13,7 +13,7 @@ import XCTest
 final class MusicMetadataUpdateTests: XCTestCase {
     
     func testAlbumUpdate1() throws {
-        var single = Single(track: 1, title: "The Girl from Ipanema", filename: "girl_from_ipanema.flac")
+        var single = Single(title: "The Girl from Ipanema", filename: "girl_from_ipanema.flac", track: 1)
         single.artist = "Stan Getz"
         single.composer = "Antonio Carlos Jobim"
         single.duration = 320
@@ -41,16 +41,16 @@ final class MusicMetadataUpdateTests: XCTestCase {
     }
     
     func testAlbumUpdate2() throws {
-        var movement1 = Movement(track: 1, title: "Allegro non troppo", filename: "allegro_non_troppo.flac")
+        var movement1 = Movement(title: "Allegro non troppo", filename: "allegro_non_troppo.flac", track: 1)
         movement1.duration = 1126
-        var movement2 = Movement(track: 2, title: "Allegro appassionato", filename: "allegro_appassionato.flac")
+        var movement2 = Movement(title: "Allegro appassionato", filename: "allegro_appassionato.flac", track: 2)
         movement2.duration = 572
-        var movement3 = Movement(track: 3, title: "Andante", filename: "andante.flac")
+        var movement3 = Movement(title: "Andante", filename: "andante.flac", track: 3)
         movement3.duration = 788
-        var movement4 = Movement(track: 4, title: "Allegretto graziioso", filename: "allegro_appassionato.flac")
+        var movement4 = Movement(title: "Allegretto graziioso", filename: "allegro_appassionato.flac", track: 4)
         movement4.duration = 569
         
-        var composition = Composition(track: 1, title: "Piano Concerto No. 2 in B flat, Op. 83")
+        var composition = Composition(title: "Piano Concerto No. 2 in B flat, Op. 83", track: 1)
         // Added in random order to test sortContents()
         composition.addMovement(movement4)
         composition.addMovement(movement2)
@@ -102,16 +102,16 @@ final class MusicMetadataUpdateTests: XCTestCase {
     }
     
     func testCompositionUpdate() throws {
-        var movement1 = Movement(track: 1, title: "Allegro non troppo", filename: "allegro_non_troppo.flac")
+        var movement1 = Movement(title: "Allegro non troppo", filename: "allegro_non_troppo.flac", track: 1)
         movement1.duration = 1126
-        var movement2 = Movement(track: 2, title: "Allegro appassionato", filename: "allegro_appassionato.flac")
+        var movement2 = Movement(title: "Allegro appassionato", filename: "allegro_appassionato.flac", track: 2)
         movement2.duration = 572
-        var movement3 = Movement(track: 3, title: "Andante", filename: "andante.flac")
+        var movement3 = Movement(title: "Andante", filename: "andante.flac", track: 3)
         movement3.duration = 788
-        var movement4 = Movement(track: 4, title: "Allegretto graziioso", filename: "allegro_appassionato.flac")
+        var movement4 = Movement(title: "Allegretto graziioso", filename: "allegro_appassionato.flac", track: 4)
         movement4.duration = 569
         
-        var composition = Composition(track: 1, title: "Piano Concerto No. 2 in B flat, Op. 83")
+        var composition = Composition(title: "Piano Concerto No. 2 in B flat, Op. 83", track: 1)
         composition.artist = "Vladimir Ashkenazy"
         composition.composer = "Johannes Brahms (1833-1897)"
         composition.conductor = "Haitnik"
@@ -154,7 +154,7 @@ final class MusicMetadataUpdateTests: XCTestCase {
 
     func testSingleUpdate() throws {
         
-        var single = Single(track: 1, title: "The Girl from Ipanema", filename: "girl_from_ipanema.flac")
+        var single = Single(title: "The Girl from Ipanema", filename: "girl_from_ipanema.flac", track: 1)
         single.artist = "Stan Getz"
         single.composer = "Antonio Carlos Jobim"
 

@@ -58,27 +58,27 @@ final class MusicMetadataMergeTests: XCTestCase {
             if let contentGroup = group {
                 switch contentGroup {
                 case 1:
-                    var single = Single(track: 1, title: "Single1", filename: "file1.mp3")
+                    var single = Single(title: "Single1", filename: "file1.mp3", track: 1)
                     if argIndex > 1 {
                         single.disk = argIndex
                     }
                     single.duration = 200
-                    var movementa = Movement(track: 2, title: "Movement1", filename: "file2.mp3")
+                    var movementa = Movement(title: "Movement1", filename: "file2.mp3", track: 2)
                     if argIndex > 1 {
                         movementa.disk = argIndex
                     }
                     movementa.duration = 380
-                    var movementb = Movement(track: 3, title: "Movement2", filename: "file3.mp3")
+                    var movementb = Movement(title: "Movement2", filename: "file3.mp3", track: 3)
                     if argIndex > 1 {
                         movementb.disk = argIndex
                     }
                     movementb.duration = 270
-                    var movementc = Movement(track: 4, title: "Movement3", filename: "file4.mp3")
+                    var movementc = Movement(title: "Movement3", filename: "file4.mp3", track: 4)
                     if argIndex > 1 {
                         movementc.disk = argIndex
                     }
                     movementc.duration = 210
-                    var composition = Composition(track: 2, title: "Composition1")
+                    var composition = Composition(title: "Composition1", track: 2)
                     composition.addMovement(movementa)
                     composition.addMovement(movementb)
                     composition.addMovement(movementc)
@@ -86,32 +86,32 @@ final class MusicMetadataMergeTests: XCTestCase {
                     album.addSingle(single)
                     album.addComposition(composition)
                 case 2:
-                    var single1 = Single(track: 1, title: "Single2", filename: "file21.mp3")
+                    var single1 = Single(title: "Single2", filename: "file21.mp3", track: 1)
                     if argIndex > 1 {
                         single1.disk = argIndex
                     }
                     single1.duration = 320
-                    var single2 = Single(track: 2, title: "Single3", filename: "file22.mp3")
+                    var single2 = Single(title: "Single3", filename: "file22.mp3", track: 2)
                     if argIndex > 1 {
                         single2.disk = argIndex
                     }
                     single2.duration = 200
-                    var movementa = Movement(track: 3, title: "Movement31", filename: "file2.mp3")
+                    var movementa = Movement(title: "Movement31", filename: "file2.mp3", track: 3)
                     if argIndex > 1 {
                         movementa.disk = argIndex
                     }
                     movementa.duration = 380
-                    var movementb = Movement(track: 4, title: "Movement32", filename: "file3.mp3")
+                    var movementb = Movement(title: "Movement32", filename: "file3.mp3", track: 4)
                     if argIndex > 1 {
                         movementb.disk = argIndex
                     }
                     movementb.duration = 270
-                    var movementc = Movement(track: 5, title: "Movement33", filename: "file4.mp3")
+                    var movementc = Movement(title: "Movement33", filename: "file4.mp3", track: 5)
                     if argIndex > 1 {
                         movementc.disk = argIndex
                     }
                     movementc.duration = 210
-                    var composition = Composition(track: 3, title: "Composition2")
+                    var composition = Composition(title: "Composition2", track: 3)
                     composition.addMovement(movementa)
                     composition.addMovement(movementb)
                     composition.addMovement(movementc)

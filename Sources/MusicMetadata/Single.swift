@@ -12,7 +12,12 @@ public struct Single: Identifiable, Hashable {
     public var compositionId: String?
     public var albumId: String?
     public var disk: Int?
-    public var track: Int
+    public var track: Int {
+        get { _track ?? 0 }
+        set { _track = newValue}
+    }
+    private var _track: Int?
+    
     
     public var title: String
     public var subtitle: String?
@@ -28,7 +33,11 @@ public struct Single: Identifiable, Hashable {
     public var encodedBy: String?
     public var encoderSettings: String?
     public var recordingYear: Int?
-    public var duration: Int       /// duration in seconds
+    public var duration: Int {       /// duration in seconds
+        get { _duration ?? 0 }
+        set { _duration = newValue}
+    }
+    private var _duration: Int?
     public var directory: String?   /// for orphaned singles only
 
     // Sort fields
@@ -36,13 +45,16 @@ public struct Single: Identifiable, Hashable {
     public var sortArtist: String?
     public var sortComposer: String?
 
-    public var filename: String
+    public var filename: String {
+        get { _filename ?? "" }
+        set { _filename = newValue }
+    }
+    private var _filename: String?
 
-    public init(track: Int, title: String, filename: String, disk: Int? = nil) {
+    public init(title: String, filename: String, track: Int? = nil, disk: Int? = nil) {
         id = UUID().uuidString
-        duration = 0
         self.disk = disk
-        self.track = track
+        self._track = track
         self.title = title
         self.filename = filename
     }
@@ -55,7 +67,7 @@ extension Single: Codable {
         case compositionId
         case albumId
         case disk
-        case track
+        case _track = "track"
         case title
         case subtitle
         case artist
@@ -70,11 +82,11 @@ extension Single: Codable {
         case encodedBy
         case encoderSettings
         case recordingYear
-        case duration
+        case _duration = "duration"
         case directory
         case sortTitle
         case sortArtist
         case sortComposer
-        case filename
+        case _filename = "filename"
     }
 }

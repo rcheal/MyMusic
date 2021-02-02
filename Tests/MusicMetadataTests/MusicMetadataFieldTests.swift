@@ -50,7 +50,7 @@ final class MusicMetadataFieldTests: XCTestCase {
     }
     
     func createComposition() -> Composition {
-        var composition = Composition(track: 1, title: "Composition 1", disk: 1)
+        var composition = Composition(title: "Composition 1", track: 1, disk: 1)
         composition.sortTitle = "SortTitle"
         composition.subtitle = "SubTitle"
         composition.artist = "Artist"
@@ -77,7 +77,7 @@ final class MusicMetadataFieldTests: XCTestCase {
     }
     
     func createMovement(track: Int, title: String, filename: String) -> Movement {
-        var movement = Movement(track: track, title: title, filename: filename)
+        var movement = Movement(title: title, filename: filename, track: track)
         movement.disk = 1
         movement.subtitle = "SubTitle"
         movement.duration = 1800
@@ -86,7 +86,7 @@ final class MusicMetadataFieldTests: XCTestCase {
     }
     
     func createSingle(track: Int, title: String, filename: String) -> Single {
-        var single = Single(track: track, title: title, filename: filename)
+        var single = Single(title: title, filename: filename, track: track)
         single.disk = 1
         single.sortTitle = "SortTitle"
         single.subtitle = "SubTitle"
@@ -112,9 +112,9 @@ final class MusicMetadataFieldTests: XCTestCase {
     func createPlaylist(_ title: String) -> Playlist {
         var playlist = Playlist(title)
         playlist.shared = true
-        var playlistItem = PlaylistItem(id: Single(track: 1, title: "Our House", filename: "").id, playlistType: .single)
+        var playlistItem = PlaylistItem(id: Single(title: "Our House", filename: "", track: 1).id, playlistType: .single)
         playlist.items.append(playlistItem)
-        playlistItem = PlaylistItem(id: Composition(track: 1, title: "Beethoven Symphony No. 6").id, playlistType: .composition)
+        playlistItem = PlaylistItem(id: Composition(title: "Beethoven Symphony No. 6", track: 1).id, playlistType: .composition)
         playlist.items.append(playlistItem)
         
         playlist.user = "bob"

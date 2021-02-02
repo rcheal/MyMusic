@@ -20,7 +20,7 @@ public struct Movement: Identifiable, Hashable {
 
     public var filename: String
 
-    public init(track: Int, title: String, filename: String, disk: Int? = nil) {
+    public init(title: String, filename: String, track: Int, disk: Int? = nil) {
         id = UUID().uuidString
         duration = 0
         self.disk = disk
