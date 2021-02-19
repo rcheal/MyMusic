@@ -1,15 +1,15 @@
 //
-//  Transaction.swift
+//  APITransaction.swift
 //  
 //
-//  Created by Robert Cheal on 1/16/21.
+//  Created by Robert Cheal on 2/11/21.
 //
 
 import Foundation
 
 var iso8601Formatter: DateFormatter?
 
-public struct Transaction: Identifiable, Hashable {
+public struct APITransaction: Identifiable, Hashable {
     public var id: String
     public var time: String
     public var method: String
@@ -32,7 +32,7 @@ public struct Transaction: Identifiable, Hashable {
     }
 }
 
-extension Transaction: Codable {
+extension APITransaction: Codable {
     
     public enum CodingKeys: String, CodingKey {
         case id

@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension Transaction {
+extension APITransaction {
     public var json: Data? {
         let encoder = JSONEncoder()
         return try? encoder.encode(self)
@@ -19,9 +19,9 @@ extension Transaction {
         return try? encoder.encode(self)
     }
     
-    public static func decodeFrom(json: Data) -> Transaction? {
+    public static func decodeFrom(json: Data) -> APITransaction? {
         let decoder = JSONDecoder()
-        if let jsonTransaction = try? decoder.decode(Transaction.self, from: json) {
+        if let jsonTransaction = try? decoder.decode(APITransaction.self, from: json) {
             return jsonTransaction
         }
         return nil
