@@ -8,7 +8,7 @@
 import Foundation
 
 public struct APITransactions {
-    var transactions: [APITransaction]
+    var transactions: [Transaction]
 }
 
 extension APITransactions: Codable {
