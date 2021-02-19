@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct APIAlbums {
+public struct APIAlbums {
     var albums: [Album]
     var _metadata: APIMetadata
 }

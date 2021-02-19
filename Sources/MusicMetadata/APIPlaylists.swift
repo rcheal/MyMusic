@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct APIPlaylists {
+public struct APIPlaylists {
     var playlists: [PlaylistSummary]
 }
 
