@@ -9,8 +9,8 @@ import Foundation
 
 public struct APIServerStatus: Codable {
     public struct Address: Codable {
-        var host: String
-        var port: Int
+        public var host: String
+        public var port: Int
     }
     
     public var version: String

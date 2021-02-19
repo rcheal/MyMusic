@@ -10,6 +10,11 @@ import Foundation
 public struct APISingles {
     public var singles: [Single]
     public var _metadata: APIMetadata
+    
+    public init(singles: [Single], _metadata: APIMetadata) {
+        self.singles = singles
+        self._metadata = _metadata
+    }
 }
 
 extension APISingles: Codable {

@@ -10,6 +10,11 @@ import Foundation
 public struct APIAlbums {
     public var albums: [Album]
     public var _metadata: APIMetadata
+    
+    public init(albums: [Album], _metadata: APIMetadata) {
+        self.albums = albums
+        self._metadata = _metadata
+    }
 }
 
 extension APIAlbums: Codable {

@@ -10,6 +10,11 @@ import Foundation
 public struct APITransactions {
     public var transactions: [Transaction]
     public var _metadata: APIMetadata
+    
+    public init(transactions: [Transaction], _metadata: APIMetadata) {
+        self.transactions = transactions
+        self._metadata = _metadata
+    }
 }
 
 extension APITransactions: Codable {
