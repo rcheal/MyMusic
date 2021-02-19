@@ -8,8 +8,8 @@
 import Foundation
 
 public struct APIAlbums {
-    var albums: [Album]
-    var _metadata: APIMetadata
+    public var albums: [Album]
+    public var _metadata: APIMetadata
 }
 
 extension APIAlbums: Codable {

@@ -8,12 +8,14 @@
 import Foundation
 
 public struct APITransactions {
-    var transactions: [Transaction]
+    public var transactions: [Transaction]
+    public var _metadata: APIMetadata
 }
 
 extension APITransactions: Codable {
     
     public enum CodingKeys: String, CodingKey {
         case transactions
+        case _metadata
     }
 }

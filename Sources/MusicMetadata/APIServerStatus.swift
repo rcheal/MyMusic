@@ -8,18 +8,18 @@
 import Foundation
 
 public struct APIServerStatus: Codable {
-    struct Address: Codable {
+    public struct Address: Codable {
         var host: String
         var port: Int
     }
     
-    var version: String
-    var apiVersions: String
-    var name: String
-    var url: Address
-    var albumCount: Int
-    var singleCount: Int
-    var playlistCount: Int
-    var upTime: Int
-    var lastTransactionTime: String
+    public var version: String
+    public var apiVersions: String
+    public var name: String
+    public var url: Address
+    public var albumCount: Int
+    public var singleCount: Int
+    public var playlistCount: Int
+    public var upTime: Int
+    public var lastTransactionTime: String
 }

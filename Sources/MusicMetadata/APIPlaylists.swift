@@ -8,12 +8,14 @@
 import Foundation
 
 public struct APIPlaylists {
-    var playlists: [PlaylistSummary]
+    public var playlists: [Playlist]
+    public var _metadata: APIMetadata
 }
 
 extension APIPlaylists: Codable {
     
     public enum CodingKeys: String, CodingKey {
         case playlists
+        case _metadata
     }
 }

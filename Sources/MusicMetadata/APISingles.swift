@@ -8,8 +8,8 @@
 import Foundation
 
 public struct APISingles {
-    var singles: [Single]
-    var _metadata: APIMetadata
+    public var singles: [Single]
+    public var _metadata: APIMetadata
 }
 
 extension APISingles: Codable {

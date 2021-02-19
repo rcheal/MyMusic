@@ -8,14 +8,8 @@
 import Foundation
 
 public struct APIMetadata: Codable {
-    var totalCount: Int
-    var limit: Int
-    var offset: Int
-    
-    public init(totalCount: Int, limit: Int, offset: Int) {
-        self.totalCount = totalCount
-        self.limit = limit
-        self.offset = offset
-    }
+    public var totalCount: Int
+    public var limit: Int
+    public var offset: Int    
 }
 
