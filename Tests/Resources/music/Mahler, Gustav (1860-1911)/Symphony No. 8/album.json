@@ -1,0 +1,382 @@
+{
+  "recordingYear" : 1986,
+  "artist" : "Bernstein, Wiener Philharmoniker",
+  "id" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+  "encodedBy" : "Created by Grip",
+  "title" : "Symphony No. 8",
+  "duration" : 4968,
+  "directory" : "Mahler, Gustav (1860-1911)\/Symphony No. 8",
+  "contents" : [
+    {
+      "id" : "D6196274-F3DC-4BF5-B599-263F3559DF2A",
+      "track" : 1,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "D6196274-F3DC-4BF5-B599-263F3559DF2A",
+        "title" : "Part I - Hymnus 'veni, Creator Spriritus' - Allegro Impetuoso",
+        "track" : 1,
+        "duration" : 86,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no_8_part_i__hymnus_veni_creator_spriritus__a_allegro_impetuoso.m4a",
+        "sortTitle" : "part i - hymnus 'veni, creator spriritus' - allegro impetuoso"
+      }
+    },
+    {
+      "id" : "2F6A011E-DDF0-4F2C-BA88-045715517FBB",
+      "track" : 2,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "2F6A011E-DDF0-4F2C-BA88-045715517FBB",
+        "title" : "Part I - A Tempo",
+        "track" : 2,
+        "duration" : 196,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no_8_b_a_tempo.m4a",
+        "sortTitle" : "part i - a tempo"
+      }
+    },
+    {
+      "id" : "CB86A47F-075B-4906-A9E5-67E6F84FE92C",
+      "track" : 3,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "CB86A47F-075B-4906-A9E5-67E6F84FE92C",
+        "title" : "Part I - Tempo I (Allegro Impetuoso)",
+        "track" : 3,
+        "duration" : 165,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no_8_c_tempo_i_allegro_impetuoso.m4a",
+        "sortTitle" : "part i - tempo i (allegro impetuoso)"
+      }
+    },
+    {
+      "id" : "BA6D4106-1AE1-42CA-935A-6FAF768B6E50",
+      "track" : 4,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "BA6D4106-1AE1-42CA-935A-6FAF768B6E50",
+        "title" : "Part I - Tempo I (Allegro, Etwas Hastig)",
+        "track" : 4,
+        "duration" : 72,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no_8_d_tempo_i_allegro_etwas_hastig.m4a",
+        "sortTitle" : "part i - tempo i (allegro, etwas hastig)"
+      }
+    },
+    {
+      "id" : "F54AB65C-6D6B-434A-919D-18BE3A4E0BC1",
+      "track" : 5,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "F54AB65C-6D6B-434A-919D-18BE3A4E0BC1",
+        "title" : "Part I - Sehr Fliebend",
+        "track" : 5,
+        "duration" : 195,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no_8_e_sehr_fliebend.m4a",
+        "sortTitle" : "part i - sehr fliebend"
+      }
+    },
+    {
+      "id" : "AB04D643-EE81-441C-BAFD-BFE3B266813D",
+      "track" : 6,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "AB04D643-EE81-441C-BAFD-BFE3B266813D",
+        "title" : "Part I - Plotzlich Sehr Breit Und Leidenschaftlichen",
+        "track" : 6,
+        "duration" : 263,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no_8_f_plotzlich_sehr_breit_und_leidenschaftlichen.m4a",
+        "sortTitle" : "part i - plotzlich sehr breit und leidenschaftlichen"
+      }
+    },
+    {
+      "id" : "1F9064CE-5BF9-4636-8271-83BC8EC3624F",
+      "track" : 7,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "1F9064CE-5BF9-4636-8271-83BC8EC3624F",
+        "title" : "Part I - Veni, Creator Spiritus",
+        "track" : 7,
+        "duration" : 267,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no_8_g_veni_creator_spiritus.m4a",
+        "sortTitle" : "part i - veni, creator spiritus"
+      }
+    },
+    {
+      "id" : "D0427D8F-5EC9-426F-A607-C0E0539F8E81",
+      "track" : 8,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "D0427D8F-5EC9-426F-A607-C0E0539F8E81",
+        "title" : "Part I - A Tempo \"Gloria Partri Domino\"",
+        "track" : 8,
+        "duration" : 198,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no_8_h_a_tempo_gloria_partri_domino.m4a",
+        "sortTitle" : "part i - a tempo \"gloria partri domino\""
+      }
+    },
+    {
+      "id" : "AA9556BD-EE7C-446F-B4B0-C2D8B523F85A",
+      "track" : 9,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "AA9556BD-EE7C-446F-B4B0-C2D8B523F85A",
+        "title" : "Part II - Final Scene from Goethe's \"Faust\" - Poco adagio",
+        "track" : 9,
+        "duration" : 383,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "poco_adagio.m4a",
+        "sortTitle" : "part ii - final scene from goethe's \"faust\" - poco adagio"
+      }
+    },
+    {
+      "id" : "0760F57D-E7F6-4F3D-A3B3-1109FE604EDF",
+      "track" : 10,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "0760F57D-E7F6-4F3D-A3B3-1109FE604EDF",
+        "title" : "Part II - PiÃÂ¹ mosso. (Allegro moderato)",
+        "track" : 10,
+        "duration" : 185,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "pi_mosso_allegro_moderato.m4a",
+        "sortTitle" : "part ii - piãâ¹ mosso. (allegro moderato)"
+      }
+    },
+    {
+      "id" : "B2982108-CB35-45FB-B426-C90BA7227CC0",
+      "track" : 11,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "B2982108-CB35-45FB-B426-C90BA7227CC0",
+        "title" : "Part II - Wieder langsam - Chor und Echo: \"Waldung, sie schwankt heran\"",
+        "track" : 11,
+        "duration" : 271,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "wieder_langsam__chor_und_echo_waldung_sie_schwankt_heran.m4a",
+        "sortTitle" : "part ii - wieder langsam - chor und echo: \"waldung, sie schwankt heran\""
+      }
+    },
+    {
+      "id" : "0E725923-7FEF-4709-94F8-6270F713039F",
+      "track" : 12,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "0E725923-7FEF-4709-94F8-6270F713039F",
+        "title" : "Part II - Moderato - Pater ecstaticus: \"Ewiger Wonnebrand\"",
+        "track" : 12,
+        "duration" : 95,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "moderato__pater_ecstaticus_ewiger_wonnebrand.m4a",
+        "sortTitle" : "part ii - moderato - pater ecstaticus: \"ewiger wonnebrand\""
+      }
+    },
+    {
+      "id" : "804A98DC-BC72-47F5-A627-3F7CFBE43F09",
+      "track" : 13,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "804A98DC-BC72-47F5-A627-3F7CFBE43F09",
+        "title" : "Part II - Allegro -- (Allegro appassionato) - Pater profundus: \"Wie Felsenabgrund mir zu FÃÂ¼ÃÂen\"",
+        "track" : 13,
+        "duration" : 269,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "allegro__allegro_appassionato__pater_profundus_wie_felsenabgrund_mir_zu_fen.m4a",
+        "sortTitle" : "part ii - allegro -- (allegro appassionato) - pater profundus: \"wie felsenabgrund mir zu fãâ¼ãâen\""
+      }
+    },
+    {
+      "id" : "15065B05-D5E6-4032-993A-5B7F6632CB24",
+      "track" : 14,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "15065B05-D5E6-4032-993A-5B7F6632CB24",
+        "title" : "Part II - Allegro deciso. (Im Anfang noch nicht eilen) - Chor der Engel: \"Gerettet ist das edle Glied\"",
+        "track" : 14,
+        "duration" : 65,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "allegro_deciso_im_anfang_noch_nicht_eilen__chor_der_engel_gerettet_ist_das_edle_glied.m4a",
+        "sortTitle" : "part ii - allegro deciso. (im anfang noch nicht eilen) - chor der engel: \"gerettet ist das edle glied\""
+      }
+    },
+    {
+      "id" : "1545DC93-87D7-4518-8328-96CC240E5F50",
+      "track" : 15,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "1545DC93-87D7-4518-8328-96CC240E5F50",
+        "title" : "Part II - Molto leggiero - Chor der jÃÂ¼ngeren Engel: \"Jene Rosen aus den HÃÂ¤nden\"",
+        "track" : 15,
+        "duration" : 109,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "molto_leggiero__chor_der_jngeren_engel_jene_rosen_aus_den_hnden.m4a",
+        "sortTitle" : "part ii - molto leggiero - chor der jãâ¼ngeren engel: \"jene rosen aus den hãâ¤nden\""
+      }
+    },
+    {
+      "id" : "54DE829A-7741-4FEE-9983-EAD77F2D7A1E",
+      "track" : 16,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "54DE829A-7741-4FEE-9983-EAD77F2D7A1E",
+        "title" : "Part II - Schon etwas langsamer und immer noch maBiger - Die vollendeteren Engel: \"Uns bleibt ein Erdenrest\"",
+        "track" : 16,
+        "duration" : 142,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "schon_etwas_langsamer_und_immer_noch_mabiger__die_vollendeteren_engel_uns_bleibt_ein_erdenrest.m4a",
+        "sortTitle" : "part ii - schon etwas langsamer und immer noch mabiger - die vollendeteren engel: \"uns bleibt ein erdenrest\""
+      }
+    },
+    {
+      "id" : "E5086C83-1730-4F7E-B08C-8D110ED61646",
+      "track" : 17,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "E5086C83-1730-4F7E-B08C-8D110ED61646",
+        "title" : "Part II - Im Anfang (die ersten vier Takte) noch etwas gehalten - Die jÃÂ¼ngeren Engel: \"Ich spÃÂ¼rÃÂ´soeben, nebelnd um FelsenhÃÂ¶h\"",
+        "track" : 17,
+        "duration" : 82,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "im_anfang_die_ersten_vier_takte_noch_etwas_gehalten__die_jngeren_engel_ich_sprsoeben_nebelnd_um_felsenhh.m4a",
+        "sortTitle" : "part ii - im anfang (die ersten vier takte) noch etwas gehalten - die jãâ¼ngeren engel: \"ich spãâ¼rãâ´soeben, nebelnd um felsenhãâ¶h\""
+      }
+    },
+    {
+      "id" : "C6C2B82E-C51E-4AF0-8948-0E84C0CD9457",
+      "track" : 18,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "C6C2B82E-C51E-4AF0-8948-0E84C0CD9457",
+        "title" : "Part II - Sempre l'istesso tempo - Doctor Marianus: \"HÃÂ¶chste Herrscherin der Welt\"",
+        "track" : 18,
+        "duration" : 264,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "sempre_listesso_tempo__doctor_marianus_hchste_herrscherin_der_welt.m4a",
+        "sortTitle" : "part ii - sempre l'istesso tempo - doctor marianus: \"hãâ¶chste herrscherin der welt\""
+      }
+    },
+    {
+      "id" : "1B543BA6-519C-40B5-906A-7F0091940328",
+      "track" : 19,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "1B543BA6-519C-40B5-906A-7F0091940328",
+        "title" : "Part II - AuBerst langsam. Adagissimo \"Dir, der Unberuhrbaren\" - Chor der BuBerinnen und Una poenitentium: \"Dir, der UnberÃÂ¼hrbaren\"",
+        "track" : 19,
+        "duration" : 235,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "auberst_langsam_adagissimo_dir_der_unberuhrbaren__chor_der_buberinnen_und_una_poenitentium_dir_der_unberhrbaren.m4a",
+        "sortTitle" : "part ii - auberst langsam. adagissimo \"dir, der unberuhrbaren\" - chor der buberinnen und una poenitentium: \"dir, der unberãâ¼hrbaren\""
+      }
+    },
+    {
+      "id" : "6F24510A-93D0-4F87-99BB-78D48F79CD15",
+      "track" : 20,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "6F24510A-93D0-4F87-99BB-78D48F79CD15",
+        "title" : "Part II - FlieBend - Magna Peccatrix - Mulier Samaritana - Maria Aegyptiaca: \"Bei der Liebe, die den FÃÂ¼ÃÂen\"",
+        "track" : 20,
+        "duration" : 290,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "fliebend__magna_peccatrix__mulier_samaritana__maria_aegyptiaca_bei_der_liebe_die_den_fen.m4a",
+        "sortTitle" : "part ii - fliebend - magna peccatrix - mulier samaritana - maria aegyptiaca: \"bei der liebe, die den fãâ¼ãâen\""
+      }
+    },
+    {
+      "id" : "A9B531AD-B62D-4C8D-B75D-E8810F7FFEA2",
+      "track" : 21,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "A9B531AD-B62D-4C8D-B75D-E8810F7FFEA2",
+        "title" : "Part II - Una poenitentium: \"Neige, du Ohnegleiche\"",
+        "track" : 21,
+        "duration" : 78,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "una_poenitentium_neige_du_ohnegleiche.m4a",
+        "sortTitle" : "part ii - una poenitentium: \"neige, du ohnegleiche\""
+      }
+    },
+    {
+      "id" : "BD1E082E-9259-432E-85BE-E11282FAD542",
+      "track" : 22,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "BD1E082E-9259-432E-85BE-E11282FAD542",
+        "title" : "Part II - Unmerklich frischer - Selige Knaben: \"Er ÃÂ¼berwÃÂ¤chst uns schon\"",
+        "track" : 22,
+        "duration" : 231,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "unmerklich_frischer__selige_knaben_er_berwchst_uns_schon.m4a",
+        "sortTitle" : "part ii - unmerklich frischer - selige knaben: \"er ãâ¼berwãâ¤chst uns schon\""
+      }
+    },
+    {
+      "id" : "3AD5D0AB-AA30-49BA-9647-E9A992FDD423",
+      "track" : 23,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "3AD5D0AB-AA30-49BA-9647-E9A992FDD423",
+        "title" : "Part II - Sehr langsam - Mater gloriosa: \"Komm! hebe dich zu hÃÂ¶hern SphÃÂ¤ren\"",
+        "track" : 23,
+        "duration" : 443,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "sehr_langsam__mater_gloriosa_komm_hebe_dich_zu_hhern_sphren.m4a",
+        "sortTitle" : "part ii - sehr langsam - mater gloriosa: \"komm! hebe dich zu hãâ¶hern sphãâ¤ren\""
+      }
+    },
+    {
+      "id" : "8C99EAC7-EDBF-4E3F-B9A3-D788509039DC",
+      "track" : 24,
+      "single" : {
+        "albumId" : "DB2BE54C-FD98-4989-94F8-F944A587D177",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "8C99EAC7-EDBF-4E3F-B9A3-D788509039DC",
+        "title" : "Part II - Sehr langsam beginnend - Chorus mysticus: \"Alles VergÃÂ¤ngliche ist nur ein G\"",
+        "track" : 24,
+        "duration" : 384,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "sehr_langsam_beginnend__chorus_mysticus_alles_vergngliche_ist_nur_ein_g.m4a",
+        "sortTitle" : "part ii - sehr langsam beginnend - chorus mysticus: \"alles vergãâ¤ngliche ist nur ein g\""
+      }
+    }
+  ],
+  "genre" : "Classical",
+  "albumArt" : {
+    "items" : [
+      {
+        "type" : 0,
+        "format" : 0
+      }
+    ],
+    "pageCount" : 0
+  },
+  "composer" : "Mahler, Gustav (1860-1911)"
+}

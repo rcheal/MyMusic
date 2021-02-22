@@ -1,0 +1,82 @@
+{
+  "recordingYear" : 1987,
+  "artist" : "Bernstein, Concertgebouworkest Amsterdam",
+  "id" : "DDAFC73A-99A8-42CF-A8E2-62D02A7189D7",
+  "encodedBy" : "Created by Grip",
+  "title" : "Symphony No. 1 'Titan'",
+  "duration" : 3363,
+  "directory" : "Mahler, Gustav (1860-1911)\/Symphony No. 1 'Titan'",
+  "contents" : [
+    {
+      "id" : "1D99F00C-C82A-4B23-8E89-DD05FF0D5214",
+      "track" : 1,
+      "single" : {
+        "albumId" : "DDAFC73A-99A8-42CF-A8E2-62D02A7189D7",
+        "sortArtist" : "bernstein, concertgebouworkest amsterdam",
+        "id" : "1D99F00C-C82A-4B23-8E89-DD05FF0D5214",
+        "title" : "i. Langsam. Schleppend. Wie Ein Naturlaut - Im Anfang Sehr Gemachlich",
+        "track" : 1,
+        "duration" : 987,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "mahler_symphony_no_1__i_langsam_schleppend_wie_ein_naturlaut__im_anfang_sehr_gemachlich.m4a",
+        "sortTitle" : "i. langsam. schleppend. wie ein naturlaut - im anfang sehr gemachlich"
+      }
+    },
+    {
+      "id" : "1E9A9668-C8A8-4DED-8FA8-730B90682C99",
+      "track" : 2,
+      "single" : {
+        "albumId" : "DDAFC73A-99A8-42CF-A8E2-62D02A7189D7",
+        "sortArtist" : "bernstein, concertgebouworkest amsterdam",
+        "id" : "1E9A9668-C8A8-4DED-8FA8-730B90682C99",
+        "title" : "ii. Kraftig Bewegt, Doch Nicht Zu Schnell - Trio. Recht Gemachlich",
+        "track" : 2,
+        "duration" : 543,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "mahler_symphony_no_1__ii_kraftig_bewegt_doch_nicht_zu_schnell__trio_recht_gemachlich.m4a",
+        "sortTitle" : "ii. kraftig bewegt, doch nicht zu schnell - trio. recht gemachlich"
+      }
+    },
+    {
+      "id" : "D4F4010A-1AB9-4D92-B56C-010121388FA7",
+      "track" : 3,
+      "single" : {
+        "albumId" : "DDAFC73A-99A8-42CF-A8E2-62D02A7189D7",
+        "sortArtist" : "bernstein, concertgebouworkest amsterdam",
+        "id" : "D4F4010A-1AB9-4D92-B56C-010121388FA7",
+        "title" : "iii. Feierlich Und Gemesen, Ohne Zu Schleppen",
+        "track" : 3,
+        "duration" : 624,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "mahler_symphony_no_1__iii_feierlich_und_gemesen_ohne_zu_schleppen.m4a",
+        "sortTitle" : "iii. feierlich und gemesen, ohne zu schleppen"
+      }
+    },
+    {
+      "id" : "D9BC0427-C4DD-492A-B23A-C68EA040F8C2",
+      "track" : 4,
+      "single" : {
+        "albumId" : "DDAFC73A-99A8-42CF-A8E2-62D02A7189D7",
+        "sortArtist" : "bernstein, concertgebouworkest amsterdam",
+        "id" : "D9BC0427-C4DD-492A-B23A-C68EA040F8C2",
+        "title" : "iv. Sturmisch Bewegt",
+        "track" : 4,
+        "duration" : 1209,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "mahler_symphony_no_1__iv_sturmisch_bewegt.m4a",
+        "sortTitle" : "iv. sturmisch bewegt"
+      }
+    }
+  ],
+  "genre" : "Classical",
+  "albumArt" : {
+    "items" : [
+      {
+        "type" : 0,
+        "format" : 1
+      }
+    ],
+    "pageCount" : 0
+  },
+  "composer" : "Mahler, Gustav (1860-1911)"
+}

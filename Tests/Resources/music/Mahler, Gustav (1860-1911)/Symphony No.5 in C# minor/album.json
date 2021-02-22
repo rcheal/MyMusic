@@ -1,0 +1,97 @@
+{
+  "recordingYear" : 1987,
+  "artist" : "Bernstein, Wiener Philharmoniker",
+  "id" : "1D66EC82-AB18-44C8-8D1C-3F1EAB4045BB",
+  "encodedBy" : "Created by Grip",
+  "title" : "Symphony No.5 in C# minor",
+  "duration" : 4498,
+  "directory" : "Mahler, Gustav (1860-1911)\/Symphony No.5 in C# minor",
+  "contents" : [
+    {
+      "id" : "D121B1BF-EF63-410D-9881-42FB3C472C05",
+      "track" : 1,
+      "single" : {
+        "albumId" : "1D66EC82-AB18-44C8-8D1C-3F1EAB4045BB",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "D121B1BF-EF63-410D-9881-42FB3C472C05",
+        "title" : "Part 1 -I- Trauermarsch. In gemessenem Schritt. Streng. Wie ein Kondukt",
+        "track" : 1,
+        "duration" : 874,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no5_in_c_minor__part_1_i_trauermarsch_in_gemessenem_schritt_streng_wie_ein_kondukt.m4a",
+        "sortTitle" : "part 1 -i- trauermarsch. in gemessenem schritt. streng. wie ein kondukt"
+      }
+    },
+    {
+      "id" : "D498D6A7-38D0-42E5-9782-5B5AFE54B470",
+      "track" : 2,
+      "single" : {
+        "albumId" : "1D66EC82-AB18-44C8-8D1C-3F1EAB4045BB",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "D498D6A7-38D0-42E5-9782-5B5AFE54B470",
+        "title" : "Part 1 -II- StÃÂÃÂ¼rmisch bewegt. Mit grosster Vehemenz",
+        "track" : 2,
+        "duration" : 905,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no5_in_c_minor__part_1_ii_strmisch_bewegt_mit_grosster_vehemenz.m4a",
+        "sortTitle" : "part 1 -ii- stãâãâ¼rmisch bewegt. mit grosster vehemenz"
+      }
+    },
+    {
+      "id" : "88BC4125-EEB3-45E1-92B4-A81C8FD1AC6D",
+      "track" : 3,
+      "single" : {
+        "albumId" : "1D66EC82-AB18-44C8-8D1C-3F1EAB4045BB",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "88BC4125-EEB3-45E1-92B4-A81C8FD1AC6D",
+        "title" : "Part 2 -III- Scherzo. Kraftig, nicht zu schnell",
+        "track" : 3,
+        "duration" : 1147,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no5_in_c_minor__part_2_iii_scherzo_kraftig_nicht_zu_schnell.m4a",
+        "sortTitle" : "part 2 -iii- scherzo. kraftig, nicht zu schnell"
+      }
+    },
+    {
+      "id" : "4AC1A058-3D3F-45F1-BCDA-2DE5614F6F38",
+      "track" : 4,
+      "single" : {
+        "albumId" : "1D66EC82-AB18-44C8-8D1C-3F1EAB4045BB",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "4AC1A058-3D3F-45F1-BCDA-2DE5614F6F38",
+        "title" : "Part 3 -IV- Adagietto. Sehr langsam",
+        "track" : 4,
+        "duration" : 672,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no5_in_c_minor__part_3_iv_adagietto_sehr_langsam.m4a",
+        "sortTitle" : "part 3 -iv- adagietto. sehr langsam"
+      }
+    },
+    {
+      "id" : "69CAB1E1-B6CB-47D8-9899-5C1C6A0ADB3B",
+      "track" : 5,
+      "single" : {
+        "albumId" : "1D66EC82-AB18-44C8-8D1C-3F1EAB4045BB",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "69CAB1E1-B6CB-47D8-9899-5C1C6A0ADB3B",
+        "title" : "Part 3 -V- Rondo-Finale. Allegro - Allegro giocoso. Frisch",
+        "track" : 5,
+        "duration" : 900,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no5_in_c_minor__part_3_v_rondofinale_allegro__allegro_giocoso_frisch.m4a",
+        "sortTitle" : "part 3 -v- rondo-finale. allegro - allegro giocoso. frisch"
+      }
+    }
+  ],
+  "genre" : "Classical",
+  "albumArt" : {
+    "items" : [
+      {
+        "type" : 0,
+        "format" : 0
+      }
+    ],
+    "pageCount" : 0
+  },
+  "composer" : "Mahler, Gustav (1860-1911)"
+}

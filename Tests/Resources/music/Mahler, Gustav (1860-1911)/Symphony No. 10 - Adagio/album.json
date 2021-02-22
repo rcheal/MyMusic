@@ -1,0 +1,97 @@
+{
+  "recordingYear" : 1975,
+  "artist" : "Bernstein, Wiener Philharmoniker",
+  "id" : "1087B32C-5831-47AF-93A0-73836162934B",
+  "encodedBy" : "Created by Grip",
+  "title" : "Symphony No. 10 - Adagio",
+  "duration" : 1564,
+  "directory" : "Mahler, Gustav (1860-1911)\/Symphony No. 10 - Adagio",
+  "contents" : [
+    {
+      "id" : "6B61152A-C571-4BFE-9520-42AC3748ED49",
+      "track" : 1,
+      "single" : {
+        "albumId" : "1087B32C-5831-47AF-93A0-73836162934B",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "6B61152A-C571-4BFE-9520-42AC3748ED49",
+        "title" : "Andante",
+        "track" : 1,
+        "duration" : 227,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no_10_adagio__a_andante.m4a",
+        "sortTitle" : "andante"
+      }
+    },
+    {
+      "id" : "403E3846-563C-48F5-9F35-261B9EE96950",
+      "track" : 2,
+      "single" : {
+        "albumId" : "1087B32C-5831-47AF-93A0-73836162934B",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "403E3846-563C-48F5-9F35-261B9EE96950",
+        "title" : "Andante Come Pirma",
+        "track" : 2,
+        "duration" : 371,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no_10_adagio__b_andante_come_pirma.m4a",
+        "sortTitle" : "andante come pirma"
+      }
+    },
+    {
+      "id" : "7B8EDEA5-BE8B-42E0-B770-03567ED77F74",
+      "track" : 3,
+      "single" : {
+        "albumId" : "1087B32C-5831-47AF-93A0-73836162934B",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "7B8EDEA5-BE8B-42E0-B770-03567ED77F74",
+        "title" : "Andante come prima",
+        "track" : 3,
+        "duration" : 365,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no_10_adagio__c.m4a",
+        "sortTitle" : "andante come prima"
+      }
+    },
+    {
+      "id" : "BE55A2E9-79C8-4B58-8BB3-BF53B0E71FB3",
+      "track" : 4,
+      "single" : {
+        "albumId" : "1087B32C-5831-47AF-93A0-73836162934B",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "BE55A2E9-79C8-4B58-8BB3-BF53B0E71FB3",
+        "title" : "Andante come prima",
+        "track" : 4,
+        "duration" : 199,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no_10_adagio__d.m4a",
+        "sortTitle" : "andante come prima"
+      }
+    },
+    {
+      "id" : "AC2A9E5C-1375-487E-B6CE-04D48B883791",
+      "track" : 5,
+      "single" : {
+        "albumId" : "1087B32C-5831-47AF-93A0-73836162934B",
+        "sortArtist" : "bernstein, wiener philharmoniker",
+        "id" : "AC2A9E5C-1375-487E-B6CE-04D48B883791",
+        "title" : "a tempo",
+        "track" : 5,
+        "duration" : 402,
+        "sortComposer" : "mahler, gustav",
+        "filename" : "symphony_no_10_adagio__e_a_tempo.m4a",
+        "sortTitle" : "tempo"
+      }
+    }
+  ],
+  "genre" : "Classical",
+  "albumArt" : {
+    "items" : [
+      {
+        "type" : 0,
+        "format" : 0
+      }
+    ],
+    "pageCount" : 0
+  },
+  "composer" : "Mahler, Gustav (1860-1911)"
+}
