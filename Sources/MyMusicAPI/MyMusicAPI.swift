@@ -248,7 +248,7 @@ public class MyMusicAPI {
     /**
      GET /{albumsEndpoint}?fields&offset&limit
      */
-    func getAlbums(fields: String? = nil, offset: Int? = nil, limit: Int? = nil) throws -> AnyPublisher<APIAlbums, APIError> {
+    public func getAlbums(fields: String? = nil, offset: Int? = nil, limit: Int? = nil) throws -> AnyPublisher<APIAlbums, APIError> {
         return apiGetListPublisher(albumsEndpoint, fields: fields, offset: offset, limit: limit)
             .decode(type: APIAlbums.self, decoder: JSONDecoder())
             .mapError { error in
@@ -280,7 +280,7 @@ public class MyMusicAPI {
      POST /{albumsEndpoint}/:id/:filename
      ...    (repeat for each image and audio file in album)
      */
-    func postAlbum(_ album: Album) throws -> AnyPublisher<Void, APIError> {
+    public func postAlbum(_ album: Album) throws -> AnyPublisher<Void, APIError> {
         let publisher = PassthroughSubject<AnyPublisher<Void, APIError>, APIError>()
         if let json = album.json,
            let directory = album.directory {
@@ -323,7 +323,7 @@ public class MyMusicAPI {
     /**
      PUT /{albumsEndpoint}/:id
      */
-    func putAlbum(_ album: Album) throws -> AnyPublisher<Void, APIError> {
+    public func putAlbum(_ album: Album) throws -> AnyPublisher<Void, APIError> {
         if let json = album.json {
             return apiPutPublisher(albumsEndpoint, id: album.id, data: json)
                 .eraseToAnyPublisher()
@@ -334,7 +334,7 @@ public class MyMusicAPI {
     /**
      DELETE /{albumsEndpoint}/:id
      */
-    func deleteAlbum(_ id: String) throws -> AnyPublisher<Void, APIError> {
+    public func deleteAlbum(_ id: String) throws -> AnyPublisher<Void, APIError> {
         return apiDeletePublisher(albumsEndpoint, id: id)
             .eraseToAnyPublisher()
     }
@@ -348,7 +348,7 @@ public class MyMusicAPI {
         return apiGetPublisher(albumsEndpoint, id: id, filename: filename)
     }
     
-    func postAlbumFile(_ album: Album, filename: String) throws -> AnyPublisher<Void, APIError> {
+    public func postAlbumFile(_ album: Album, filename: String) throws -> AnyPublisher<Void, APIError> {
         if let directory = album.directory {
             let localAlbumURL = fileRootURL.appendingPathComponent(directory)
             let localFileURL = localAlbumURL.appendingPathComponent(filename)
@@ -359,7 +359,7 @@ public class MyMusicAPI {
         throw APIError.unknown
     }
     
-    func putAlbumFile(_ album: Album, filename: String) throws -> AnyPublisher<Void, APIError> {
+    public func putAlbumFile(_ album: Album, filename: String) throws -> AnyPublisher<Void, APIError> {
         if let directory = album.directory {
             let localAlbumURL = fileRootURL.appendingPathComponent(directory)
             let localFileURL = localAlbumURL.appendingPathComponent(filename)
@@ -370,7 +370,7 @@ public class MyMusicAPI {
         throw APIError.unknown
     }
     
-    func deleteAlbumFile(_ id: String, filename: String) throws -> AnyPublisher<Void, APIError> {
+    public func deleteAlbumFile(_ id: String, filename: String) throws -> AnyPublisher<Void, APIError> {
         return apiDeletePublisher(albumsEndpoint, id: id, filename: filename)
     }
     
@@ -379,7 +379,7 @@ public class MyMusicAPI {
     /**
      GET /{singlesEndpoint}?fields&offset&limit
      */
-    func getSingles(fields: String? = nil, offset: Int? = nil, limit: Int? = nil) throws -> AnyPublisher<APISingles, APIError> {
+    public func getSingles(fields: String? = nil, offset: Int? = nil, limit: Int? = nil) throws -> AnyPublisher<APISingles, APIError> {
         return apiGetListPublisher(singlesEndpoint, fields: fields, offset: offset, limit: limit)
             .decode(type: APISingles.self, decoder: JSONDecoder())
             .mapError { error in
@@ -394,7 +394,7 @@ public class MyMusicAPI {
     /**
      GET /{singlesEndpoint}/:id
      */
-    func getSingle(_ id: String) throws -> AnyPublisher<Single, APIError> {
+    public func getSingle(_ id: String) throws -> AnyPublisher<Single, APIError> {
         return apiGetPublisher(singlesEndpoint, id: id)
             .decode(type: Single.self, decoder: JSONDecoder())
             .mapError { error in
@@ -409,7 +409,7 @@ public class MyMusicAPI {
     /**
      POST /{singlesEndpoint}/:id
      */
-    func postSingle(_ single: Single) throws -> AnyPublisher<Void, APIError> {
+    public func postSingle(_ single: Single) throws -> AnyPublisher<Void, APIError> {
         let publisher = PassthroughSubject<AnyPublisher<Void, APIError>, APIError>()
         if let json = single.json,
            let directory = single.directory {
@@ -450,7 +450,7 @@ public class MyMusicAPI {
     /**
      PUT /{singlesEndpoint}/:id
      */
-    func putSingle(_ single: Single) throws -> AnyPublisher<Void, APIError> {
+    public func putSingle(_ single: Single) throws -> AnyPublisher<Void, APIError> {
         if let json = single.json {
             return apiPutPublisher(singlesEndpoint, id: single.id, data: json)
                 .eraseToAnyPublisher()
@@ -461,7 +461,7 @@ public class MyMusicAPI {
     /**
      DELETE /{singlesEndpoint}/:id
      */
-    func deleteSingle(_ id: String) throws -> AnyPublisher<Void, APIError> {
+    public func deleteSingle(_ id: String) throws -> AnyPublisher<Void, APIError> {
         return apiDeletePublisher(singlesEndpoint, id: id)
             .eraseToAnyPublisher()
     }
@@ -471,11 +471,11 @@ public class MyMusicAPI {
     /**
      GET /{singlesEndpoint}/:id/:filename
      */
-    func getSingleFile(_ id: String, filename: String) throws -> AnyPublisher<Data, APIError> {
+    public func getSingleFile(_ id: String, filename: String) throws -> AnyPublisher<Data, APIError> {
         return apiGetPublisher(singlesEndpoint, id: id, filename: filename)
     }
     
-    func postSingleFile(_ single: Single, filename: String) throws -> AnyPublisher<Void, APIError> {
+    public func postSingleFile(_ single: Single, filename: String) throws -> AnyPublisher<Void, APIError> {
         if let directory = single.directory {
             let localSingleURL = fileRootURL.appendingPathComponent(directory)
             let localFileURL = localSingleURL.appendingPathComponent(filename)
@@ -486,7 +486,7 @@ public class MyMusicAPI {
         throw APIError.unknown
     }
     
-    func putSingleFile(_ single: Single, filename: String) throws -> AnyPublisher<Void, APIError> {
+    public func putSingleFile(_ single: Single, filename: String) throws -> AnyPublisher<Void, APIError> {
         if let directory = single.directory {
             let localSingleURL = fileRootURL.appendingPathComponent(directory)
             let localFileURL = localSingleURL.appendingPathComponent(filename)
@@ -497,7 +497,7 @@ public class MyMusicAPI {
         throw APIError.unknown
     }
     
-    func deleteSingleFile(_ id: String, filename: String) throws -> AnyPublisher<Void, APIError> {
+    public func deleteSingleFile(_ id: String, filename: String) throws -> AnyPublisher<Void, APIError> {
         return apiDeletePublisher(singlesEndpoint, id: id, filename: filename)
     }
     
@@ -506,40 +506,40 @@ public class MyMusicAPI {
     /**
      GET /{playlistsEndpoint}?fields&offset&limit
      */
-    func getPlaylists(fields: String? = nil, offset: Int? = nil, limit: Int? = nil) throws -> AnyPublisher<APIPlaylists, APIError> {
-        return apiGetListPublisher(playlistsEndpoint, fields: fields, offset: offset, limit: limit)
-            .decode(type: APIPlaylists.self, decoder: JSONDecoder())
-            .mapError { error in
-                if let error = error as? APIError {
-                    return error
-                }
-                return APIError.unknown
-            }
-            .eraseToAnyPublisher()
-    }
-
-    func getPlaylist(_ id: String) throws -> AnyPublisher<Playlist, APIError> {
-        return apiGetPublisher(playlistsEndpoint, id: id)
-            .decode(type: Playlist.self, decoder: JSONDecoder())
-            .mapError { error in
-                if let error = error as? APIError {
-                    return error
-                }
-                return APIError.unknown
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    func postPlaylist(_ playlist: Playlist) throws {
-        
-    }
-    
-    func putPlaylist(_ playlist: Playlist) throws {
-        
-    }
-    
-    func deletePlaylist(_ playlist: Playlist) throws {
-        
-    }
+//    public func getPlaylists(fields: String? = nil, offset: Int? = nil, limit: Int? = nil) throws -> AnyPublisher<APIPlaylists, APIError> {
+//        return apiGetListPublisher(playlistsEndpoint, fields: fields, offset: offset, limit: limit)
+//            .decode(type: APIPlaylists.self, decoder: JSONDecoder())
+//            .mapError { error in
+//                if let error = error as? APIError {
+//                    return error
+//                }
+//                return APIError.unknown
+//            }
+//            .eraseToAnyPublisher()
+//    }
+//
+//    public func getPlaylist(_ id: String) throws -> AnyPublisher<Playlist, APIError> {
+//        return apiGetPublisher(playlistsEndpoint, id: id)
+//            .decode(type: Playlist.self, decoder: JSONDecoder())
+//            .mapError { error in
+//                if let error = error as? APIError {
+//                    return error
+//                }
+//                return APIError.unknown
+//            }
+//            .eraseToAnyPublisher()
+//    }
+//    
+//    public func postPlaylist(_ playlist: Playlist) throws {
+//        
+//    }
+//    
+//    public func putPlaylist(_ playlist: Playlist) throws {
+//        
+//    }
+//    
+//    public func deletePlaylist(_ playlist: Playlist) throws {
+//        
+//    }
     
 }
