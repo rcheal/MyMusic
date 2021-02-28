@@ -517,7 +517,7 @@ public class MyMusicAPI {
 //            }
 //            .eraseToAnyPublisher()
 //    }
-//
+
 //    public func getPlaylist(_ id: String) throws -> AnyPublisher<Playlist, APIError> {
 //        return apiGetPublisher(playlistsEndpoint, id: id)
 //            .decode(type: Playlist.self, decoder: JSONDecoder())
@@ -529,17 +529,17 @@ public class MyMusicAPI {
 //            }
 //            .eraseToAnyPublisher()
 //    }
-//    
+    
 //    public func postPlaylist(_ playlist: Playlist) throws {
 //        
 //    }
-//    
+    
 //    public func putPlaylist(_ playlist: Playlist) throws {
 //        
 //    }
-//    
+    
 //    public func deletePlaylist(_ playlist: Playlist) throws {
-//        
+//
 //    }
     
 }
