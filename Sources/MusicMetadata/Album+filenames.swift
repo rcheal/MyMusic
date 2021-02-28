@@ -8,7 +8,7 @@
 import Foundation
 
 extension Album {
-    public func getFilenames(album: Album) -> [String] {
+    public func getFilenames() -> [String] {
         var filenames = [String]()
         // Add artwork filenames
         filenames = getArtworkFilenames()
