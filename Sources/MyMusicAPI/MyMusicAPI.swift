@@ -60,30 +60,6 @@ public class MyMusicAPI {
         
     }
     
-    private func getFilenames(album: Album) -> [String] {
-        var filenames = [String]()
-        // Add artwork filenames
-        let artworkCount = album.artworkCount()
-        if artworkCount > 0 {
-            for index in 0..<artworkCount {
-                if let filename = album.artRef(index)?.filename {
-                    filenames.append(filename)
-                }
-            }
-        }
-        // Add audio track filenames
-        for content in album.contents {
-            if let single = content.single {
-                filenames.append(single.filename)
-            } else if let composition = content.composition {
-                for movement in composition.movements {
-                    filenames.append(movement.filename)
-                }
-            }
-        }
-        return filenames
-    }
-    
     private func apiGetListPublisher(_ endPoint: String, fields: String? = nil, offset: Int? = nil, limit: Int? = nil) -> AnyPublisher<Data, APIError> {
         if let url = URL(string: serverURL) {
             var endpointURL = url.appendingPathComponent(endPoint)
@@ -294,7 +270,7 @@ public class MyMusicAPI {
                             publisher.send(completion: .failure(apiError))
                             
                         case .finished:
-                            let filenames = getFilenames(album: album)
+                            let filenames =  album.getFilenames()
                             let localAlbumURL = fileRootURL.appendingPathComponent(directory)
                             for filename in filenames {
                                 let localFileURL = localAlbumURL.appendingPathComponent(filename)
