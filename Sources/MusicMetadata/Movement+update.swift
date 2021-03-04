@@ -18,4 +18,14 @@ extension Movement {
         }
     }
 
+    public mutating func update(disk: Int?) {
+        self.disk = disk
+    }
+    
+    public mutating func update(track: Int, disk: Int? = nil) {
+        self.track = track
+        if let disk = disk {
+            self.disk = disk
+        }
+    }
 }
