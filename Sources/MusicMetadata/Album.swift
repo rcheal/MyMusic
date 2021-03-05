@@ -74,5 +74,7 @@ extension Album: Codable {
         case _albumArt = "albumArt"
         case contents
         case sortTitle
+        case sortArtist
+        case sortComposer
     }
 }

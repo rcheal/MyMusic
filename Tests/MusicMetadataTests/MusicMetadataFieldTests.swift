@@ -170,7 +170,7 @@ final class MusicMetadataFieldTests: XCTestCase {
         let json = String(bytes: jsonData, encoding: String.Encoding.utf8) ?? ""
         let jsonRef =
 """
-{"id":"1DFC13CC-BE33-4CED-96D9-CDC3508C6522","composer":"The Composer","encodedBy":"EncodedBy","subtitle":"Subtitle","directory":"Title\\/Artist","supportingArtists":"Artist1;Artist2;Artist3","lyricist":"Lyricist","encoderSettings":"EncoderSettings","orchestra":"Orchestra","title":"The Title","publisher":"Publisher","recordingYear":2020,"sortTitle":"Title","conductor":"Conductor","duration":1800,"contents":[],"artist":"The Artist","genre":"Genre","copyright":"Copyright"}
+{"composer":"The Composer","publisher":"Publisher","title":"The Title","supportingArtists":"Artist1;Artist2;Artist3","lyricist":"Lyricist","orchestra":"Orchestra","directory":"Title\\/Artist","duration":1800,"encodedBy":"EncodedBy","sortTitle":"Title","sortArtist":"Artist","contents":[],"encoderSettings":"EncoderSettings","id":"1DFC13CC-BE33-4CED-96D9-CDC3508C6522","conductor":"Conductor","subtitle":"Subtitle","artist":"The Artist","sortComposer":"Composer","genre":"Genre","recordingYear":2020,"copyright":"Copyright"}
 """
                 
         XCTAssertEqual(json, jsonRef)
@@ -180,10 +180,10 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(album.sortTitle, album2?.sortTitle)
         XCTAssertEqual(album.subtitle, album2?.subtitle)
         XCTAssertEqual(album.artist, album2?.artist)
-        XCTAssertNil(album2?.sortArtist)
+        XCTAssertEqual(album.sortArtist, album2?.sortArtist)
         XCTAssertEqual(album.supportingArtists, album2?.supportingArtists)
         XCTAssertEqual(album.composer, album2?.composer)
-        XCTAssertNil(album2?.sortComposer)
+        XCTAssertEqual(album.sortComposer, album2?.sortComposer)
         XCTAssertEqual(album.conductor, album2?.conductor)
         XCTAssertEqual(album.orchestra, album2?.orchestra)
         XCTAssertEqual(album.lyricist, album2?.lyricist)
@@ -248,10 +248,10 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(album.sortTitle, album2?.sortTitle)
         XCTAssertEqual(album.subtitle, album2?.subtitle)
         XCTAssertEqual(album.artist, album2?.artist)
-        XCTAssertNil(album2?.sortArtist)
+        XCTAssertEqual(album.sortArtist, album2?.sortArtist)
         XCTAssertEqual(album.supportingArtists, album2?.supportingArtists)
         XCTAssertEqual(album.composer, album2?.composer)
-        XCTAssertNil(album2?.sortComposer)
+        XCTAssertEqual(album.sortComposer, album2?.sortComposer)
         XCTAssertEqual(album.conductor, album2?.conductor)
         XCTAssertEqual(album.orchestra, album2?.orchestra)
         XCTAssertEqual(album.lyricist, album2?.lyricist)
