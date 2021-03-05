@@ -10,9 +10,15 @@ import Foundation
 extension Album {
     
     public mutating func update() {
-        sortTitle = Album.sortedTitle(title).lowercased()
-        sortArtist = Album.sortedPerson(artist)?.lowercased()
-        sortComposer = Album.sortedPerson(composer)?.lowercased()
+        if let sortTitle = sortTitle, sortTitle.last == "*" {} else {
+            sortTitle = Album.sortedTitle(title).lowercased()
+        }
+        if let sortArtist = sortArtist, sortArtist.last == "*" {} else {
+            sortArtist = Album.sortedPerson(artist)?.lowercased()
+        }
+        if let sortComposer = sortComposer, sortComposer.last == "*" {} else {
+            sortComposer = Album.sortedPerson(composer)?.lowercased()
+        }
         
         for index in contents.indices {
             if var composition = contents[index].composition {

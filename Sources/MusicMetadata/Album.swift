@@ -73,5 +73,6 @@ extension Album: Codable {
         case directory
         case _albumArt = "albumArt"
         case contents
+        case sortTitle
     }
 }

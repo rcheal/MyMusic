@@ -170,14 +170,14 @@ final class MusicMetadataFieldTests: XCTestCase {
         let json = String(bytes: jsonData, encoding: String.Encoding.utf8) ?? ""
         let jsonRef =
 """
-{"id":"1DFC13CC-BE33-4CED-96D9-CDC3508C6522","composer":"The Composer","encodedBy":"EncodedBy","subtitle":"Subtitle","directory":"Title\\/Artist","supportingArtists":"Artist1;Artist2;Artist3","lyricist":"Lyricist","encoderSettings":"EncoderSettings","orchestra":"Orchestra","title":"The Title","publisher":"Publisher","recordingYear":2020,"conductor":"Conductor","duration":1800,"contents":[],"artist":"The Artist","genre":"Genre","copyright":"Copyright"}
+{"id":"1DFC13CC-BE33-4CED-96D9-CDC3508C6522","composer":"The Composer","encodedBy":"EncodedBy","subtitle":"Subtitle","directory":"Title\\/Artist","supportingArtists":"Artist1;Artist2;Artist3","lyricist":"Lyricist","encoderSettings":"EncoderSettings","orchestra":"Orchestra","title":"The Title","publisher":"Publisher","recordingYear":2020,"sortTitle":"Title","conductor":"Conductor","duration":1800,"contents":[],"artist":"The Artist","genre":"Genre","copyright":"Copyright"}
 """
                 
         XCTAssertEqual(json, jsonRef)
         
         let album2 = Album.decodeFrom(json: jsonData)
         XCTAssertEqual(album.title, album2?.title)
-        XCTAssertNil(album2?.sortTitle)
+        XCTAssertEqual(album.sortTitle, album2?.sortTitle)
         XCTAssertEqual(album.subtitle, album2?.subtitle)
         XCTAssertEqual(album.artist, album2?.artist)
         XCTAssertNil(album2?.sortArtist)
@@ -245,7 +245,7 @@ final class MusicMetadataFieldTests: XCTestCase {
 
         let album2 = Album.decodeFrom(json: jsonData)
         XCTAssertEqual(album.title, album2?.title)
-        XCTAssertNil(album2?.sortTitle)
+        XCTAssertEqual(album.sortTitle, album2?.sortTitle)
         XCTAssertEqual(album.subtitle, album2?.subtitle)
         XCTAssertEqual(album.artist, album2?.artist)
         XCTAssertNil(album2?.sortArtist)
