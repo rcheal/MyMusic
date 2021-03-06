@@ -87,6 +87,22 @@ extension Album {
         var resultArt: AlbumArtwork = AlbumArtwork()
         if albumArta.count > 0 {
             if albumArtb.count > 0 {
+                // Merge pages
+
+                // Add albumArta pages
+                var pageNumber = 1
+                while let page = albumArta.pageArtRef(pageNumber) {
+                    resultArt.addArt(page)
+                    pageNumber += 1
+                }
+                
+                // Add albumArtb pages
+                pageNumber = 1
+                while let page = albumArtb.pageArtRef(pageNumber) {
+                    resultArt.addArt(page)
+                    pageNumber += 1
+                }
+                
                 // Merge front art
                 if let front = albumArta.frontArtRef() {
                     resultArt.addArt(front)
@@ -104,22 +120,6 @@ extension Album {
                     }
                 }
 
-                // Merge pages
-
-                // Add albumArta pages
-                var pageNumber = 1
-                while let page = albumArta.pageArtRef(pageNumber) {
-                    resultArt.addArt(page)
-                    pageNumber += 1
-                }
-                
-                // Add albumArtb pages
-                pageNumber = 1
-                while let page = albumArtb.pageArtRef(pageNumber) {
-                    resultArt.addArt(page)
-                    pageNumber += 1
-                }
-                
                 // Merge back art
                 if let back = albumArta.backArtRef() {
                     resultArt.addArt(back)
@@ -146,8 +146,7 @@ extension Album {
         return resultArt
     }
     
-    public mutating func merge(_ album: Album) {
-         
+    private mutating func mergeMetadata(_ album: Album) {
         // Merge Album metadata
         title = mergeStrings(title, album.title)!
         subtitle = mergeStrings(subtitle, album.subtitle)
@@ -164,22 +163,15 @@ extension Album {
         encoderSettings = mergeStrings(encoderSettings, album.encoderSettings)
         recordingYear = mergeYears(recordingYear, album.recordingYear)
         albumArt = mergeAlbumArt(albumArt, album.albumArt)
+    }
+    
+    public mutating func merge(_ album: Album) {
+        // Merge Album metadata
+        mergeMetadata(album)
         
         // Merge contents
-        for index in contents.indices {
-            if let composition = contents[index].composition {
-                for index2 in composition.movements.indices {
-                    let movement = composition.movements[index2]
-                    if movement.disk == nil {
-                        contents[index].composition?.movements[index2].disk = 1
-                    }
-                }
-            } else if let single = contents[index].single {
-                if single.disk == nil {
-                    contents[index].single?.disk = 1
-                }
-            }
-        }
+        
+        setDisk(1, force: false)
         let lastDisk = contents.last?.disk ?? 1
         for var content in album.contents {
             if let composition = content.composition {
@@ -201,19 +193,84 @@ extension Album {
         
     }
     
-    private mutating func setDisk(_ disk: Int?) {
+    public mutating func merge(_ albums: [Album]) {
+        for album in albums {
+            merge(album)
+        }
+    }
+    
+    public mutating func merge(singles: [Single]) {
+        for single in singles {
+            addSingle(single)
+        }
+    }
+    
+    public mutating func setDisk(_ disk: Int?, force: Bool = true) {
         for index in contents.indices {
             if let composition = contents[index].composition {
                 for index2 in composition.movements.indices {
-                    var movement = composition.movements[index2]
-                    movement.disk = disk
-                    contents[index].composition?.movements[index2] = movement
+                    let movement = composition.movements[index2]
+                    if movement.disk == nil || force {
+                        contents[index].composition?.movements[index2].disk = disk
+                    }
                 }
-            } else if var single = contents[index].single {
-                single.disk = disk
-                contents[index].single = single
+            } else if let single = contents[index].single {
+                if single.disk == nil || force {
+                    contents[index].single?.disk = disk
+                }
             }
         }
+    }
+    
+    public mutating func separateSingle(_ id: String) -> Single? {
+        for content in contents {
+            if var single = content.single,
+               single.id == id {
+                single.albumId = nil
+                single.compositionId = nil
+                if single.artist == nil {
+                    single.artist = artist
+                }
+                if single.supportingArtists == nil {
+                    single.supportingArtists = supportingArtists
+                }
+                if single.composer == nil {
+                    single.composer = composer
+                }
+                if single.conductor == nil {
+                    single.conductor = conductor
+                }
+                if single.orchestra == nil {
+                    single.orchestra = orchestra
+                }
+                if single.lyricist == nil {
+                    single.lyricist = lyricist
+                }
+                if single.genre == nil {
+                    single.genre = genre
+                }
+                if single.publisher == nil {
+                    single.publisher = publisher
+                }
+                if single.copyright == nil {
+                    single.copyright = copyright
+                }
+                if single.encodedBy == nil {
+                    single.encodedBy = encodedBy
+                }
+                if single .encoderSettings == nil {
+                    single.encoderSettings = encoderSettings
+                }
+                if single.recordingYear == nil {
+                    single.recordingYear = recordingYear
+                }
+                single.directory = directory
+                removeAllSingles { $0.id == id }
+                return single
+                
+            }
+        }
+        return nil
     }
     
     public mutating func split() -> [Album] {
