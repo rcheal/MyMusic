@@ -437,7 +437,7 @@ final class MusicMetadataMergeTests: XCTestCase {
 
         album1.merge(album2)
         
-        let albums = album1.split()
+        let albums = album1.splitByDisk()
         
         
         XCTAssertEqual(albums.count, 2)

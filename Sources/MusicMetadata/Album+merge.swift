@@ -178,10 +178,13 @@ extension Album {
                 for index in composition.movements.indices {
                     var movement = composition.movements[index]
                     movement.disk = lastDisk + 1
+                    movement.albumId = id
                     content.composition?.movements[index] = movement
+                    content.composition?.albumId = id
                 }
             } else if var single = content.single {
                 single.disk = lastDisk + 1
+                single.albumId = id
                 content.single = single
                 content.disk = single.disk
                 content.track = single.track
@@ -273,7 +276,47 @@ extension Album {
         return nil
     }
     
-    public mutating func split() -> [Album] {
+    public func splitBySingle() -> [Single] {
+        var singles: [Single] = []
+        
+        for content in contents {
+            if var single = content.single {
+                single.artist = single.artist ?? artist
+                single.composer = single.composer ?? composer
+                single.conductor = single.conductor ?? conductor
+                single.orchestra = single.orchestra ?? orchestra
+                single.lyricist = single.lyricist ?? lyricist
+                single.genre = single.genre ?? genre
+                single.publisher = single.publisher ?? publisher
+                single.copyright = single.copyright ?? copyright
+                single.encodedBy = single.encodedBy ?? encodedBy
+                single.encoderSettings = single.encoderSettings ?? encoderSettings
+                singles.append(single)
+            } else if let composition = content.composition {
+                for movement in composition.movements {
+                    var single = Single(title: movement.title, filename: movement.filename, track: movement.track, disk: movement.disk)
+                    single.id = movement.id
+                    single.subtitle = composition.title
+                    single.duration = movement.duration
+                    single.artist = artist
+                    single.composer = composer
+                    single.conductor = conductor
+                    single.orchestra = orchestra
+                    single.lyricist = lyricist
+                    single.genre = genre
+                    single.publisher = publisher
+                    single.copyright = copyright
+                    single.encodedBy = encodedBy
+                    single.encoderSettings = encoderSettings
+                    singles.append(single)
+                }
+            }
+        }
+        
+        return singles
+    }
+    
+    public mutating func splitByDisk() -> [Album] {
         var lastDisk: Int = 1
         var album = self
         var albums: [Album] = []
