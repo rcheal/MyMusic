@@ -50,12 +50,7 @@ public class MyMusicAPI {
     
     public var serverURL: String = ""
     public static var shared = MyMusicAPI()
-    #if os(OSX)
-    public var fileRootURL: URL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("MyMusicAPI")
-    #endif
-    #if os(iOS)
-    public var fileRootURL: URL = FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("MyMusicAPI")
-    #endif
+    public var fileRootURL = URL(fileURLWithPath: "")
     
     private var subscriptions = Set<AnyCancellable>()
     
