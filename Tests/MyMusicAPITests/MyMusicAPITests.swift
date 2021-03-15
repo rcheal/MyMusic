@@ -1112,7 +1112,7 @@ final class MyMusicAPITests: XCTestCase {
                 receiveValue: { titles in
                     XCTAssertEqual(titles.count, 3)
                     if titles.contains(testSingle3.title) {
-                        XCTFail("Singled not deleted \(testSingle3.title)")
+                        XCTFail("Single not deleted \(testSingle3.title)")
                     }
                 })
             .store(in: &subscriptions)

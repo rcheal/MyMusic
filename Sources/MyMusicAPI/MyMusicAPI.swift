@@ -46,18 +46,22 @@ public enum APIError: Error, Equatable {
     case badURL
 }
 
-@available(OSX 10.15, *)
 public class MyMusicAPI {
     
     public var serverURL: String = ""
     public static var shared = MyMusicAPI()
+    #if os(OSX)
     public var fileRootURL: URL = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("MyMusicAPI")
+    #endif
+    #if os(iOS)
+    public var fileRootURL: URL = FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true).appendingPathComponent("MyMusicAPI")
+    #endif
     
     private var subscriptions = Set<AnyCancellable>()
     
     public init() {
         
-        
+    
     }
     
     private func apiGetListPublisher(_ endPoint: String, fields: String? = nil, offset: Int? = nil, limit: Int? = nil) -> AnyPublisher<Data, APIError> {
