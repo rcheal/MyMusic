@@ -10,13 +10,16 @@ import Foundation
 extension Album {
     
     public mutating func update() {
-        if let sortTitle = sortTitle, sortTitle.last == "*" {} else {
+        if let sortTitle = sortTitle,
+           let first = sortTitle.first, first.isUppercase {} else {
             sortTitle = Album.sortedTitle(title).lowercased()
         }
-        if let sortArtist = sortArtist, sortArtist.last == "*" {} else {
+        if let sortArtist = sortArtist,
+           let first = sortArtist.first, first.isUppercase {} else {
             sortArtist = Album.sortedPerson(artist)?.lowercased()
         }
-        if let sortComposer = sortComposer, sortComposer.last == "*" {} else {
+        if let sortComposer = sortComposer,
+           let first = sortComposer.first, first.isUppercase {} else {
             sortComposer = Album.sortedPerson(composer)?.lowercased()
         }
         

@@ -281,6 +281,7 @@ extension Album {
         
         for content in contents {
             if var single = content.single {
+                single.albumId = nil
                 single.artist = single.artist ?? artist
                 single.composer = single.composer ?? composer
                 single.conductor = single.conductor ?? conductor
@@ -296,6 +297,7 @@ extension Album {
                 for movement in composition.movements {
                     var single = Single(title: movement.title, filename: movement.filename, track: movement.track, disk: movement.disk)
                     single.id = movement.id
+                    single.albumId = nil
                     single.subtitle = composition.title
                     single.duration = movement.duration
                     single.artist = artist

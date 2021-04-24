@@ -32,11 +32,11 @@ public struct AlbumSummary: Identifiable, Hashable {
     public init(_ album: Album) {
         id = album.id
         title = album.title
-        sortTitle = Album.sortedTitle(album.title).lowercased()
+        sortTitle = album.sortTitle?.lowercased() ?? Album.sortedTitle(album.title).lowercased()
         artist = album.artist
-        sortArtist = Album.sortedPerson(album.artist)?.lowercased()
+        sortArtist = album.sortArtist?.lowercased() ?? Album.sortedPerson(album.artist)?.lowercased()
         composer = album.composer
-        sortComposer = Album.sortedPerson(album.composer)?.lowercased()
+        sortComposer = album.sortComposer?.lowercased() ?? Album.sortedPerson(album.composer)?.lowercased()
         genre = album.genre
         recordingYear = album.recordingYear
         frontArtFilename = album.frontArtRef()?.filename
