@@ -298,9 +298,44 @@ public class MyMusicAPI {
     /**
      PUT /{albumsEndpoint}/:id
      */
-    public func putAlbum(_ album: Album) throws -> AnyPublisher<Void, APIError> {
-        if let json = album.json {
-            return apiPutPublisher(albumsEndpoint, id: album.id, data: json)
+    public func putAlbum(_ album: Album, skipFiles: Bool = true) throws -> AnyPublisher<Void, APIError> {
+        let publisher = PassthroughSubject<AnyPublisher<Void, APIError>, APIError>()
+        if let json = album.json,
+           let directory = album.directory {
+            let metaDataPostPublisher = apiPutPublisher(albumsEndpoint, id: album.id, data: json)
+            if skipFiles {
+                return metaDataPostPublisher.eraseToAnyPublisher()
+            }
+            
+            metaDataPostPublisher
+                .sink(
+                    receiveCompletion: { [self] completion in
+                        switch completion {
+                        case .failure(let apiError):
+                            publisher.send(completion: .failure(apiError))
+                            
+                        case .finished:
+                            let filenames =  album.getFilenames()
+                            let localAlbumURL = fileRootURL.appendingPathComponent(directory)
+                            for filename in filenames {
+                                let localFileURL = localAlbumURL.appendingPathComponent(filename)
+                                if let data = FileManager.default.contents(atPath: localFileURL.path) {
+                                    let fileDataPostPublisher = apiPostPublisher(albumsEndpoint, id: album.id, filename: filename, data: data)
+                                    publisher.send(fileDataPostPublisher)
+                                }
+                            }
+                            publisher.send(completion: .finished)
+                            
+                            
+                        }
+                        
+                    },
+                    receiveValue: { _ in } )
+                .store(in: &subscriptions)
+            
+            
+            return publisher
+                .flatMap { $0 }
                 .eraseToAnyPublisher()
         }
         throw APIError.unknown
