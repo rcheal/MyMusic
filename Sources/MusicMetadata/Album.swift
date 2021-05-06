@@ -48,6 +48,17 @@ public struct Album: Identifiable, Hashable {
         id = UUID().uuidString
         self.title = title
     }
+    
+    public init(summary: AlbumSummary) {
+        id = summary.id
+        title = summary.title
+        artist = summary.artist
+        composer = summary.composer
+        genre = summary.genre
+        recordingYear = summary.recordingYear
+        directory = summary.directory
+        addArt(AlbumArtRef(type: .front, format: summary.frontArtFilename == "front.png" ? .png : .jpg))
+    }
         
 }
 
