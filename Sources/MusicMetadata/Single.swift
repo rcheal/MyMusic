@@ -59,6 +59,17 @@ public struct Single: Identifiable, Hashable {
         self.filename = filename
     }
     
+    public init(summary: SingleSummary) {
+        id = summary.id
+        albumId = summary.albumId
+        title = summary.title
+        artist = summary.artist
+        composer = summary.composer
+        genre = summary.genre
+        recordingYear = summary.recordingYear
+        track = 0
+    }
+    
 }
 
 extension Single: Codable {

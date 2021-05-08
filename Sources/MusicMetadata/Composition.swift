@@ -44,6 +44,18 @@ public struct Composition: Identifiable, Hashable {
         self.startDisk = disk
     }
     
+    public init(summary: CompositionSummary) {
+        id = summary.id
+        albumId = summary.albumId
+        title = summary.title
+        artist = summary.artist
+        composer = summary.composer
+        genre = summary.genre
+        recordingYear = summary.recordingYear
+        duration = 0
+        startTrack = 0
+    }
+    
 }
 
 extension Composition: Codable {
