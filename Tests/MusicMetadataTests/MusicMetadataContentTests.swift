@@ -123,6 +123,20 @@ final class MusicMetadataContentTests: XCTestCase {
 
         return composition
     }
+    
+    func createComposition(_ title: String) -> Composition {
+        var composition = Composition(title: title, track: 1)
+        
+        let movement1 = Movement(title: title + "I. Allegro", filename: "file1.mp3", track: 1)
+        let movement2 = Movement(title: title + "II. Adagio", filename: "file2.mp3", track: 2)
+        let movement3 = Movement(title: title + "III. Presto", filename: "file3.mp3", track: 3)
+        composition.addMovement(movement1)
+        composition.addMovement(movement2)
+        composition.addMovement(movement3)
+
+        return composition
+
+    }
 
     // MARK:  Album add content tests
     func testAlbumAddSingles() throws {
@@ -799,6 +813,32 @@ final class MusicMetadataContentTests: XCTestCase {
 
     }
     
+    func testCompositionNormalizeTitles() throws {
+        let composition = createComposition("Symphony No. 5 in D minor, Op. 302 ")
+        
+        var composition2 = composition
+        composition2.normalizeTitles()
+        
+        XCTAssertEqual(composition.movements.count, 3)
+        XCTAssertEqual(composition2.movements.count, 3)
+        
+        let compositionTitle = composition.title
+        let title1 = "I. Allegro"
+        let title2 = "II. Adagio"
+        let title3 = "III. Presto"
+        
+        XCTAssertEqual(composition2.title, compositionTitle)
+        
+        XCTAssertEqual(composition.movements[0].title, compositionTitle + title1)
+        XCTAssertEqual(composition2.movements[0].title, title1)
+        
+        XCTAssertEqual(composition.movements[1].title, compositionTitle + title2)
+        XCTAssertEqual(composition2.movements[1].title, title2)
+
+        XCTAssertEqual(composition.movements[2].title, compositionTitle + title3)
+        XCTAssertEqual(composition2.movements[2].title, title3)
+
+    }
     
     static var allTests = [
         ("testAlbumAddSingles", testAlbumAddSingles),
@@ -821,6 +861,7 @@ final class MusicMetadataContentTests: XCTestCase {
         ("testCompositionRemove2", testCompositionRemove2),
         ("testCompositionRemove3", testCompositionRemove3),
         ("testCompositionReplace", testCommpositionReplace),
+        ("testCompositionNormalizeTitles", testCompositionNormalizeTitles),
     ]
 
 }

@@ -51,4 +51,13 @@ extension Composition {
         }
     }
     
+    public mutating func normalizeTitles() {
+        for index in movements.indices {
+            let movementTitle = movements[index].title
+            if movementTitle.hasPrefix(title) {
+                movements[index].title = String(movementTitle.dropFirst(title.count))
+            }
+        }
+    }
+    
 }
