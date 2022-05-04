@@ -3,6 +3,8 @@ import Combine
 @testable import MyMusicAPI
 @testable import MusicMetadata
 
+let defaultServerURL = "http://127.0.0.1:8888"
+
 struct Resource {
     let url: URL
     let baseURL: URL
@@ -24,7 +26,7 @@ final class MyMusicAPITests: XCTestCase {
     
     override func setUp() {
         api = MyMusicAPI.shared
-        api.serverURL = "http://127.0.0.1:8888"
+        api.serverURL = defaultServerURL
     }
     
     override func tearDown() {
@@ -48,46 +50,19 @@ final class MyMusicAPITests: XCTestCase {
 
     }
     
-    func createAlbum(title: String, composer: String) throws -> Album {
+    func createAlbum(title: String, composer: String) async throws -> Album {
     
         let album = getAlbum(title: title, composer: composer)
-        
-        let publisher = try api.postAlbum(album)
-        let expectation = self.expectation(description: #function)
 
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        if apiError != .conflict {
-                            XCTFail("Album post failed with error \(apiError)")
-                        }
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 4, handler: nil)
+        let _ = try await api.post(album: album)
+
         return album
     }
     
-    func deleteAlbum(_ id: String) throws {
-        let publisher = try api.deleteAlbum(id)
-        let expectation = self.expectation(description: #function)
+    func deleteAlbum(_ id: String) async throws {
 
-        publisher
-            .sink(
-                receiveCompletion: { _ in
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in })
-            .store(in: &subscriptions)
+        let _ = try await api.delete(albumId: id)
         
-        waitForExpectations(timeout: 2, handler: nil)
     }
     
     func getSingleURL(genre: String, artist: String) -> URL {
@@ -109,152 +84,81 @@ final class MyMusicAPITests: XCTestCase {
 
     }
     
-    func createSingle(genre: String, artist: String, jsonFilename: String? = nil) throws -> Single {
+    func createSingle(genre: String, artist: String, jsonFilename: String? = nil) async throws -> Single {
         let filename = jsonFilename ?? "single.json"
-        let single = getSingle(genre: genre, artist: artist, jsonFilename: filename)
-        
-        let publisher = try api.postSingle(single)
-        let expectation = self.expectation(description: #function)
 
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        if apiError != .conflict {
-                            XCTFail("Single post failed with error \(apiError)")
-                        }
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 4, handler: nil)
+        let single = getSingle(genre: genre, artist: artist, jsonFilename: filename)
+
+        let _ = try await api.post(single: single)
+
         return single
     }
     
-    func createSingleFile(single: Single, filename: String) throws {
-        
-        let publisher = try api.postSingleFile(single, filename: filename)
-        let expectation = self.expectation(description: #function)
-        
-        publisher
-            .sink(
-                receiveCompletion: { _ in expectation.fulfill() },
-                receiveValue: { _ in })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-    }
-    
-    func deleteSingle(_ id: String) throws {
-        let publisher = try api.deleteSingle(id)
-        let expectation = self.expectation(description: #function)
+//    func createSingleFile(single: Single, filename: String) throws {
+//
+//        let publisher = try api.postSingleFile(single, filename: filename)
+//        let expectation = self.expectation(description: #function)
+//
+//        publisher
+//            .sink(
+//                receiveCompletion: { _ in expectation.fulfill() },
+//                receiveValue: { _ in })
+//            .store(in: &subscriptions)
+//
+//        waitForExpectations(timeout: 2, handler: nil)
+//    }
+//
+    func deleteSingle(_ id: String) async throws {
 
-        publisher
-            .sink(
-                receiveCompletion: { _ in expectation.fulfill() },
-                receiveValue: { _ in })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-    }
-    
-    func deleteSingleFile(_ id: String, filename: String) throws {
-        let publisher = try api.deleteSingleFile(id, filename: filename)
-        let expectation = self.expectation(description: #function)
-        
-        publisher
-            .sink(
-                receiveCompletion: { _ in expectation.fulfill() },
-                receiveValue: { _ in })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
+        let _ = try await api.delete(singleId: id)
     }
     
     // MARK: *** Server ***
     
-    func testGetServerInfo() throws {
+    func testGetServerInfo() async throws {
         // Given
-        let publisher = try api.getServerInfo()
         let expectedVersion = "1.0.0"
         let expectedApiVersions = "v1"
-        let expectedName = "Robert’s iMac"
+        let expectedName = "Robert’s Mac Studio"
         let expectedAddress = "127.0.0.1:8888"
-        let expectation = self.expectation(description: #function)
-        var serverStatus: APIServerStatus?
-        
-        // When
 
-        publisher
-            .sink(receiveCompletion: { _ in expectation.fulfill() },
-                  receiveValue: { serverStatus = $0 })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        XCTAssertNotNil(serverStatus)
-        if let status = serverStatus {
+        do {
+            let status = try await api.getServerInfo()
             XCTAssertEqual(status.version, expectedVersion)
             XCTAssertEqual(status.apiVersions, expectedApiVersions)
             XCTAssertEqual(status.name, expectedName)
             XCTAssertEqual(status.address, expectedAddress)
+            XCTAssertEqual(status.albumCount, 0)
+            XCTAssertEqual(status.singleCount, 0)
+            XCTAssertEqual(status.playlistCount, 0)
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with API error - \(apiError)")
+            }
+            XCTFail("Failed with error - \(error.localizedDescription)")
         }
-        
+
     }
     
     // MARK: *** Album ***
     
-    func testGetAlbums() throws {
+    func testGetAlbums() async throws {
         // Given
         let composer = "Mahler, Gustav (1860-1911)"
-        
-        let album1 = try! createAlbum(title: "Symphony No. 10 - Adagio", composer: composer)
-        let album2 = try! createAlbum(title: "Symphony No. 1 'Titan'", composer: composer)
-        let album3 = try! createAlbum(title: "Symphony No. 8", composer: composer)
-        let album4 = try! createAlbum(title: "Symphony No.5 in C# minor", composer: composer)
+
+
+        let album1 = try await createAlbum(title: "Symphony No. 10 - Adagio", composer: composer)
+        let album2 = try await createAlbum(title: "Symphony No. 1 'Titan'", composer: composer)
+        let album3 = try await createAlbum(title: "Symphony No. 8", composer: composer)
+        let album4 = try await createAlbum(title: "Symphony No.5 in C# minor", composer: composer)
         
         let fields = "title,artist,composer,genre,recordingYear,frontart,directory"
         let offset = 1
         let limit = 2
-        let publisher = try api.getAlbums(fields: fields, offset: offset, limit: limit)
-        let expectation = self.expectation(description: #function)
-        
-        var albums: [AlbumSummary]?
-        
-        // When
-        
-        publisher
-            .map { albums in
-                albums.albums.map {
-                    AlbumSummary($0)
-                }
-            }
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let error):
-                        XCTFail("Unexpected failure: \(error)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: {
-                    albums = $0
-                })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        XCTAssertNotNil(albums)
-        if let albums = albums {
+
+        do {
+            let apiAlbums = try await api.getAlbums(fields: fields, offset: offset, limit: limit)
+            let albums = apiAlbums.albums.map { AlbumSummary ($0) }
             XCTAssertEqual(albums.count, 2)
             for album in albums {
                 switch album.id {
@@ -276,444 +180,260 @@ final class MyMusicAPITests: XCTestCase {
                     XCTFail("Unexpected album: \(album.title)")
                 }
             }
+        } catch {
+            XCTFail("Unexpected failure: \(error.localizedDescription)")
         }
-        
-        try! deleteAlbum(album1.id)
-        try! deleteAlbum(album2.id)
-        try! deleteAlbum(album3.id)
-        try! deleteAlbum(album4.id)
+
+        try await deleteAlbum(album1.id)
+        try await deleteAlbum(album2.id)
+        try await deleteAlbum(album3.id)
+        try await deleteAlbum(album4.id)
 
     }
     
-    func testGetAlbum() throws {
+    func testGetAlbum() async throws {
         // Given
         let title = "Symphony No. 10 - Adagio"
         let composer = "Mahler, Gustav (1860-1911)"
-        let testAlbum = try! createAlbum(title: title, composer: composer)
+        let testAlbum = try await createAlbum(title: title, composer: composer)
 
-        let publisher = try api.getAlbum(testAlbum.id)
-        let expectation = self.expectation(description: #function)
-        
-        var album: Album?
-        
-        // When
-        
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let error):
-                        XCTFail("Unexpected failure: \(error)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: {
-                    album = $0
-                })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        XCTAssertNotNil(album)
-        if let album = album {
+        do {
+            let album = try await api.get(albumId: testAlbum.id)
             XCTAssertEqual(album.title, "Symphony No. 10 - Adagio")
             XCTAssertEqual(album.artist, "Bernstein, Wiener Philharmoniker")
             XCTAssertEqual(album.composer, "Mahler, Gustav (1860-1911)")
             XCTAssertNil(album.conductor)
             XCTAssertEqual(album.duration, 1564)
+        } catch APIError.notFound {
+            XCTFail("Album not found")
+        } catch {
+            XCTFail("Unexpected failure: \(error.localizedDescription)")
         }
-        
+
+        try await deleteAlbum(testAlbum.id)
+
     }
 
-    func testGetAlbumNotFound() throws {
+    func testGetAlbumNotFound() async throws {
         // Given
         let id = "54738953-4079-4BF7-A188-E3B6A245866C"
-        let publisher = try api.getAlbum(id)
-        let expectation = self.expectation(description: #function)
-        let expectedError = APIError.notFound
-        
-        var apiError: APIError = APIError.unknown
-        var album: Album?
-        
-        // When
-        
-        publisher
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let error):
-                    apiError = error
-                default:
-                    break
-                    
-                }
-                expectation.fulfill()
-                
-            },
-                  receiveValue: { album = $0 })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        XCTAssertNil(album)
-        XCTAssertEqual(apiError, expectedError)
-        
-    }
-    
-    func testGetAlbumBadPort() throws {
-        // Given
-        let title = "Symphony No. 10 - Adagio"
-        let composer = "Mahler, Gustav (1860-1911)"
-        let testAlbum = try! createAlbum(title: title, composer: composer)
-
-        api.serverURL = "http://127.0.0.1:8280"
-        let publisher = try api.getAlbum(testAlbum.id)
-        let expectation = self.expectation(description: #function)
-        
-        var apiError: APIError = APIError.unknown
-        var album: Album?
-        
-        // When
-        
-        publisher
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let error):
-                    apiError = error
-                default:
-                    break
-                    
-                }
-                expectation.fulfill()
-                
-            },
-                  receiveValue: { album = $0 })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        XCTAssertNil(album)
-        switch apiError {
-        case .networkError(let error):
-            XCTAssertEqual(error.errorCode, -1004)
-        default:
-            XCTFail("Unexpected error: \(apiError)")
+        do {
+            // When
+            let _ = try await api.get(albumId: id)
+            // Then
+            XCTFail("Album found")
+        } catch APIError.notFound {
+            // Success
+        } catch {
+            XCTFail("Unexpected error - \(error.localizedDescription)")
         }
     }
     
-    func testGetAlbumFile() throws {
+    func testGetAlbumBadPort() async throws {
         // Given
         let title = "Symphony No. 10 - Adagio"
         let composer = "Mahler, Gustav (1860-1911)"
-        let testAlbum = try! createAlbum(title: title, composer: composer)
+        let testAlbum = try await createAlbum(title: title, composer: composer)
+
+        api.serverURL = "http://127.0.0.1:8280"
+
+        do {
+            // When
+            let _ = try await api.get(albumId: testAlbum.id)
+            // Then
+            XCTFail("Unexpected Success")
+        } catch {
+            if let apiError = error as? APIError {
+                switch apiError {
+                case .networkError(let error):
+                    XCTAssertEqual(error.errorCode, -1004)
+                default:
+                    XCTFail("Unexpected error: \(apiError)")
+                }
+            }
+        }
+
+        api.serverURL = defaultServerURL
+
+        try await deleteAlbum(testAlbum.id)
+    }
+    
+    func testGetAlbumFile() async throws {
+        // Given
+        let title = "Symphony No. 10 - Adagio"
+        let composer = "Mahler, Gustav (1860-1911)"
+        let testAlbum = try await createAlbum(title: title, composer: composer)
         let albumURL = getAlbumURL(title: title, composer: composer)
     
         let filename = testAlbum.frontArtRef()?.filename ?? "front"
-        
         var fileContents: Data = Data()
+
         let expectedContents: Data = FileManager.default.contents(atPath: albumURL.appendingPathComponent(filename).path) ?? Data()
-        
-        let publisher = try api.getAlbumFile(testAlbum.id, filename: filename)
-        let expectation = self.expectation(description: #function)
-        
-        // When
-        
-        publisher
-            .sink(
-                receiveCompletion: { _ in expectation.fulfill() },
-                receiveValue: { data in
-                    fileContents = data
-                })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 5, handler: nil)
-        
-        // Then
-        XCTAssertEqual(fileContents, expectedContents)
 
+        do {
+            // When
+            fileContents = try await api.getFile(albumId: testAlbum.id, filename: filename)
+            // Then
+            XCTAssertEqual(fileContents, expectedContents)
+        } catch {
+            XCTFail("Unexpected error: \(error.localizedDescription)")
+        }
+
+        try await deleteAlbum(testAlbum.id)
     }
     
-    func testPostAlbum() throws {
+    func testPostAlbum() async throws {
         // Given
         let title = "Symphony No. 10 - Adagio"
         let composer = "Mahler, Gustav (1860-1911)"
         
         let album = getAlbum(title: title, composer: composer)
         
-        try! deleteAlbum(album.id)
-        
-        let expectedFileCount = 6
-        var fileCount = 0
-        
-        let publisher = try api.postAlbum(album)
-        let expectation = self.expectation(description: #function)
+        do {
+            // When
+            let transaction = try await api.post(album: album)
+            // Then
+            XCTAssertEqual(transaction.entity, "album")
+            XCTAssertEqual(transaction.method, "POST")
+            XCTAssertEqual(transaction.id, album.id)
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            }
+            XCTFail("Unexpected failure \(error.localizedDescription)")
+        }
 
-        // When
-            
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        XCTFail("Album post failed with error \(apiError)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in fileCount += 1 })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        
-        XCTAssertEqual(fileCount, expectedFileCount)
-        
-        try deleteAlbum(album.id)
+        try await deleteAlbum(album.id)
     }
     
-    func testPostAlbumFile() throws {
+    func testPostAlbumFile() async throws {
+        // Given
+        let title = "Symphony No. 10 - Adagio"
+        let composer = "Mahler, Gustav (1860-1911)"
+        let filename = "test.txt"
+        
+        let album = try await createAlbum(title: title, composer: composer)
+
+        do {
+            // When
+            try await api.postFile(album: album, filename: filename)
+            // Then
+            //  Success
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            }
+            XCTFail("Unexpected failure \(error.localizedDescription)")
+        }
+
+        try await deleteAlbum(album.id)
+    }
+
+    func testPutAlbum() async throws {
         // Given
         let title = "Symphony No. 10 - Adagio"
         let composer = "Mahler, Gustav (1860-1911)"
         
-        let album = getAlbum(title: title, composer: composer)
-    
-        let expectedFileCount = 1
-        var fileCount = 0
-        
-        let publisher = try api.postAlbumFile(album, filename: "test.txt")
-        let expectation = self.expectation(description: #function)
-
-        // When
-    
-        
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        XCTFail("Album post failed with error \(apiError)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in fileCount += 1 })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        
-        // Then
-        
-        XCTAssertEqual(fileCount, expectedFileCount)
-
-    }
-
-    func testPutAlbum() throws {
-        // Given
-        let title = "Symphony No. 10 - Adagio"
-        let composer = "Mahler, Gustav (1860-1911)"
-        
-        let testAlbum = try! createAlbum(title: title, composer: composer)
+        let testAlbum = try await createAlbum(title: title, composer: composer)
 
         var album = testAlbum
         album.title = "Symphony No. 10 - Altered"
         album.artist = "Leonard Bernstein"
-        
-        let expectedFileCount = 1
-        var fileCount = 0
-        
-        let publisher = try api.putAlbum(album)
-        let expectation = self.expectation(description: #function)
 
-        // When
-            
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        XCTFail("Album put failed with error \(apiError)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in fileCount += 1 })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        
-        XCTAssertEqual(fileCount, expectedFileCount)
-        
-        try! deleteAlbum(album.id)
+        do {
+            // When
+            let transaction = try await api.put(album: album)
+            // Then
+            XCTAssertEqual(transaction.entity, "album")
+            XCTAssertEqual(transaction.method, "PUT")
+            XCTAssertEqual(transaction.id, testAlbum.id)
+        }
+
+        try await deleteAlbum(testAlbum.id)
     }
     
-    func testPutAlbumFile() throws {
+    func testPutAlbumFile() async throws {
         // Given
         let title = "Symphony No. 10 - Adagio"
         let composer = "Mahler, Gustav (1860-1911)"
         let filename = "front.jpg"
 
-        let expectedFileCount = 1
-        var fileCount = 0
-        
-        let album = try createAlbum(title: title, composer: composer)
-        
-        let publisher = try api.putAlbumFile(album, filename: filename)
-        let expectation = self.expectation(description: #function)
+        let album = try await createAlbum(title: title, composer: composer)
 
-        // When
-        
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        XCTFail("Album put file failed with error \(apiError)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in fileCount += 1 })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        XCTAssertEqual(fileCount, expectedFileCount)
-        
-        try deleteAlbum(album.id)
+        do {
+            try await api.putFile(album: album, filename: filename)
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            }
+            XCTFail("Unexpected failure \(error.localizedDescription)")
+        }
+
+        try await deleteAlbum(album.id)
 
     }
     
-    func testDeleteAlbum() throws {
+    func testDeleteAlbum() async throws {
         // Given
         let title = "Symphony No. 10 - Adagio"
         let composer = "Mahler, Gustav (1860-1911)"
-        let testAlbum = try! createAlbum(title: title, composer: composer)
-    
-        let publisher = try api.deleteAlbum(testAlbum.id)
-        let expectation = self.expectation(description: #function)
+        let testAlbum = try await createAlbum(title: title, composer: composer)
 
-        // When
-            
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        XCTFail("Album delete failed with error \(apiError)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
+        do {
+            // When
+            let transaction = try await api.delete(albumId: testAlbum.id)
+            // Then
+            XCTAssertEqual(transaction.entity, "album")
+            XCTAssertEqual(transaction.method, "DELETE")
+            XCTAssertEqual(transaction.id, testAlbum.id)
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            }
+            XCTFail("Unexpected failure \(error.localizedDescription)")
+        }
     }
     
-    func testDeleteAlbumFile() throws {
+    func testDeleteAlbumFile() async throws {
         // Given
         let composer = "Mahler, Gustav (1860-1911)"
         let title = "Symphony No. 10 - Adagio"
         let filename = "front.jpg"
         
-        let album = try! createAlbum(title: title, composer: composer)
-    
-        var fileCount = 0
-        
-        let publisher = try api.deleteAlbumFile(album.id, filename: filename)
-        let expectation = self.expectation(description: #function)
+        let album = try await createAlbum(title: title, composer: composer)
 
-        // When
+        do {
+            try await api.deleteFile(albumId: album.id, filename: filename)
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            }
+            XCTFail("Unexpected failure \(error.localizedDescription)")
+        }
     
-        
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        XCTFail("Album put failed with error \(apiError)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in fileCount += 1 })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        XCTAssertEqual(fileCount, 1)
-        
-        try deleteAlbum(album.id)
+        try await deleteAlbum(album.id)
 
     }
     
     // MARK: *** Single ***
     
-    func testGetSingles() throws {
+    func testGetSingles() async throws {
         // Given
-        try! deleteSingle(getSingle(genre: "Alternative", artist: "Amos, Tori").id)
-        try! deleteSingle(getSingle(genre: "Jazz", artist: "Bud Powell Trio").id)
-        try! deleteSingle(getSingle(genre: "Jazz", artist: "Coleman Hawkins").id)
-        try! deleteSingle(getSingle(genre: "Kids", artist: "Sheb Woolly").id)
 
-        let single1 = try! createSingle(genre: "Alternative", artist: "Amos, Tori")
-        let single2 = try! createSingle(genre: "Jazz", artist: "Bud Powell Trio")
-        let single3 = try! createSingle(genre: "Jazz", artist: "Coleman Hawkins")
-        let single4 = try! createSingle(genre: "Kids", artist: "Sheb Woolly")
+        let single1 = try await createSingle(genre: "Alternative", artist: "Amos, Tori")
+        let single2 = try await createSingle(genre: "Jazz", artist: "Bud Powell Trio")
+        let single3 = try await createSingle(genre: "Jazz", artist: "Coleman Hawkins")
+        let single4 = try await createSingle(genre: "Kids", artist: "Sheb Woolly")
         
         let fields = "title,artist,composer,genre,recordingYear"
         let offset = 1
         let limit = 2
-        let publisher = try api.getSingles(fields: fields, offset: offset, limit: limit)
-        let expectation = self.expectation(description: #function)
-        
-        var singles: [SingleSummary]?
-        
-        // When
-        
-        publisher
-            .map { singles in
-                singles.singles.map {
-                    SingleSummary($0)
-                }
-            }
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let error):
-                        XCTFail("Unexpected failure: \(error)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: {
-                    singles = $0
-                })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        XCTAssertNotNil(singles)
-        if let singles = singles {
+
+        do {
+            // When
+            let apiSingles = try await api.getSingles(fields: fields, offset: offset, limit: limit)
+            let singles = apiSingles.singles.map { SingleSummary ($0) }
+            // Then
             XCTAssertEqual(singles.count, 2)
             for single in singles {
                 switch single.id {
@@ -731,52 +451,31 @@ final class MyMusicAPITests: XCTestCase {
                     XCTAssertEqual(single.recordingYear, single3.recordingYear)
                 default:
                     XCTFail("Unexpected single: \(single.title)/\(single.id)")
-                    
+
                 }
             }
+        } catch {
+            XCTFail("Unexpected Failure: \(error.localizedDescription)")
         }
-        
-        try! deleteSingle(single1.id)
-        try! deleteSingle(single2.id)
-        try! deleteSingle(single3.id)
-        try! deleteSingle(single4.id)
+
+        // Cleanup
+        try await deleteSingle(single1.id)
+        try await deleteSingle(single2.id)
+        try await deleteSingle(single3.id)
+        try await deleteSingle(single4.id)
 
     }
     
-    func testGetSingle() throws {
+    func testGetSingle() async throws {
         // Given
         let genre = "Jazz"
         let artist = "Bud Powell Trio"
-        let testSingle = try! createSingle(genre: genre, artist: artist)
-        
-        let publisher = try api.getSingle(testSingle.id)
-        let expectation = self.expectation(description: #function)
-        
-        var single: Single?
-        
-        // When
-        
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let error):
-                        XCTFail("Unexpected failure: \(error)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: {
-                    single = $0
-                })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        XCTAssertNotNil(single)
-        if let single = single {
+        let testSingle = try await createSingle(genre: genre, artist: artist)
+
+        do {
+            // When
+            let single = try await api.get(singleId: testSingle.id)
+            // Then
             XCTAssertEqual(single.title, "Get Happy")
             XCTAssertEqual(single.artist, "Bud Powell Trio")
             XCTAssertEqual(single.composer, "Harold Arlen/Ted Koehler")
@@ -786,382 +485,255 @@ final class MyMusicAPITests: XCTestCase {
             XCTAssertEqual(single.duration, 173)
             XCTAssertEqual(single.filename, "14 Get Happy.mp3")
             XCTAssertEqual(single.directory, "singles/Jazz/Bud Powell Trio")
-
+        } catch APIError.notFound {
+            XCTFail("Single not found")
+        } catch {
+            XCTFail("Unexpected failure: \(error.localizedDescription)")
         }
-        
-        try deleteSingle(testSingle.id)
+
+        // Cleanup
+        try await deleteSingle(testSingle.id)
 
     }
 
-    func testGetSingleNotFound() throws {
+    func testGetSingleNotFound() async throws {
         // Given
         let id = "2AF8F474-5B5B-4183-860A-BF96F50F6F9F"
-        let publisher = try api.getSingle(id)
-        let expectation = self.expectation(description: #function)
-        let expectedError = APIError.notFound
-        
-        var apiError: APIError = APIError.unknown
-        var single: Single?
-        
-        // When
-        
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let error):
-                        apiError = error
-                    default:
-                        break
-                        
-                    }
-                    expectation.fulfill()
-                    
-                },
-                receiveValue: { single = $0 })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        XCTAssertNil(single)
-        XCTAssertEqual(apiError, expectedError)
-        
+
+        do {
+            // When
+            let _ = try await api.get(singleId: id)
+            // Then
+            XCTFail("Single found")
+        } catch APIError.notFound {
+            // Success
+        } catch {
+            XCTFail("Unexpected error - \(error.localizedDescription)")
+        }
     }
   
-    func testGetSingleBadPort() throws {
+    func testGetSingleBadPort() async throws {
         // Given
         let genre = "Jazz"
         let artist = "Bud Powell Trio"
-        let testSingle = try! createSingle(genre: genre, artist: artist)
+        let testSingle = try await createSingle(genre: genre, artist: artist)
 
         api.serverURL = "http://127.0.0.1:8280"
-        let publisher = try api.getSingle(testSingle.id)
-        let expectation = self.expectation(description: #function)
-        
-        var apiError: APIError = APIError.unknown
-        var single: Single?
-        
-        // When
-        
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let error):
-                        apiError = error
-                    default:
-                        break
-                        
-                    }
-                    expectation.fulfill()
-                    
-                },
-                receiveValue: { single = $0 })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        XCTAssertNil(single)
-        switch apiError {
-        case .networkError(let error):
-            XCTAssertEqual(error.errorCode, -1004)
-        default:
-            XCTFail("Unexpected error \(apiError)")
+
+        do {
+            // When
+            let _ = try await api.get(singleId: testSingle.id)
+            // Then
+            XCTFail("Unexpected Success")
+        } catch {
+            if let apiError = error as? APIError {
+                switch apiError {
+                case .networkError(let error):
+                    XCTAssertEqual(error.errorCode, -1004)
+                default:
+                    XCTFail("Unexpected error: \(apiError)")
+                }
+            }
         }
-        
-        try deleteSingle(testSingle.id)
+
+        api.serverURL = defaultServerURL
+
+        try await deleteSingle(testSingle.id)
     }
     
-    func testGetSingleFile() throws {
+    func testGetSingleFile() async throws {
         // Given
         let genre = "Jazz"
         let artist = "Bud Powell Trio"
-        let testSingle = try! createSingle(genre: genre, artist: artist)
+        let testSingle = try await createSingle(genre: genre, artist: artist)
         let singleURL  = getSingleURL(genre: genre, artist: artist)
         
         let filename = testSingle.filename
         
         var fileContents: Data = Data()
         let expectedContents: Data = FileManager.default.contents(atPath: singleURL.appendingPathComponent(filename).path) ?? Data()
-        
-        let publisher = try api.getSingleFile(testSingle.id, filename: filename)
-        let expectation = self.expectation(description: #function)
-        
-        // When
-        
-        publisher
-            .sink(
-                receiveCompletion: { _ in expectation.fulfill() },
-                receiveValue: { data in
-                    fileContents = data
-                })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        XCTAssertEqual(fileContents, expectedContents)
-        
-        try deleteSingle(testSingle.id)
+
+        do {
+            // When
+            fileContents = try await api.getFile(singleId: testSingle.id, filename: filename)
+            // Then
+            XCTAssertEqual(fileContents, expectedContents)
+        } catch {
+            XCTFail("Unexpected error: \(error.localizedDescription)")
+        }
+
+        try await deleteSingle(testSingle.id)
     }
     
-    func testPostSingle() throws {
+    func testPostSingle() async throws {
         // Given
         let genre = "Jazz"
         let artist = "Bud Powell Trio"
         
         let single = getSingle(genre: genre, artist: artist)
-        
-        try! deleteSingle(single.id)
-        
-        let expectedFileCount = 1
-        var fileCount = 0
-        
-        let publisher = try api.postSingle(single)
-        let expectation = self.expectation(description: #function)
-        
-        // When
-        
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        XCTFail("Single post failed with error \(apiError)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in fileCount += 1})
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        XCTAssertEqual(fileCount, expectedFileCount)
-        
-        try deleteSingle(single.id)
-        
+
+        do {
+            // When
+            let transaction = try await api.post(single: single)
+            // Then
+            XCTAssertEqual(transaction.entity, "single")
+            XCTAssertEqual(transaction.method, "POST")
+            XCTAssertEqual(transaction.id, single.id)
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            }
+            XCTFail("Unexpected failure \(error.localizedDescription)")
+        }
+
+        try await deleteSingle(single.id)
     }
     
-    func testPostSingleFile() throws {
+    func testPostSingleFile() async throws {
         // Given
         let genre = "Rock"
         let artist = "Roy Orbison"
         let filename = "test.txt"
         
-        let single = try! createSingle(genre: genre, artist: artist, jsonFilename: "01 Crying.json")
-        
-        let expectedFileCount = 1
-        var fileCount = 0
-        
-        let publisher = try api.postSingleFile(single, filename: filename)
-        let expectation = self.expectation(description: #function)
-        
-        // When
-        
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        XCTFail("Single file post failed with error \(apiError)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in fileCount += 1 })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        
-        XCTAssertEqual(fileCount, expectedFileCount)
-        
-        try! deleteSingleFile(single.id, filename: filename)
-        try! deleteSingle(single.id)
+        let single = try await createSingle(genre: genre, artist: artist, jsonFilename: "01 Crying.json")
+
+        do {
+            // When
+            try await api.postFile(single: single, filename: filename)
+            // Then
+            //  Success
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            } else {
+                XCTFail("Unexpected failure \(error.localizedDescription)")
+            }
+        }
+
+        try await api.deleteFile(singleId: single.id, filename: filename)
+        try await deleteSingle(single.id)
         
     }
     
-    func testPutSingle() throws {
+    func testPutSingle() async throws {
         // Given
         let genre = "Jazz"
         let artist = "Bud Powell Trio"
         
-        let testSingle = try! createSingle(genre: genre, artist: artist)
+        let testSingle = try await createSingle(genre: genre, artist: artist)
 
         var single = testSingle
         single.title = "Move"
         single.artist = "Stan Getz"
-        
-        let expectedFileCount = 1
-        var fileCount = 0
-        
-        let publisher = try api.putSingle(single)
-        let expectation = self.expectation(description: #function)
-        
-        // When
-        
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        XCTFail("Single put failed with error \(apiError)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in fileCount += 1 })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        
-        XCTAssertEqual(fileCount, expectedFileCount)
-        
-        try! deleteSingle(single.id)
+
+        do {
+            // When
+            let transaction = try await api.put(single: single)
+            // Then
+            XCTAssertEqual(transaction.entity, "single")
+            XCTAssertEqual(transaction.method, "PUT")
+            XCTAssertEqual(transaction.id, testSingle.id)
+
+        }
+
+        try await deleteSingle(testSingle.id)
     }
     
-    func testPutSingleFile() throws {
+    func testPutSingleFile() async throws {
         // Given
         let genre = "Jazz"
         let artist = "Bud Powell Trio"
         let filename =  "14 Get Happy.mp3"
         
-        let expectedFileCount = 1
-        var fileCount = 0
-        
-        let single = try createSingle(genre: genre, artist: artist)
-        
-        let publisher = try api.putSingleFile(single, filename: filename)
-        let expectation = self.expectation(description: #function)
-        
-        // When
+        let single = try await createSingle(genre: genre, artist: artist)
 
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        XCTFail("Single put file failed with error \(apiError)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in fileCount += 1 })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-
-        // Then
-        XCTAssertEqual(fileCount, expectedFileCount)
-        
-        try deleteSingle(single.id)
-    }
-    
-    func testDeleteSingle() throws {
-        // Given
-        let genre = "Rock"
-        let artist = "Roy Orbison"
-        
-        let testSingle1 = try! createSingle(genre: genre, artist: artist, jsonFilename: "01 Crying.json")
-        let testSingle2 = try! createSingle(genre: genre, artist: artist, jsonFilename: "01 Roy Orbison - Pretty Woman.json")
-        let testSingle3 = try! createSingle(genre: genre, artist: artist, jsonFilename: "05 It's Over.json")
-        let testSingle4 = try! createSingle(genre: genre, artist: artist, jsonFilename: "Blue Bayou.json")
-        
-        let publisher = try api.deleteSingle(testSingle3.id)
-        let expectation = self.expectation(description: #function)
-        
-        // When
-        
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        XCTFail("Single delete failed with error \(apiError)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        
-        let exp = self.expectation(description: #function + ": THEN")
-        
-        try api.getSingles(fields: "title")
-            .map {
-                $0.singles.map { $0.title }
+        do {
+            // When
+            try await api.putFile(single: single, filename: filename)
+            // Then
+            //  Success
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            } else {
+                XCTFail("Unexpected failure \(error.localizedDescription)")
             }
-            .sink(
-                receiveCompletion: { _ in exp.fulfill() },
-                receiveValue: { titles in
-                    XCTAssertEqual(titles.count, 3)
-                    if titles.contains(testSingle3.title) {
-                        XCTFail("Single not deleted \(testSingle3.title)")
-                    }
-                })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        try! deleteSingle(testSingle1.id)
-        try! deleteSingle(testSingle2.id)
-        try! deleteSingle(testSingle3.id)
-        try! deleteSingle(testSingle4.id)
+        }
+
+        try await api.deleteFile(singleId: single.id, filename: filename)
+        try await deleteSingle(single.id)
     }
     
-    func testDeleteSingleFile() throws {
+    func testDeleteSingle() async throws {
         // Given
         let genre = "Rock"
         let artist = "Roy Orbison"
-        let filename = "test.txt"
         
-        let single = try! createSingle(genre: genre, artist: artist, jsonFilename: "01 Crying.json")
+        let testSingle1 = try await createSingle(genre: genre, artist: artist, jsonFilename: "01 Crying.json")
+        let testSingle2 = try await createSingle(genre: genre, artist: artist, jsonFilename: "01 Roy Orbison - Pretty Woman.json")
+        let testSingle3 = try await createSingle(genre: genre, artist: artist, jsonFilename: "05 It's Over.json")
+        let testSingle4 = try await createSingle(genre: genre, artist: artist, jsonFilename: "Blue Bayou.json")
+
+        do {
+            // When
+            let transaction = try await api.delete(singleId: testSingle3.id)
+            // Then
+            XCTAssertEqual(transaction.entity, "single")
+            XCTAssertEqual(transaction.method, "DELETE")
+            XCTAssertEqual(transaction.id, testSingle3.id)
+            let apiSingles = try await api.getSingles(fields: "title", offset: nil, limit: nil)
+            let titles =  apiSingles.singles.map { $0.title }
+            XCTAssertEqual(titles.count, 3)
+            if titles.contains(testSingle3.title) {
+                XCTFail("Single not deleted \(testSingle3.title)")
+            }
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            }
+            XCTFail("Unexpected failure \(error.localizedDescription)")
+        }
+
+        try await deleteSingle(testSingle1.id)
+        try await deleteSingle(testSingle2.id)
+        try? await deleteSingle(testSingle3.id)
+        try await deleteSingle(testSingle4.id)
+    }
+    
+    func testDeleteSingleFile() async throws {
+        // Given
+        let genre = "Rock"
+        let artist = "Roy Orbison"
+        let filename = "01 Crying.mp3"
         
-        try! createSingleFile(single: single, filename: filename)
+        let single = try await createSingle(genre: genre, artist: artist, jsonFilename: "01 Crying.json")
         
-        var fileCount = 0
-        
-        let publisher = try api.deleteSingleFile(single.id, filename: filename)
-        let expectation = self.expectation(description: #function)
-        
-        // When
-        
-        publisher
-            .sink(
-                receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let apiError):
-                        XCTFail("Single file delete failed with error \(apiError)")
-                    case .finished:
-                        break
-                    }
-                    expectation.fulfill()
-                },
-                receiveValue: { _ in  fileCount += 1 })
-            .store(in: &subscriptions)
-        
-        waitForExpectations(timeout: 2, handler: nil)
-        
-        // Then
-        XCTAssertEqual(fileCount, 1)
-        
-        try deleteSingle(single.id)
+        do {
+            // When
+            try await api.deleteFile(singleId: single.id, filename: filename)
+            // Then
+            //  Success
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            } else {
+                XCTFail("Unexpected failure \(error.localizedDescription)")
+            }
+        }
+        do {
+            try await api.deleteFile(singleId: single.id, filename: filename)
+            XCTFail("Double delete did not fail")
+        } catch APIError.notFound {
+            // Success
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            } else {
+                XCTFail("Unexpected failure \(error.localizedDescription)")
+            }
+        }
+
+        try await deleteSingle(single.id)
     }
     
     // MARK: *** Playlist ***
@@ -1173,6 +745,13 @@ final class MyMusicAPITests: XCTestCase {
         ("testGetAlbum", testGetAlbum),
         ("testGetAlbumNotFound", testGetAlbumNotFound),
         ("testGetAlbumBadPort", testGetAlbumBadPort),
+        ("testGetAlbumFile", testGetAlbumFile),
+        ("testPostAlbum", testPostAlbum),
+        ("testPostAlbumFile", testPostAlbumFile),
+        ("testPutAlbum", testPutAlbum),
+        ("testPutAlbumFile", testPutAlbumFile),
+        ("testDeleteAlbum", testDeleteAlbum),
+        ("testDeleteAlbumFile", testDeleteAlbumFile),
         ("testGetSingles", testGetSingles),
         ("testGetSingle", testGetSingle),
         ("testGetSingleNotFound", testGetSingleNotFound),

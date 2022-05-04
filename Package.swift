@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.6
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "MyMusicAPI",
     platforms: [
-        .macOS(.v10_15),
+        .macOS(.v12),
         .iOS(.v13)
     ],
     products: [
@@ -19,7 +19,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         // .package(url: /* package url */, from: "1.0.0"),
         .package(
-            name: "MusicMetadata",
+//            name: "MusicMetadata",
             url: "https://github.com/rcheal/MusicMetadata.git",
             from: "1.0.0"),
     ],
