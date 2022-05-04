@@ -523,7 +523,7 @@ public class MyMusicAPI {
     /**
      GET /{albumsEndpoint}/:id
      */
-    @available(*, deprecated, message: "Use 'get(albumId:) async throws' instead")
+//    @available(*, deprecated, message: "Use 'get(albumId:) async throws' instead")
     func getAlbum(_ id: String) throws -> AnyPublisher<Album, APIError> {
         return apiGetPublisher(albumsEndpoint, id: id)
             .decode(type: Album.self, decoder: JSONDecoder())
@@ -541,7 +541,7 @@ public class MyMusicAPI {
      POST /{albumsEndpoint}/:id/:filename
      ...    (repeat for each image and audio file in album)
      */
-    @available(*, deprecated, message: "Use 'post(album:) async throws -> Transsaction' instead")
+//    @available(*, deprecated, message: "Use 'post(album:) async throws -> Transsaction' instead")
     public func postAlbum(_ album: Album) throws -> AnyPublisher<Void, APIError> {
         let publisher = PassthroughSubject<AnyPublisher<Void, APIError>, APIError>()
         if let json = album.json,
@@ -585,7 +585,7 @@ public class MyMusicAPI {
     /**
      PUT /{albumsEndpoint}/:id
      */
-    @available(*, deprecated, message: "Use 'put(album:skipFiles) async throws -> Transsaction' instead")
+//    @available(*, deprecated, message: "Use 'put(album:skipFiles) async throws -> Transsaction' instead")
     public func putAlbum(_ album: Album, skipFiles: Bool = true) throws -> AnyPublisher<Void, APIError> {
         let publisher = PassthroughSubject<AnyPublisher<Void, APIError>, APIError>()
         if let json = album.json,
@@ -632,7 +632,7 @@ public class MyMusicAPI {
     /**
      DELETE /{albumsEndpoint}/:id
      */
-    @available(*, deprecated, message: "Use 'delete(albumId:) async throws' instead")
+//    @available(*, deprecated, message: "Use 'delete(albumId:) async throws' instead")
     public func deleteAlbum(_ id: String) throws -> AnyPublisher<Void, APIError> {
         return apiDeletePublisher(albumsEndpoint, id: id)
             .eraseToAnyPublisher()
@@ -754,12 +754,12 @@ public class MyMusicAPI {
     /**
      GET /{albumsEndpoint}/:id/:filename}
      */
-    @available(*, deprecated, message: "Use 'getFile(album:filename) async throws -> Data' instead")
+//    @available(*, deprecated, message: "Use 'getFile(album:filename) async throws -> Data' instead")
     public func getAlbumFile(_ id: String, filename: String) throws -> AnyPublisher<Data, APIError> {
         return apiGetPublisher(albumsEndpoint, id: id, filename: filename)
     }
 
-    @available(*, deprecated, message: "Use 'postFile(album:filename) async throws' instead")
+//    @available(*, deprecated, message: "Use 'postFile(album:filename) async throws' instead")
     public func postAlbumFile(_ album: Album, filename: String) throws -> AnyPublisher<Void, APIError> {
         if let directory = album.directory {
             let localAlbumURL = fileRootURL.appendingPathComponent(directory)
