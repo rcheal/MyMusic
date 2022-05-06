@@ -1,0 +1,17 @@
+{
+  "id" : "291a5302-dab8-4ab9-85ef-77f79b17fb4f",
+  "title" : "Blues Playlist",
+  "shared" : true,
+  "items" : [
+    {
+      "id" : "87bd8df2-c97d-47d4-b451-5107bb3abc09",
+      "playlistType" : "single"
+    },
+    {
+      "id" : "0f6d8720-9c10-4e9b-a00a-54b0263b32ca",
+      "playlistType" : "album"
+    }
+  ]
+}
+
+

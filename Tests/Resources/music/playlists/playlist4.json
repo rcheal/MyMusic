@@ -1,0 +1,17 @@
+{
+  "id" : "1381c1e4-35d1-4914-bd4a-744e999bf16b",
+  "title" : "Rock Playlist",
+  "shared" : false,
+  "items" : [
+    {
+      "id" : "89fee22d-79bf-4a5f-ab39-0e3823996243",
+      "playlistType" : "single"
+    },
+    {
+      "id" : "74864652-fd38-4db2-ab28-768237765ca0",
+      "playlistType" : "album"
+    }
+  ]
+}
+
+

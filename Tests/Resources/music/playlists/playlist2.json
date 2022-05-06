@@ -1,0 +1,16 @@
+{
+  "id" : "52cf927e-a82b-45c1-9999-0eb3b22d9293",
+  "title" : "Jazz Playlist",
+  "shared" : true,
+  "items" : [
+    {
+      "id" : "84a15b41-f088-4c4f-b2b3-d31bbf1db1bf",
+      "playlistType" : "single"
+    },
+    {
+      "id" : "69beb6e0-e173-4995-b7aa-5acdca7b4af5",
+      "playlistType" : "album"
+    }
+  ]
+}
+

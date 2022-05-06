@@ -1,0 +1,29 @@
+{
+  "id" : "10d32832-0850-4e4e-bd3a-a498b975fa4e",
+  "title" : "Classical Playlist",
+  "shared" : false,
+  "user" : "bob",
+  "items" : [
+    {
+      "id" : "ac26b946-1b03-407c-922c-75511dd213de",
+      "playlistType" : "single"
+    },
+    {
+      "id" : "a281dc86-92ed-4098-9ab4-6a97dd511579",
+      "playlistType" : "album"
+    },
+    {
+      "id" : "bfe39f0d-0c1a-4c57-a575-7a911895540b",
+      "playlistType" : "composition"
+    },
+    {
+      "id" : "82475e20-95b5-46b0-9c20-8ae4e7fa6539",
+      "playlistType" : "movement"
+    },
+    {
+      "id" : "ce5c07c4-a766-41a8-b75d-c65c9d260465",
+      "playlistType" : "playlist"
+    }
+  ]
+}
+

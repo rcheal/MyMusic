@@ -112,7 +112,41 @@ final class MyMusicAPITests: XCTestCase {
 
         let _ = try await api.delete(singleId: id)
     }
+
+    func getPlaylistURL() -> URL {
+        let fileRootURL = try! Resource(relativePath: "music").url
+        api.fileRootURL = fileRootURL
+        return fileRootURL.appendingPathComponent("playlists")
+    }
+
+    func getPlaylist(jsonFilename: String? = nil) throws -> Playlist {
+        let filename = jsonFilename ?? "playlist.json"
+        let jsonFileURL = getPlaylistURL().appendingPathComponent(filename)
+
+        let json = FileManager.default.contents(atPath: jsonFileURL.path)!
+
+        do {
+            return try JSONDecoder().decode(Playlist.self, from: json)
+        } catch {
+            print("JSON decode error: \(error.localizedDescription)")
+            throw error
+        }
+    }
+
+    func createPlaylist(jsonFilename: String? = nil) async throws -> Playlist {
+        let filename = jsonFilename ?? "playlist.json"
+
+        let playlist = try getPlaylist(jsonFilename: filename)
+
+        let _ = try await api.post(playlist: playlist)
+
+        return playlist
+    }
     
+    func deletePlaylist(_ id: String) async throws {
+        let _ = try await api.delete(playlistId: id)
+    }
+
     // MARK: *** Server ***
     
     func testGetServerInfo() async throws {
@@ -303,6 +337,13 @@ final class MyMusicAPITests: XCTestCase {
             XCTFail("Unexpected failure \(error.localizedDescription)")
         }
 
+        do {
+            let verifyAlbum = try await api.get(albumId: album.id)
+            XCTAssertEqual(verifyAlbum.json, album.json)
+        } catch {
+            XCTFail("Posted album not found - \(error.localizedDescription)")
+        }
+
         try await deleteAlbum(album.id)
     }
     
@@ -347,6 +388,24 @@ final class MyMusicAPITests: XCTestCase {
             XCTAssertEqual(transaction.entity, "album")
             XCTAssertEqual(transaction.method, "PUT")
             XCTAssertEqual(transaction.id, testAlbum.id)
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            } else {
+                XCTFail("Unexpected failure \(error.localizedDescription)")
+            }
+        }
+
+        do {
+            let verifyAlbum = try await api.get(albumId: album.id)
+            // Verify modified fields
+            XCTAssertEqual(verifyAlbum.title, album.title)
+            XCTAssertEqual(verifyAlbum.composer, album.composer)
+            // Verify all other fields
+            var verifyAlbum2 = testAlbum
+            verifyAlbum2.title = album.title
+            verifyAlbum2.artist = album.artist
+            XCTAssertEqual(verifyAlbum.json, verifyAlbum2.json)
         }
 
         try await deleteAlbum(testAlbum.id)
@@ -391,6 +450,15 @@ final class MyMusicAPITests: XCTestCase {
                 XCTFail("Failed with error - \(apiError)")
             }
             XCTFail("Unexpected failure \(error.localizedDescription)")
+        }
+
+        do {
+            let _ = try await api.get(albumId: testAlbum.id)
+            XCTFail("Album still exists")
+        } catch APIError.notFound {
+            // Success
+        } catch {
+            XCTFail("Unexpected failure during verification \(error.localizedDescription)")
         }
     }
     
@@ -586,6 +654,13 @@ final class MyMusicAPITests: XCTestCase {
             XCTFail("Unexpected failure \(error.localizedDescription)")
         }
 
+        do {
+            let verifySingle = try await api.get(singleId: single.id)
+            XCTAssertEqual(verifySingle.json, single.json)
+        } catch {
+            XCTFail("Posted single not found - \(error.localizedDescription)")
+        }
+
         try await deleteSingle(single.id)
     }
     
@@ -633,7 +708,24 @@ final class MyMusicAPITests: XCTestCase {
             XCTAssertEqual(transaction.entity, "single")
             XCTAssertEqual(transaction.method, "PUT")
             XCTAssertEqual(transaction.id, testSingle.id)
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            } else {
+                XCTFail("Unexpected failure \(error.localizedDescription)")
+            }
+        }
 
+        do {
+            let verifySingle = try await api.get(singleId: single.id)
+            // Verify modified fields
+            XCTAssertEqual(verifySingle.title, single.title)
+            XCTAssertEqual(verifySingle.artist, single.artist)
+            // Verify all other fields
+            var verifySingle2 = testSingle
+            verifySingle2.title = single.title
+            verifySingle2.artist = single.artist
+            XCTAssertEqual(verifySingle.json, verifySingle2.json)
         }
 
         try await deleteSingle(testSingle.id)
@@ -737,8 +829,228 @@ final class MyMusicAPITests: XCTestCase {
     }
     
     // MARK: *** Playlist ***
-    
-    
+
+    func testGetPlaylists() async throws {
+        let playlist1 = try await createPlaylist(jsonFilename: "playlist1.json")
+        let playlist2 = try await createPlaylist(jsonFilename: "playlist2.json")
+        let playlist3 = try await createPlaylist(jsonFilename: "playlist3.json")
+        let playlist4 = try await createPlaylist(jsonFilename: "playlist4.json")
+
+        let fields = "title,user,shared"
+        let offset = 1
+        let limit = 2
+
+        do {
+            // When
+            let apiPlaylists = try await api.getPlaylists(fields: fields, offset: offset, limit: limit)
+            let playlists = apiPlaylists.playlists.map { PlaylistSummary ($0) }
+            // Then
+            XCTAssertEqual(playlists.count, 2)
+            for playlist in playlists {
+                switch playlist.id {
+                case playlist2.id:
+                    XCTAssertEqual(playlist.title, playlist2.title)
+                case playlist3.id:
+                    XCTAssertEqual(playlist.title, playlist3.title)
+                default:
+                    XCTFail("Unexpected playlist: \(playlist.title)")
+                }
+            }
+        } catch {
+            XCTFail("Unexpected Failure: \(error.localizedDescription)")
+        }
+
+        //Cleanup
+        try await deletePlaylist(playlist1.id)
+        try await deletePlaylist(playlist2.id)
+        try await deletePlaylist(playlist3.id)
+        try await deletePlaylist(playlist4.id)
+    }
+
+    func testGetPlaylist() async throws {
+        // Given
+        let testPlaylist = try await createPlaylist(jsonFilename: "playlist1.json")
+
+        do {
+            // When
+            let playlist = try await api.get(playlistId: testPlaylist.id)
+            // Then
+            XCTAssertEqual(playlist.title, "Classical Playlist")
+            XCTAssertEqual(playlist.user, "bob")
+            XCTAssertEqual(playlist.shared, false)
+            XCTAssertEqual(playlist.items.count, 5)
+            var index = 0
+            for item in playlist.items {
+                index += 1
+                switch index {
+                case 1:
+                    XCTAssertEqual(item.id, "ac26b946-1b03-407c-922c-75511dd213de")
+                    XCTAssertEqual(item.playlistType, .single)
+                case 2:
+                    XCTAssertEqual(item.id, "a281dc86-92ed-4098-9ab4-6a97dd511579")
+                    XCTAssertEqual(item.playlistType, .album)
+                case 3:
+                    XCTAssertEqual(item.id, "bfe39f0d-0c1a-4c57-a575-7a911895540b")
+                    XCTAssertEqual(item.playlistType, .composition)
+                case 4:
+                    XCTAssertEqual(item.id, "82475e20-95b5-46b0-9c20-8ae4e7fa6539")
+                    XCTAssertEqual(item.playlistType, .movement)
+                case 5:
+                    XCTAssertEqual(item.id, "ce5c07c4-a766-41a8-b75d-c65c9d260465")
+                    XCTAssertEqual(item.playlistType, .playlist)
+                default:
+                    break
+                }
+            }
+        } catch APIError.notFound {
+            XCTFail("Playlist not found")
+        } catch {
+            XCTFail("Unexpected failure: \(error.localizedDescription)")
+        }
+
+        // Cleanup
+        try await deletePlaylist(testPlaylist.id)
+
+    }
+
+    func testGetPlaylistNotFound() async throws {
+        // Given
+        let id = "2AF8F474-5B5B-4183-860A-BF96F50F6F9F"
+
+        do {
+            // When
+            let _ = try await api.get(playlistId: id)
+            // Then
+            XCTFail("Playlist found")
+        } catch APIError.notFound {
+            // Success
+        } catch {
+            XCTFail("Unexpected error - \(error.localizedDescription)")
+        }
+
+    }
+
+    func testGetPlaylistBadPort() async throws {
+        // Given
+        let testPlaylist = try await createPlaylist(jsonFilename: "playlist3.json")
+
+        api.serverURL = "http://127.0.0.1:8280"
+
+        do {
+            // When
+            let _ = try await api.get(playlistId: testPlaylist.id)
+            // Then
+            XCTFail("Unexpected Success")
+        } catch {
+            if let apiError = error as? APIError {
+                switch apiError {
+                case .networkError(let error):
+                    XCTAssertEqual(error.errorCode, -1004)
+                default:
+                    XCTFail("Unexpected error: \(apiError)")
+                }
+            }
+        }
+
+        api.serverURL = defaultServerURL
+
+        try await deletePlaylist(testPlaylist.id)
+
+    }
+
+    func testPostPlaylist() async throws {
+        // Given
+        let playlist = try getPlaylist(jsonFilename: "playlist1.json")
+
+        do {
+            // When
+            let transaction = try await api.post(playlist: playlist)
+            // Then
+            XCTAssertEqual(transaction.entity, "playlist")
+            XCTAssertEqual(transaction.method, "POST")
+            XCTAssertEqual(transaction.id, playlist.id)
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            }
+            XCTFail("Unexpected failure \(error.localizedDescription)")
+         }
+
+        do {
+            let verifyPlaylist = try await api.get(playlistId: playlist.id)
+            XCTAssertEqual(verifyPlaylist.json, playlist.json)
+        } catch {
+            XCTFail("Posted playlist not found - \(error.localizedDescription)")
+        }
+
+        try await deletePlaylist(playlist.id)
+    }
+
+    func testPutPlaylist() async throws {
+        // Given
+        let testPlaylist = try await createPlaylist(jsonFilename: "playlist1.json")
+
+        var playlist = testPlaylist
+        playlist.title = "New Age Playlist"
+        playlist.user = "sharon"
+        do {
+            // When
+            let transaction = try await api.put(playlist: playlist)
+            // then
+            XCTAssertEqual(transaction.entity, "playlist")
+            XCTAssertEqual(transaction.method, "PUT")
+            XCTAssertEqual(transaction.id, testPlaylist.id)
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            } else {
+                XCTFail("Unexpected failure \(error.localizedDescription)")
+            }
+        }
+
+        do {
+            let verifyPlaylist = try await api.get(playlistId: playlist.id)
+            // Verify modified fields
+            XCTAssertEqual(verifyPlaylist.title, playlist.title)
+            XCTAssertEqual(verifyPlaylist.user, playlist.user)
+            // Verify all other fields
+            var verifyPlaylist2 = testPlaylist
+            verifyPlaylist2.title = playlist.title
+            verifyPlaylist2.user = playlist.user
+            XCTAssertEqual(verifyPlaylist.json, verifyPlaylist2.json)
+        }
+
+        try await deletePlaylist(testPlaylist.id)
+    }
+
+    func testDeletePlaylist() async throws {
+        // Given
+        let testPlaylist = try await createPlaylist(jsonFilename: "playlist1.json")
+
+        do {
+            // When
+            let transaction =  try await api.delete(playlistId: testPlaylist.id)
+            // Then
+            XCTAssertEqual(transaction.entity, "playlist")
+            XCTAssertEqual(transaction.method, "DELETE")
+            XCTAssertEqual(transaction.id, testPlaylist.id)
+        } catch {
+            if let apiError = error as? APIError {
+                XCTFail("Failed with error - \(apiError)")
+            }
+            XCTFail("Unexpected failure \(error.localizedDescription)")
+        }
+
+        do {
+            let _ = try await api.get(playlistId: testPlaylist.id)
+            XCTFail("Playlist still exists")
+        } catch APIError.notFound {
+            // Success
+        } catch {
+            XCTFail("Unexpected failure during verification \(error.localizedDescription)")
+        }
+    }
+
     static var allTests = [
         ("testGetServerInfo", testGetServerInfo),
         ("testGetAlbums", testGetAlbums),
@@ -755,5 +1067,20 @@ final class MyMusicAPITests: XCTestCase {
         ("testGetSingles", testGetSingles),
         ("testGetSingle", testGetSingle),
         ("testGetSingleNotFound", testGetSingleNotFound),
+        ("testGetSingleBadPort", testGetSingleBadPort),
+        ("testGetSingleFile", testGetSingleFile),
+        ("testPostSingle", testPostSingle),
+        ("testPostSingleFile", testPostSingleFile),
+        ("testPutSingle", testPutSingle),
+        ("testPutSingleFile", testPutSingleFile),
+        ("testDeleteSingle", testDeleteSingle),
+        ("testDeleteSingleFile", testDeleteSingleFile),
+        ("testGetPlaylists", testGetPlaylists),
+        ("testGetPlaylist", testGetPlaylist),
+        ("testGetPlaylistNotFound", testGetPlaylistNotFound),
+        ("testGetPlaylistBadPort", testGetPlaylistBadPort),
+        ("testPostPlaylist", testPostPlaylist),
+        ("testPutPlaylist", testPutPlaylist),
+        ("testDeletePlaylist", testDeletePlaylist)
     ]
 }

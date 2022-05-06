@@ -936,7 +936,6 @@ public class MyMusicAPI {
 
      - Returns: Transaction
      */
-
     public func put(single: Single, skipFiles: Bool = true) async throws -> Transaction {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(single.id)
@@ -968,7 +967,7 @@ public class MyMusicAPI {
 
      Deletes single and associated audio file from the server.
 
-     - Parameter albumId: Unique id of the single to be deleted
+     - Parameter singleId: Unique id of the single to be deleted
 
      - Returns: Transaction
      */
@@ -1233,45 +1232,173 @@ public class MyMusicAPI {
         return apiDeletePublisher(singlesEndpoint, id: id, filename: filename)
     }
     
-    // MARK: Playlists
-    
+    // MARK: - Playlists
+
     /**
      GET /{playlistsEndpoint}?fields&offset&limit
-     */
-//    public func getPlaylists(fields: String? = nil, offset: Int? = nil, limit: Int? = nil) throws -> AnyPublisher<APIPlaylists, APIError> {
-//        return apiGetListPublisher(playlistsEndpoint, fields: fields, offset: offset, limit: limit)
-//            .decode(type: APIPlaylists.self, decoder: JSONDecoder())
-//            .mapError { error in
-//                if let error = error as? APIError {
-//                    return error
-//                }
-//                return APIError.unknown
-//            }
-//            .eraseToAnyPublisher()
-//    }
 
-//    public func getPlaylist(_ id: String) throws -> AnyPublisher<Playlist, APIError> {
-//        return apiGetPublisher(playlistsEndpoint, id: id)
-//            .decode(type: Playlist.self, decoder: JSONDecoder())
-//            .mapError { error in
-//                if let error = error as? APIError {
-//                    return error
-//                }
-//                return APIError.unknown
-//            }
-//            .eraseToAnyPublisher()
-//    }
-    
-//    public func postPlaylist(_ playlist: Playlist) throws {
-//        
-//    }
-    
-//    public func putPlaylist(_ playlist: Playlist) throws {
-//        
-//    }
-    
-//    public func deletePlaylist(_ playlist: Playlist) throws {
-//
-//    }
-    
+     HTTP call to return a list of playlists.  Use fields to limit the metadata for each playlist and offset/limit to page through the results
+
+     - Parameter fields: A comma separated list of fields to be include in the result.  nil for all fields
+     - Parameter offset: Offset in list of all playlists, to start the result
+     - Parameter limit: Maximum number of playlists to return
+
+     - Returns: APIPlaylists
+     */
+    public func getPlaylists(fields: String? = nil, offset: Int? = nil, limit: Int? = nil) async throws -> APIPlaylists {
+        if let url = URL(string: serverURL) {
+            var endPoint = url.appendingPathComponent(playlistsEndpoint)
+            var queryItems: [(String,String)] = []
+            if let fields = fields {
+                queryItems.append(("fields",fields))
+            }
+            if let offset = offset {
+                queryItems.append(("offset",String(offset)))
+            }
+            if let limit = limit {
+                queryItems.append(("limit",String(limit)))
+            }
+            endPoint.append(queryItems: queryItems)
+            var request = URLRequest(url: endPoint)
+            request.httpMethod = "GET"
+            let (data, response) = try await URLSession.shared.data(for: request)
+            if let playlists = try? JSONDecoder().decode(APIPlaylists.self, from: data) {
+                return playlists
+            }
+            throw getAPIError(from: response)
+        }
+        throw APIError.badURL
+    }
+
+    /**
+     HEAD /{playlistsEndpoint}/:id
+
+     HTTP HEAD call to determine if a specific playlist exits.
+
+     - Parameter playlistId: Unique id of specific playlist to check
+
+     - Returns: true if playlist exists, false otherwise.
+     */
+    public func head(playlistId: String) async throws -> Bool {
+        if let endPoint = URL(string: playlistsEndpoint)?.appendingPathComponent(playlistId) {
+            var request = URLRequest(url: endPoint)
+            request.httpMethod = "HEAD"
+            let (_, response) = try await URLSession.shared.data(for: request)
+            let error = getAPIError(from: response)
+            switch error {
+            case .ok:
+                return true
+            case .notFound:
+                return false
+            default:
+                throw error
+            }
+        }
+        throw APIError.badURL
+    }
+
+    /**
+     GET /{playlistsEndpoint}/:id
+
+     HTTP call to retrieve a specfic playlist's metadata.
+
+     - Parameter playlistId: Unique id of specific playlist to retrieve
+
+     - Returns: playlist
+     */
+    public func get(playlistId: String) async throws -> Playlist {
+        if let url = URL(string: serverURL) {
+            let endPoint = url.appendingPathComponent(playlistsEndpoint).appendingPathComponent(playlistId)
+            var request = URLRequest(url: endPoint)
+            request.httpMethod = "GET"
+            let (data, response) = try await URLSession.shared.data(for: request)
+            if let playlist = Playlist.decodeFrom(json: data) {
+                return playlist
+            }
+            throw getAPIError(from: response)
+        }
+        throw APIError.badURL
+    }
+
+    /**
+     POST playlist metadata to server
+
+     POSTs playlist metadata to server.
+
+     POST /(playlistsEndpoint}/:id
+
+     - Parameter playlist: Playlist metadata to post
+
+     - Returns: Transaction
+     */
+    public func post(playlist: Playlist) async throws -> Transaction {
+        if let url = URL(string: serverURL) {
+            let endPoint = url.appendingPathComponent(playlistsEndpoint).appendingPathComponent(playlist.id)
+            var request = URLRequest(url: endPoint)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            if let json = playlist.json {
+                let (data, response) = try await URLSession.shared.upload(for: request, from: json)
+                if let transaction = Transaction.decodeFrom(json: data) {
+                    return transaction
+                }
+                throw getAPIError(from: response)
+            }
+            throw APIError.badRequest
+        }
+        throw APIError.badURL
+    }
+
+    /**
+     PUT playlist metadata to server
+
+     PUTs playlist metadata to server.
+
+     PUT /{playlistsEndpoint}/:id
+
+     - Parameter playlist: Playlist metadata to put
+
+     - Returns: Transaction
+     */
+    public func put(playlist: Playlist) async throws -> Transaction {
+        if let url = URL(string: serverURL) {
+            let endPoint = url.appendingPathComponent(playlistsEndpoint).appendingPathComponent(playlist.id)
+            var request = URLRequest(url: endPoint)
+            request.httpMethod = "PUT"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            if let json = playlist.json {
+                let (data, response) = try await URLSession.shared.upload(for: request, from: json)
+                if let transaction = Transaction.decodeFrom(json: data) {
+                    return transaction
+                }
+                throw getAPIError(from: response)
+            }
+            throw APIError.badRequest
+        }
+        throw APIError.badURL
+    }
+
+    /**
+     DELETE /{playlistsEndpoint}/:id
+
+     Deletes playlist from the server.
+
+     - Parameter playlistId: Unique id of the playlist to be deleted
+
+     - Returns: Transaction
+     */
+     public func delete(playlistId: String) async throws -> Transaction {
+        if let url = URL(string: serverURL) {
+            let endpointURL = url.appendingPathComponent(playlistsEndpoint).appendingPathComponent(playlistId)
+            var request = URLRequest(url: endpointURL)
+            request.httpMethod = "DELETE"
+
+            let (data, _) = try await URLSession.shared.data(for: request)
+            return try JSONDecoder().decode(Transaction.self, from: data)
+        }
+        throw  APIError.badURL
+    }
+
+
+
 }
