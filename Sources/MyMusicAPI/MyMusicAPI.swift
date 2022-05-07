@@ -324,7 +324,9 @@ public class MyMusicAPI {
             if let limit = limit {
                 queryItems.append(("limit",String(limit)))
             }
-            endPoint.append(queryItems: queryItems)
+            if !queryItems.isEmpty {
+                endPoint.append(queryItems: queryItems)
+            }
             var request = URLRequest(url: endPoint)
             request.httpMethod = "GET"
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -812,7 +814,9 @@ public class MyMusicAPI {
             if let limit = limit {
                 queryItems.append(("limit",String(limit)))
             }
-            endPoint.append(queryItems: queryItems)
+            if !queryItems.isEmpty {
+                endPoint.append(queryItems: queryItems)
+            }
             var request = URLRequest(url: endPoint)
             request.httpMethod = "GET"
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -1258,7 +1262,9 @@ public class MyMusicAPI {
             if let limit = limit {
                 queryItems.append(("limit",String(limit)))
             }
-            endPoint.append(queryItems: queryItems)
+            if !queryItems.isEmpty {
+                endPoint.append(queryItems: queryItems)
+            }
             var request = URLRequest(url: endPoint)
             request.httpMethod = "GET"
             let (data, response) = try await URLSession.shared.data(for: request)

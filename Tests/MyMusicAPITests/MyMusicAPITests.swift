@@ -224,6 +224,66 @@ final class MyMusicAPITests: XCTestCase {
         try await deleteAlbum(album4.id)
 
     }
+
+    func testGetAllAlbums() async throws {
+        // Given
+        let composer = "Mahler, Gustav (1860-1911)"
+
+
+        let album1 = try await createAlbum(title: "Symphony No. 10 - Adagio", composer: composer)
+        let album2 = try await createAlbum(title: "Symphony No. 1 'Titan'", composer: composer)
+        let album3 = try await createAlbum(title: "Symphony No. 8", composer: composer)
+        let album4 = try await createAlbum(title: "Symphony No.5 in C# minor", composer: composer)
+        let fields = "title,artist,composer,genre,recordingYear,frontart,directory"
+
+        do {
+            let apiAlbums = try await api.getAlbums(fields: fields)
+            let albums = apiAlbums.albums.map { AlbumSummary ($0) }
+            XCTAssertEqual(albums.count, 4)
+            for album in albums {
+                switch album.id {
+                case album1.id:
+                    XCTAssertEqual(album.title, album1.title)
+                    XCTAssertEqual(album.artist, album1.artist)
+                    XCTAssertEqual(album.composer, album1.composer)
+                    XCTAssertEqual(album.genre, album1.genre)
+                    XCTAssertEqual(album.frontArtFilename, album1.frontArtRef()?.filename)
+                    XCTAssertEqual(album.directory, album1.directory)
+                case album2.id:
+                    XCTAssertEqual(album.title, album2.title)
+                    XCTAssertEqual(album.artist, album2.artist)
+                    XCTAssertEqual(album.composer, album2.composer)
+                    XCTAssertEqual(album.genre, album2.genre)
+                    XCTAssertEqual(album.frontArtFilename, album2.frontArtRef()?.filename)
+                    XCTAssertEqual(album.directory, album2.directory)
+                case album3.id:
+                    XCTAssertEqual(album.title, album3.title)
+                    XCTAssertEqual(album.artist, album3.artist)
+                    XCTAssertEqual(album.composer, album3.composer)
+                    XCTAssertEqual(album.genre, album3.genre)
+                    XCTAssertEqual(album.frontArtFilename, album3.frontArtRef()?.filename)
+                    XCTAssertEqual(album.directory, album3.directory)
+                case album4.id:
+                    XCTAssertEqual(album.title, album4.title)
+                    XCTAssertEqual(album.artist, album4.artist)
+                    XCTAssertEqual(album.composer, album4.composer)
+                    XCTAssertEqual(album.genre, album4.genre)
+                    XCTAssertEqual(album.frontArtFilename, album4.frontArtRef()?.filename)
+                    XCTAssertEqual(album.directory, album4.directory)
+                default:
+                    XCTFail("Unexpected album: \(album.title)")
+                }
+            }
+        } catch {
+            XCTFail("Unexpected failure: \(error.localizedDescription)")
+        }
+
+        try await deleteAlbum(album1.id)
+        try await deleteAlbum(album2.id)
+        try await deleteAlbum(album3.id)
+        try await deleteAlbum(album4.id)
+
+    }
     
     func testGetAlbum() async throws {
         // Given
