@@ -341,7 +341,7 @@ public class MyMusicAPI {
     /**
      HEAD /{albumsEndpoint}/:id
 
-     HTTP HEAD call to determine if a specific album exits.
+     HTTP HEAD call to determine if a specific album exists.
 
      - Parameter albumId: Unique id of specific album to check
 
@@ -668,6 +668,40 @@ public class MyMusicAPI {
     /**
      POST /{albumsEndpoint}/:id/:filename}
 
+     Post a single file contents related to the album.
+
+     - Parameter albumId: Unique identifier of associated album
+
+     - Parameter filename: Filename of the file to post
+
+     - Parameter data: Content of file to post
+
+     - Returns: No return value
+
+     - Throws: APIError
+     */
+    public func postFile(albumId: String, filename: String, data: Data) async throws {
+        if let url = URL(string: serverURL) {
+            var endpointURL = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(albumId)
+            let contentType = "application/octet-stream"
+            endpointURL.appendPathComponent(filename)
+            var request = URLRequest(url: endpointURL)
+            request.httpMethod = "POST"
+            request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+
+            let (_, response) = try await URLSession.shared.upload(for: request, from: data)
+            let apiError = getAPIError(from: response)
+            if apiError == .ok {
+                return
+            }
+            throw apiError
+        }
+        throw APIError.badURL
+    }
+
+    /**
+     POST /{albumsEndpoint}/:id/:filename}
+
      Post a single file contents related to the album.  The file to post will be found on the local disk in the directory specified in the Album metadata
 
      - Parameter album: Previously retrieved (get(albumId:) metadata for the album
@@ -677,7 +711,10 @@ public class MyMusicAPI {
      - Returns: No return value
 
      - Throws: APIError
+
+     - Deprecated:  Use 'postFile(albumId:filename:data) async throws' instead
      */
+//    @available(*, deprecated, message: "Use 'postFile(albumId:filename:data) async throws' instead")
     public func postFile(album: Album, filename: String) async throws {
         if let directory = album.directory {
             let localAlbumURL = fileRootURL.appendingPathComponent(directory)
@@ -704,6 +741,44 @@ public class MyMusicAPI {
         throw APIError.badRequest
     }
 
+    /**
+     PUT /{albumsEndpoint}/:id/:filename}
+
+     Replace a single file contents related to the album.
+
+     - Parameter albumId: Unique identifier of associated album
+
+     - Parameter filename: Filename of the file to put
+
+     - Parameter data: Content of file to put
+
+     - Returns: No return value
+
+     - Throws: APIError
+     */
+    public func putFile(albumId: String, filename: String, data: Data) async throws {
+        if let url = URL(string: serverURL) {
+            var endpointURL = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(albumId)
+            let contentType = "application/octet-stream"
+            endpointURL.appendPathComponent(filename)
+            var request = URLRequest(url: endpointURL)
+            request.httpMethod = "PUT"
+            request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+
+            let (_, response) = try await URLSession.shared.upload(for: request, from: data)
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode != 200 {
+                    throw getAPIError(from: response)
+                }
+                return
+            }
+            throw APIError.unknown
+        }
+        throw APIError.badURL
+
+    }
+
+//    @available(*, deprecated, message: "Use 'putFile(albumId:filename:data) async throws' instead")
     public func putFile(album: Album, filename: String) async throws {
         if let directory = album.directory {
             let localAlbumURL = fileRootURL.appendingPathComponent(directory)
@@ -761,7 +836,7 @@ public class MyMusicAPI {
         return apiGetPublisher(albumsEndpoint, id: id, filename: filename)
     }
 
-//    @available(*, deprecated, message: "Use 'postFile(album:filename) async throws' instead")
+//    @available(*, deprecated, message: "Use 'postFile(albumId:filename:data) async throws' instead")
     public func postAlbumFile(_ album: Album, filename: String) throws -> AnyPublisher<Void, APIError> {
         if let directory = album.directory {
             let localAlbumURL = fileRootURL.appendingPathComponent(directory)
@@ -773,6 +848,7 @@ public class MyMusicAPI {
         throw APIError.unknown
     }
 
+//    @available(*, deprecated, message: "Use 'putFile(albumId:filename:data) async throws' instead")
     public func putAlbumFile(_ album: Album, filename: String) throws -> AnyPublisher<Void, APIError> {
         if let directory = album.directory {
             let localAlbumURL = fileRootURL.appendingPathComponent(directory)
@@ -784,6 +860,7 @@ public class MyMusicAPI {
         throw APIError.unknown
     }
 
+//    @available(*, deprecated, message: "Use 'deleteFile(albumId:filename) async throws' instead")
     public func deleteAlbumFile(_ id: String, filename: String) throws -> AnyPublisher<Void, APIError> {
         return apiDeletePublisher(albumsEndpoint, id: id, filename: filename)
     }
@@ -993,6 +1070,7 @@ public class MyMusicAPI {
     /**
      GET /{singlesEndpoint}?fields&offset&limit
      */
+//    @available(*, deprecated, message: "Use 'getSingles(fields:offset:limit:) async throws -> APISingles' instead")
     public func getSingles(fields: String? = nil, offset: Int? = nil, limit: Int? = nil) throws -> AnyPublisher<APISingles, APIError> {
         return apiGetListPublisher(singlesEndpoint, fields: fields, offset: offset, limit: limit)
             .decode(type: APISingles.self, decoder: JSONDecoder())
@@ -1008,6 +1086,7 @@ public class MyMusicAPI {
     /**
      GET /{singlesEndpoint}/:id
      */
+//    @available(*, deprecated, message: "Use 'get(singleId:) async throws -> Single' instead")
     public func getSingle(_ id: String) throws -> AnyPublisher<Single, APIError> {
         return apiGetPublisher(singlesEndpoint, id: id)
             .decode(type: Single.self, decoder: JSONDecoder())
@@ -1108,6 +1187,41 @@ public class MyMusicAPI {
     /**
      POST /{singlesEndpoint}/:id/:filename}
 
+     Post a file contents related to the single.
+
+     - Parameter single: Previously retrieved (get(singleId:) metadata for the single
+
+     - Parameter filename: Filename of the file to post
+
+     - Parameter data: Content of file to post
+
+     - Returns: No returrn value
+
+     - Throws: APIError
+     */
+    public func postFile(singleId: String, filename: String, data: Data) async throws {
+        if let url = URL(string: serverURL) {
+            var endpointURL = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(singleId)
+            let contentType = "application/octet-stream"
+            endpointURL.appendPathComponent(filename)
+            var request = URLRequest(url: endpointURL)
+            request.httpMethod = "POST"
+            request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+
+            let (_, response) = try await URLSession.shared.upload(for: request, from: data)
+            let apiError = getAPIError(from: response)
+            if apiError == .ok {
+                return
+            }
+            throw apiError
+        }
+        throw APIError.badURL
+
+    }
+
+    /**
+     POST /{singlesEndpoint}/:id/:filename}
+
      Post a file contents related to the single.  The file to post will be found on the local disk in the directory specified in the Single metadata
 
      - Parameter single: Previously retrieved (get(singleId:) metadata for the single
@@ -1142,6 +1256,40 @@ public class MyMusicAPI {
             }
         }
         throw APIError.badRequest
+    }
+
+    /**
+     PUT /{singleEndpoint}/:id/:filename}
+
+     Replace a file related to the single.
+
+     - Parameter singleId: Unique identifier of associated single
+
+     - Parameter filename: Filename of the file to put
+
+     - Parameter data: Contents of the file to put
+
+     - Returns: No return value
+
+     - Throws: APIError
+     */
+    public func putFile(singleId: String, filename: String, data: Data) async throws {
+        if let url = URL(string: serverURL) {
+            var endpointURL = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(singleId)
+            let contentType = "application/octet-stream"
+            endpointURL.appendPathComponent(filename)
+            var request = URLRequest(url: endpointURL)
+            request.httpMethod = "PUT"
+            request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+
+            let (_, response) = try await URLSession.shared.upload(for: request, from: data)
+            let apiError = getAPIError(from: response)
+            if apiError == .ok {
+                return
+            }
+            throw apiError
+        }
+        throw APIError.badURL
     }
 
     /**
