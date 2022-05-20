@@ -274,7 +274,8 @@ public class MyMusicAPI {
      - Returns: true if album exists, false otherwise.
      */
     public func head(albumId: String) async throws -> Bool {
-        if let endPoint = URL(string: albumsEndpoint)?.appendingPathComponent(albumId) {
+        if let url = URL(string: serverURL) {
+            let endPoint = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(albumId)
             var request = URLRequest(url: endPoint)
             request.httpMethod = "HEAD"
             let (_, response) = try await URLSession.shared.data(for: request)
@@ -841,7 +842,8 @@ public class MyMusicAPI {
      - Returns: true if single exists, false otherwise.
      */
     public func head(singleId: String) async throws -> Bool {
-        if let endPoint = URL(string: singlesEndpoint)?.appendingPathComponent(singleId) {
+        if let url = URL(string: serverURL) {
+            let endPoint = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(singleId)
             var request = URLRequest(url: endPoint)
             request.httpMethod = "HEAD"
             let (_, response) = try await URLSession.shared.data(for: request)
@@ -1360,7 +1362,8 @@ public class MyMusicAPI {
      - Returns: true if playlist exists, false otherwise.
      */
     public func head(playlistId: String) async throws -> Bool {
-        if let endPoint = URL(string: playlistsEndpoint)?.appendingPathComponent(playlistId) {
+        if let url = URL(string: serverURL) {
+            let endPoint = url.appendingPathComponent(playlistsEndpoint).appendingPathComponent(playlistId) 
             var request = URLRequest(url: endPoint)
             request.httpMethod = "HEAD"
             let (_, response) = try await URLSession.shared.data(for: request)
