@@ -12,14 +12,11 @@ public struct PlaylistSummary: Identifiable, Hashable {
     public var user: String?
     public var title: String
     public var shared: Bool
-    // Sort fields
-    public var sortTitle: String?
 
     public init(_ id: String, title: String, shared: Bool = false) {
         self.id = id
         self.title = title
         self.shared = shared
-        self.sortTitle = Album.sortedTitle(title).lowercased()
     }
     
     public init(_ playlist: Playlist) {
@@ -27,7 +24,6 @@ public struct PlaylistSummary: Identifiable, Hashable {
         user = playlist.user
         title = playlist.title
         shared = playlist.shared
-        sortTitle = Album.sortedTitle(playlist.title).lowercased()
     }
     
 }
@@ -38,6 +34,5 @@ extension PlaylistSummary: Codable {
         case user
         case title
         case shared
-        case sortTitle
     }
 }

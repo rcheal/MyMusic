@@ -7,37 +7,20 @@
 
 import Foundation
 
-public enum PlaylistItemType: String, Codable {
-    case album
-    case composition
-    case movement
-    case single
-    case playlist
-}
-
-public struct PlaylistItem: Identifiable, Hashable {
-    public var id: String
-    public var playlistType: PlaylistItemType
-    
-    public init(id: String, playlistType: PlaylistItemType) {
-        self.id = id
-        self.playlistType = playlistType
-    }
-}
-
 public struct Playlist: Identifiable, Hashable {
     public var id: String
     
     public var user: String?
     public var title: String
     public var shared: Bool
+    public var autoRepeat: Bool = false
+    public var shuffle: Bool = false
     
-    public var nextItemIndex: Int?
-    public var items: [PlaylistItem]
-    public var orderedItems: [PlaylistItem]?
-    
+    public var content: PlaylistItem
+
     public init(_ title: String, user: String? = nil, shared: Bool? = nil) {
-        id = UUID().uuidString
+        let id = UUID().uuidString
+        self.id = id
         self.title = title
         self.user = user
         if let shared = shared {
@@ -45,24 +28,29 @@ public struct Playlist: Identifiable, Hashable {
         } else {
             self.shared = user == nil
         }
-        items = []
+        content = PlaylistItem(playlistId: id, title: title)
     }
 
-}
+    mutating public func addContent(_ item: PlaylistItem) {
+        if content.items == nil {
+            content.items = [item]
+        } else {
+            content.items?.append(item)
+        }
+    }
 
-extension PlaylistItem: Codable {
-    
+
 }
 
 extension Playlist: Codable {
-    
+
     public enum CodingKeys: String, CodingKey {
         case id
         case user
         case title
         case shared
-        case nextItemIndex
-        case items
+        case autoRepeat
+        case content
     }
 
 }
