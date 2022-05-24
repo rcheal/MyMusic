@@ -7,15 +7,28 @@
 
 import Foundation
 
+public enum PlaylistType: String, Codable {
+    case implicit
+    case explicit
+}
+
+
 public struct Playlist: Identifiable, Hashable {
     public var id: String
     
     public var user: String?
     public var title: String
     public var shared: Bool
+    public var playlistType: PlaylistType?
     public var autoRepeat: Bool = false
     public var shuffle: Bool = false
-    
+    // Implicit playlist search fields
+    public var artist: String?
+    public var composer: String?
+    public var genre: String?
+    public var years: String?
+    public var ratings: String?
+
     public var content: [PlaylistItem] = []
 
     public init(_ title: String,
@@ -41,7 +54,14 @@ extension Playlist: Codable {
         case user
         case title
         case shared
+        case playlistType
         case autoRepeat
+        case shuffle
+        case artist
+        case composer
+        case genre
+        case years
+        case ratings
         case content
     }
 
