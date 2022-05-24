@@ -7,10 +7,10 @@
 
 import Foundation
 
-public enum PlaylistType: String, CaseIterable, Codable {
+public enum PlaylistType: String, CaseIterable, Identifiable, Codable {
     case implicit, explicit
 
-    var id: Self { self }
+    public var id: Self { self }
 }
 
 
