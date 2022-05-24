@@ -16,9 +16,11 @@ public struct Playlist: Identifiable, Hashable {
     public var autoRepeat: Bool = false
     public var shuffle: Bool = false
     
-    public var content: PlaylistItem
+    public var content: [PlaylistItem] = []
 
-    public init(_ title: String, user: String? = nil, shared: Bool? = nil) {
+    public init(_ title: String,
+                user: String? = nil,
+                shared: Bool? = nil) {
         let id = UUID().uuidString
         self.id = id
         self.title = title
@@ -28,17 +30,7 @@ public struct Playlist: Identifiable, Hashable {
         } else {
             self.shared = user == nil
         }
-        content = PlaylistItem(playlistId: id, title: title)
     }
-
-    mutating public func addContent(_ item: PlaylistItem) {
-        if content.items == nil {
-            content.items = [item]
-        } else {
-            content.items?.append(item)
-        }
-    }
-
 
 }
 
@@ -51,6 +43,26 @@ extension Playlist: Codable {
         case shared
         case autoRepeat
         case content
+    }
+
+}
+
+extension Playlist {
+
+    public var count: Int { content.count }
+
+    public var trackCount: Int {
+        get {
+            var count = 0
+            for item in content {
+                count += item.trackCount
+            }
+            return count
+        }
+    }
+
+    mutating public func append(_ item: PlaylistItem) {
+            content.append(item)
     }
 
 }

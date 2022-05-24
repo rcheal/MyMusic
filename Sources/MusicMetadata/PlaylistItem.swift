@@ -8,8 +8,6 @@
 import Foundation
 
 public enum PlaylistItemType: String, Codable {
-    case playqueue
-    case playlist
     case album
     case composition
     case movement
@@ -25,38 +23,20 @@ public struct PlaylistItem: Identifiable, Hashable {
 
     public var items: [PlaylistItem]?
 
-    public var count: Int {
-        get {
-            items?.count ?? 0
-        }
-    }
-
-    // PlayQueue
-    public init() {
-        self.id = UUID().uuidString
-        self.title = "Play Queue"
-        self.playlistType = .playqueue
-    }
-
-    // Playlist
-    public init(_ playlist: PlaylistSummary) {
-        self.id = playlist.id
-        self.title = playlist.title
-        self.playlistType = .playlist
-    }
-
     // Album
-    public init(_ album: AlbumSummary) {
+    public init(_ album: AlbumSummary, items: [PlaylistItem]? = nil) {
         self.id = album.id
         self.title = album.title
         self.playlistType = .album
+        self.items = items
     }
 
     // Composition
-    public init(_ composition: CompositionSummary) {
+    public init(_ composition: CompositionSummary, items: [PlaylistItem]? = nil) {
         self.id = composition.id
         self.title = composition.title
         self.playlistType = .composition
+        self.items = items
     }
 
     // Movement
@@ -73,22 +53,74 @@ public struct PlaylistItem: Identifiable, Hashable {
         self.playlistType = .single
     }
 
-    public init(playlistId: String, title: String) {
-        self.id = playlistId
-        self.title = title
-        self.playlistType = .playlist
+    // Album
+    public init(album: String, items: [PlaylistItem]? = nil) {
+        self.id = UUID().uuidString
+        self.title = album
+        self.playlistType = .album
+        self.items = items
     }
 
-    public init(playqueueId: String, title: String) {
-        self.id = playqueueId
-        self.title = title
-        self.playlistType = .playqueue
+    // Composition
+    public init(composition: String, items: [PlaylistItem]? = nil) {
+        self.id = UUID().uuidString
+        self.title = composition
+        self.playlistType = .composition
+        self.items = items
+    }
+
+    // Movement
+    public init(movement: String) {
+        self.id = UUID().uuidString
+        self.title = movement
+        self.playlistType = .movement
+    }
+
+    // Single
+    public init(single: String) {
+        self.id = UUID().uuidString
+        self.title = single
+        self.playlistType = .single
     }
 
 }
 
 extension PlaylistItem: Codable {
+}
 
+extension PlaylistItem {
+
+    public var count: Int {
+        get {
+            items?.count ?? 0
+        }
+    }
+
+    public var trackCount: Int {
+        get {
+            switch playlistType {
+            case .single, .movement:
+                return 1
+            default:
+                var count = 0
+                if let items = items {
+                    for item in items {
+                        count += item.trackCount
+                    }
+                }
+                return count
+            }
+        }
+    }
+
+    mutating public func addItem(_ item: PlaylistItem) {
+        if var items = items {
+            items.append(item)
+            self.items = items
+        } else {
+            self.items = [item]
+        }
+    }
 }
 
 

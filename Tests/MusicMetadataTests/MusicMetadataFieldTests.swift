@@ -110,18 +110,26 @@ final class MusicMetadataFieldTests: XCTestCase {
     }
     
     func createPlaylist(_ title: String) -> Playlist {
+        let content = [
+            PlaylistItem(album: "White Album", items: [
+                PlaylistItem(single: "Back in the U.S.S.R."),
+                PlaylistItem(single: "Dear Prudence"),
+                PlaylistItem(single: "Glass Onion"),
+                PlaylistItem(single: "Ob-La-Di, Ob-La-Da"),
+                PlaylistItem(single: "Wild Honey Pie")
+            ]),
+            PlaylistItem(composition: "Beethoven Symphony No. 6", items: [
+                PlaylistItem(movement: "Allegro ma non troppo"),
+                PlaylistItem(movement: "Andante molto mosso"),
+                PlaylistItem(movement: "Allegro"),
+                PlaylistItem(movement: "Allegro"),
+                PlaylistItem(movement: "Allegretto")
+            ])
+        ]
+
         var playlist = Playlist(title)
+        playlist.content = content
         playlist.shared = true
-        let album = Album(title: "White Album")
-        let single = Single(title: "Our House", filename: "", track: 1)
-        let composition = Composition(title: "Beethoven Symphony No. 6", track: 1)
-        let movement = Movement(title: "I. Adagio", filename: "file.mp3", track: 1)
-        let nestedPlaylist = Playlist("Nested Playlist")
-        playlist.addContent(PlaylistItem(SingleSummary(single)))
-        playlist.addContent(PlaylistItem(CompositionSummary(composition)))
-        playlist.addContent(PlaylistItem(AlbumSummary(album)))
-        playlist.addContent(PlaylistItem(movement))
-        playlist.addContent(PlaylistItem(PlaylistSummary(nestedPlaylist)))
 
         playlist.user = "bob"
         return playlist
@@ -227,15 +235,29 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(playlist.shared, playlist2?.shared)
         XCTAssertEqual(playlist.autoRepeat, playlist2?.autoRepeat)
         XCTAssertEqual(playlist.shuffle, playlist2?.shuffle)
-        XCTAssertEqual(playlist.content.count, playlist2?.content.count)
-        if let items = playlist.content.items,
-           let items2 = playlist.content.items {
-            XCTAssertEqual(playlist.content.count, 5)
-            for index in items.indices {
-                let pl1 = items[index]
-                let pl2 = items2[index]
-                XCTAssertEqual(pl1.id, pl2.id)
-                XCTAssertEqual(pl1.playlistType, pl2.playlistType)
+        XCTAssertEqual(playlist.count, playlist2?.count)
+        XCTAssertEqual(playlist.trackCount, playlist2?.trackCount)
+        let items = playlist.content
+        let items2 = playlist.content
+        XCTAssertEqual(playlist.count, 2)
+        XCTAssertEqual(playlist.trackCount, 10)
+        for index in items.indices {
+            let pl1 = items[index]
+            let pl2 = items2[index]
+            XCTAssertEqual(pl1.id, pl2.id)
+            XCTAssertEqual(pl1.playlistType, pl2.playlistType)
+            XCTAssertEqual(pl1.title, pl2.title)
+            XCTAssertEqual(pl1.count, pl2.count)
+            if let i1 = pl1.items,
+               let i2 = pl2.items {
+                XCTAssertEqual(pl1.count, 5)
+                for idx in i1.indices {
+                    let p1 = i1[idx]
+                    let p2 = i2[idx]
+                    XCTAssertEqual(p1.id, p2.id)
+                    XCTAssertEqual(p1.playlistType, p2.playlistType)
+                }
+
             }
         }
     }

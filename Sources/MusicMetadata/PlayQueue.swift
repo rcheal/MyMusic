@@ -12,11 +12,8 @@ public struct PlayQueue {
     public var autoRepeat: Bool = false
     public var shuffle: Bool = false
 
-    public var content: PlaylistItem
+    public var content: [PlaylistItem] = []
 
-    public init() {
-        content = PlaylistItem()
-    }
 }
 
 extension PlayQueue: Codable {
@@ -26,6 +23,25 @@ extension PlayQueue: Codable {
         case shuffle
         case content
 
+    }
+
+}
+
+extension PlayQueue {
+    public var count: Int { content.count }
+
+    public var trackCount: Int {
+        get {
+            var count = 0
+            for item in content {
+                count += item.trackCount
+            }
+            return count
+        }
+    }
+
+    mutating public func append(_ item: PlaylistItem) {
+            content.append(item)
     }
 
 }
