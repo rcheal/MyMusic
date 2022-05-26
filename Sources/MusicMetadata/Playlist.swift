@@ -20,7 +20,7 @@ public struct Playlist: Identifiable, Hashable {
     public var user: String?
     public var title: String
     public var shared: Bool
-    public var playlistType: PlaylistType?
+    public var playlistType: PlaylistType = .explicit
     public var autoRepeat: Bool = false
     public var shuffle: Bool = false
     // Implicit playlist search fields
