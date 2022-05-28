@@ -128,7 +128,7 @@ final class MusicMetadataFieldTests: XCTestCase {
         ]
 
         var playlist = Playlist(title)
-        playlist.content = content
+        playlist.items = content
         playlist.shared = true
 
         playlist.user = "bob"
@@ -237,8 +237,8 @@ final class MusicMetadataFieldTests: XCTestCase {
         XCTAssertEqual(playlist.shuffle, playlist2?.shuffle)
         XCTAssertEqual(playlist.count, playlist2?.count)
         XCTAssertEqual(playlist.trackCount, playlist2?.trackCount)
-        let items = playlist.content
-        let items2 = playlist.content
+        let items = playlist.items
+        let items2 = playlist.items
         XCTAssertEqual(playlist.count, 2)
         XCTAssertEqual(playlist.trackCount, 10)
         for index in items.indices {

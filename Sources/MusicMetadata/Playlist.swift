@@ -30,7 +30,7 @@ public struct Playlist: Identifiable, Hashable {
     public var years: String?
     public var ratings: String?
 
-    public var content: [PlaylistItem] = []
+    public var items: [PlaylistItem] = []
 
     public init(_ title: String,
                 user: String? = nil,
@@ -63,19 +63,19 @@ extension Playlist: Codable {
         case genre
         case years
         case ratings
-        case content
+        case items
     }
 
 }
 
 extension Playlist {
 
-    public var count: Int { content.count }
+    public var count: Int { items.count }
 
     public var trackCount: Int {
         get {
             var count = 0
-            for item in content {
+            for item in items {
                 count += item.trackCount
             }
             return count
@@ -83,7 +83,7 @@ extension Playlist {
     }
 
     mutating public func append(_ item: PlaylistItem) {
-            content.append(item)
+            items.append(item)
     }
 
 }

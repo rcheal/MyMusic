@@ -113,14 +113,6 @@ extension PlaylistItem {
         }
     }
 
-    mutating public func addItem(_ item: PlaylistItem) {
-        if var items = items {
-            items.append(item)
-            self.items = items
-        } else {
-            self.items = [item]
-        }
-    }
 }
 
 
