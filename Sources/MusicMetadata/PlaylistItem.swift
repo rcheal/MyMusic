@@ -86,6 +86,13 @@ public struct PlaylistItem: Identifiable, Hashable {
 }
 
 extension PlaylistItem: Codable {
+
+    public enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case playlistType
+        case items
+    }
 }
 
 extension PlaylistItem {
