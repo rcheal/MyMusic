@@ -25,6 +25,21 @@ extension Playlist {
         return nil
     }
 
+    public func getItemPosition(_ id: String) -> [Int] {
+        for (index, item) in items.enumerated() {
+            if item.id == id {
+                return [index]
+            }
+            let value = item.getItemPosition(id)
+            if value.count > 0 {
+                var position = [index]
+                position.append(contentsOf: value)
+                return position
+            }
+        }
+        return []
+    }
+
     mutating public func addItem(_ item: PlaylistItem) {
         items.append(item)
     }
