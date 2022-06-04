@@ -63,4 +63,33 @@ extension PlaylistItem {
             }
         }
     }
+
+    public mutating func swap(_ posArray: [Int], _ direction: PlaylistItemSwapDirection) -> Bool {
+        guard !posArray.isEmpty else {
+            return false
+        }
+        var posArray = posArray
+        let pos = posArray.removeFirst()
+        if posArray.isEmpty {
+            if var items = items {
+                let pos = (direction == .down) ? pos + 1 : pos
+                if 1..<items.count ~= pos {
+                    items.swapAt(pos, pos-1)
+                    self.items = items
+                    return true
+                }
+            }
+        } else {
+            if var items = items {
+                if 0..<items.count ~= pos {
+                    if items[pos].swap(posArray, direction) {
+                        self.items = items
+                        return true
+                    }
+                }
+            }
+        }
+        return false
+    }
+
 }

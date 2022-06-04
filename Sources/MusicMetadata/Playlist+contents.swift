@@ -7,6 +7,11 @@
 
 import Foundation
 
+public enum PlaylistItemSwapDirection {
+    case up, down
+}
+
+
 extension Playlist {
     public func getItem(_ id: String) -> PlaylistItem? {
         for item in items {
@@ -36,4 +41,25 @@ extension Playlist {
             self.items[index] = newItem
         }
     }
+
+    public mutating func swap(_ posArray: [Int], _ direction: PlaylistItemSwapDirection) -> Bool {
+        guard !posArray.isEmpty else {
+            return false
+        }
+        var posArray = posArray
+        let pos = posArray.removeFirst()
+        if posArray.isEmpty {
+            let pos = (direction == .down) ? pos + 1 : pos
+            if 1..<items.count ~= pos {
+                items.swapAt(pos, pos-1)
+                return true
+            }
+        } else {
+            if 0..<items.count ~= pos {
+                return items[pos].swap(posArray, direction)
+            }
+        }
+        return false
+    }
+
 }
