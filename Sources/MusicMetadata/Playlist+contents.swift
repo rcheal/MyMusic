@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreLocation
 
 public enum PlaylistItemSwapDirection {
     case up, down
@@ -13,6 +14,20 @@ public enum PlaylistItemSwapDirection {
 
 
 extension Playlist {
+
+    public func getItems() -> [PlaylistItem] {
+        let flattenedItems = flattened()
+        return shuffle ? flattenedItems.shuffled() : flattenedItems
+    }
+
+    public func flattened() -> [PlaylistItem] {
+        var newItems: [PlaylistItem] = []
+        for item in items {
+            newItems.append(contentsOf: item.flattened())
+        }
+        return newItems
+    }
+
     public func getItem(_ id: String) -> PlaylistItem? {
         for item in items {
             if item.id == id {

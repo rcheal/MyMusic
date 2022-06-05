@@ -49,7 +49,23 @@ public struct PlaylistItem: Identifiable, Hashable {
     // Single
     public init(_ single: SingleSummary) {
         self.id = single.id
-        self.title = single.title
+        if single.genre == "Classical" {
+            if let composer = single.composer {
+                self.title = "\(composer): \(single.title)"
+            } else if let artist = single.artist {
+                self.title = "\(artist): \(single.title)"
+            } else {
+                self.title = single.title
+            }
+        } else {
+            if let artist = single.artist {
+                self.title = "\(single.title) - \(artist)"
+            } else if let composer = single.composer {
+                self.title = "\(single.title) - \(composer)"
+            } else {
+                self.title = single.title
+            }
+        }
         self.playlistType = .single
     }
 

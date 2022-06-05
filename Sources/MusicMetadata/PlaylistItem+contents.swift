@@ -40,6 +40,25 @@ extension PlaylistItem {
         return []
     }
 
+    public func flattened() -> [PlaylistItem] {
+        if let items = items {
+            var newItems: [PlaylistItem] = []
+            for item in items {
+                if playlistType == .composition {
+                    var item = item
+                    item.title = title + ", " + item.title
+                    newItems.append(contentsOf: item.flattened())
+                } else {
+                    newItems.append(contentsOf: item.flattened())
+                }
+            }
+            return newItems
+        }
+        else {
+            return [self]
+        }
+    }
+    
     mutating public func addItem(_ item: PlaylistItem) {
         if var items = items {
             items.append(item)
