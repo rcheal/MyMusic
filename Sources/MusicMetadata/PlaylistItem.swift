@@ -26,7 +26,7 @@ public struct PlaylistItem: Identifiable, Hashable {
     // Album
     public init(_ album: AlbumSummary, items: [PlaylistItem]? = nil) {
         self.id = album.id
-        self.title = album.title
+        self.title = album.description
         self.playlistType = .album
         self.items = items
     }
@@ -34,7 +34,7 @@ public struct PlaylistItem: Identifiable, Hashable {
     // Composition
     public init(_ composition: CompositionSummary, items: [PlaylistItem]? = nil) {
         self.id = composition.id
-        self.title = composition.title
+        self.title = composition.description
         self.playlistType = .composition
         self.items = items
     }
@@ -49,23 +49,7 @@ public struct PlaylistItem: Identifiable, Hashable {
     // Single
     public init(_ single: SingleSummary) {
         self.id = single.id
-        if single.genre == "Classical" {
-            if let composer = single.composer {
-                self.title = "\(composer): \(single.title)"
-            } else if let artist = single.artist {
-                self.title = "\(artist): \(single.title)"
-            } else {
-                self.title = single.title
-            }
-        } else {
-            if let artist = single.artist {
-                self.title = "\(single.title) - \(artist)"
-            } else if let composer = single.composer {
-                self.title = "\(single.title) - \(composer)"
-            } else {
-                self.title = single.title
-            }
-        }
+        self.title = single.description
         self.playlistType = .single
     }
 

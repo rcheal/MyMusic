@@ -9,7 +9,7 @@ import Foundation
 
 extension AlbumSummary {
     
-    public func description() -> String {
+    public var description: String {
         if genre == "Classical" {
             if let composer = composer {
                 return "\(composer): \(title)"
