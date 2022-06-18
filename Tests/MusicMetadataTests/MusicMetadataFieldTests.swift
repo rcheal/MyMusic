@@ -262,15 +262,6 @@ final class MusicMetadataFieldTests: XCTestCase {
         }
     }
     
-    func testTransactionFields() throws {
-        let id = UUID().uuidString
-        let transaction = Transaction(method: "POST", entity: "album", id: id)
-        
-        XCTAssertEqual(transaction.id, id)
-        XCTAssertEqual(transaction.method, "POST")
-        XCTAssertEqual(transaction.entity, "album")
-    }
-    
     func testFields() throws {
         let album = createAlbum()
 
