@@ -9,6 +9,12 @@ import Foundation
 
 extension Playlist {
 
+    /// Populate specified fields frrom another ``Playlist`` struct
+    ///
+    /// Used to return a slimmed down playlist definition for API transfer.
+    /// - Parameters:
+    ///   - fields: Comma separated list of field names
+    ///   - playlist: Full ``Playlist`` to pull values from
     public mutating func addFields(_ fields: String, from playlist: Playlist) {
 
         let components = fields.lowercased().components(separatedBy: ",")

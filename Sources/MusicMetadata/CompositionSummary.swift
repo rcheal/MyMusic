@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Abbrieviated form of Composition to improve performance in composition lists
 public struct CompositionSummary: Identifiable, Hashable {
     public var id: String
     public var albumId: String?

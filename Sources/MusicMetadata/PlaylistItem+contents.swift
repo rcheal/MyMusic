@@ -9,6 +9,35 @@ import Foundation
 
 extension PlaylistItem {
 
+    /// Count of first level nested playlist items
+    public var count: Int {
+        get {
+            items?.count ?? 0
+        }
+    }
+
+    /// Count of tracks in item
+    public var trackCount: Int {
+        get {
+            switch playlistType {
+            case .single, .movement:
+                return 1
+            default:
+                var count = 0
+                if let items = items {
+                    for item in items {
+                        count += item.trackCount
+                    }
+                }
+                return count
+            }
+        }
+    }
+
+    /// Get specific child playlist item
+    ///
+    /// - Parameter id: id of PlaylistItem to retrieve
+    /// - Returns: ``PlaylistItem``
     public func getItem(_ id: String) -> PlaylistItem? {
         if let items = items {
             for item in items {
@@ -23,6 +52,10 @@ extension PlaylistItem {
         return nil
     }
 
+    /// Get indices of specific child playlist item
+    ///
+    /// - Parameter id: id of playlist item to check
+    /// - Returns: Array of indices indicating the position of the item within self
     public func getItemPosition(_ id: String) -> [Int] {
         if let items = items {
             for (index, item) in items.enumerated() {
@@ -40,7 +73,7 @@ extension PlaylistItem {
         return []
     }
 
-    public func flattened() -> [PlaylistItem] {
+    internal func flattened() -> [PlaylistItem] {
         if let items = items {
             var newItems: [PlaylistItem] = []
             for item in items {
@@ -58,7 +91,10 @@ extension PlaylistItem {
             return [self]
         }
     }
-    
+
+    /// Add child item
+    ///
+    /// - Parameter item: New item
     mutating public func addItem(_ item: PlaylistItem) {
         if var items = items {
             items.append(item)
@@ -68,10 +104,14 @@ extension PlaylistItem {
         }
     }
 
+    /// Remove all child items
     public mutating func removeAllItems() {
         items?.removeAll()
     }
 
+    /// Conditionally remove child items
+    ///
+    /// - Parameter shouldBeRemoved: closure determining whether item should be removed
     public mutating func removeAllItems(where shouldBeRemoved: (PlaylistItem) throws -> Bool) rethrows {
         try items?.removeAll(where: shouldBeRemoved)
         if let items = items {
@@ -83,7 +123,13 @@ extension PlaylistItem {
         }
     }
 
-    public mutating func swap(_ posArray: [Int], _ direction: PlaylistItemSwapDirection) -> Bool {
+    /// Move child item within parent item
+    ///
+    /// - Parameters:
+    ///   - posArray: Index array showing position of item within this item
+    ///   - direction: Direction to move item - .up will swal with previous item, .down will swap with next item
+    /// - Returns: true if move was performed; otherwise false
+    public mutating func move(_ posArray: [Int], _ direction: PlaylistItemMoveDirection) -> Bool {
         guard !posArray.isEmpty else {
             return false
         }
@@ -101,7 +147,7 @@ extension PlaylistItem {
         } else {
             if var items = items {
                 if 0..<items.count ~= pos {
-                    if items[pos].swap(posArray, direction) {
+                    if items[pos].move(posArray, direction) {
                         self.items = items
                         return true
                     }

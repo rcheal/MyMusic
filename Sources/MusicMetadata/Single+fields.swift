@@ -8,7 +8,13 @@
 import Foundation
 
 extension Single {
-    
+
+    /// Populate specified fields from another ``Single`` struct
+    ///
+    /// Used to return a slimmed down single definition for API transfer.
+    /// - Parameters:
+    ///   - fields: Comma separated list of field names
+    ///   - single: Full ``Single`` to pull values from
     public mutating func addFields(_ fields: String, from single: Single) {
 
         let components = fields.lowercased().components(separatedBy: ",")

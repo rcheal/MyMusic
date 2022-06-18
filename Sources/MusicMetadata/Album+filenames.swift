@@ -8,6 +8,9 @@
 import Foundation
 
 extension Album {
+    /// Get Audio and Artwork filenames
+    ///
+    /// - Returns: Array of all audio and artwork filenames in Album
     public func getFilenames() -> [String] {
         var filenames = [String]()
         // Add artwork filenames
@@ -17,6 +20,9 @@ extension Album {
         return filenames
     }
 
+    /// Get Artwork filenames
+    ///
+    /// - Returns: Array of all artwork filenames in Album
     public func getArtworkFilenames() -> [String] {
         var filenames = [String]()
         let count = artworkCount()
@@ -29,7 +35,10 @@ extension Album {
         }
         return filenames
     }
-    
+
+    /// Get Audio filenames
+    ///
+    /// - Returns: Array of all audio filenames in Album
     public func getAudioFilenames() -> [String] {
         var filenames: [String] = []
         for content in contents {

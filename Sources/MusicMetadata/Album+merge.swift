@@ -10,7 +10,16 @@ import Foundation
 private let delim = "$"
 
 extension Album {
-    
+
+    /// Merge two optional Strings into one
+    ///
+    /// Returns a single string showing which parts of the string are the same and parts that are different.
+    /// If only one string is not nil, that that string is returned.  If both string are not nil, then
+    /// the result consists of ```<common prefix>$<1st suffix>$<2nd suffix>```
+    /// - Parameters:
+    ///   - a: The first string
+    ///   - b: The second string
+    /// - Returns: The merged string
     private func mergeStrings(_ a: String?, _ b: String?) -> String? {
         var result: String?
         if a == nil {
@@ -33,7 +42,18 @@ extension Album {
         }
         return result
     }
-    
+
+    /// Splits previously merged string
+    ///
+    /// Splits a string previously created by ``mergeStrings`` into two or more strings.
+    /// Typically used to undo a merged multi-disk album into separate albums for each disk.
+    ///
+    /// Note that common prefixes will be present in each returned string.  Differences shown by $ delimiter will be split
+    /// individual strings
+    /// - Parameters:
+    ///   - string: String to split
+    ///   - count: Number of strings to create
+    /// - Returns: Array of strings
     private func splitString(_ string: String?, count: Int) -> [String]? {
         var result: [String] = []
         if let s = string {
@@ -54,8 +74,15 @@ extension Album {
         }
         return nil
     }
-    
-    public func mergeYears(_ yeara: Int?, _ yearb: Int?) -> Int? {
+
+    /// Merge multiple years into a single year
+    ///
+    /// Will return the latest of yeara or yearb
+    /// - Parameters:
+    ///   - yeara: first year
+    ///   - yearb: second year
+    /// - Returns: merged year
+    private func mergeYears(_ yeara: Int?, _ yearb: Int?) -> Int? {
         if yeara == nil {
             return yearb
         } else if yearb == nil {
@@ -64,8 +91,14 @@ extension Album {
          
         return max(yeara!, yearb!)
     }
-    
-    public func mergeSupportingArtists(_ artistsa: String?, _ artistsb: String?) -> String? {
+
+    ///  Merge multiple supportings artists into one string
+    ///
+    /// - Parameters:
+    ///     - artistsa: supporting artists a
+    ///     - artistsb: supporting artists b
+    /// - Returns: Supporting artists string containing all of the artist contained in either artistsa or artistsb
+    private func mergeSupportingArtists(_ artistsa: String?, _ artistsb: String?) -> String? {
         if var contentsa = artistsa?.components(separatedBy: "\n") {
             if let contentsb = artistsb?.components(separatedBy: "\n") {
                 for content in contentsb {
@@ -81,8 +114,14 @@ extension Album {
         
         return artistsb
     }
-    
-    public mutating func mergeAlbumArt(_ albumArta: AlbumArtwork, _ albumArtb: AlbumArtwork) -> AlbumArtwork {
+
+    /// Merge artwork from two albums into one
+    ///
+    /// - Parameters:
+    ///   - albumArta: albumArt a
+    ///   - albumArtb: albumArt b
+    /// - Returns: ``AlbumArtwork`` struct containing the combined artwork
+    private mutating func mergeAlbumArt(_ albumArta: AlbumArtwork, _ albumArtb: AlbumArtwork) -> AlbumArtwork {
         
         var resultArt: AlbumArtwork = AlbumArtwork()
         if albumArta.count > 0 {
@@ -145,7 +184,10 @@ extension Album {
         }
         return resultArt
     }
-    
+
+    /// Merge metadata of another album into this album
+    ///
+    /// - Parameter album: ``Album`` to merge into self
     private mutating func mergeMetadata(_ album: Album) {
         // Merge Album metadata
         title = mergeStrings(title, album.title)!
@@ -164,7 +206,12 @@ extension Album {
         recordingYear = mergeYears(recordingYear, album.recordingYear)
         albumArt = mergeAlbumArt(albumArt, album.albumArt)
     }
-    
+
+    /// Merge another album into self
+    ///
+    /// Merges all metadata and contents of another album into self.  This is used primarily to combine multi-disk albums where each disk
+    /// is a separate album into a single multi-disk album.  Disk numbers are assinged to the contents to keep them separate
+    /// - Parameter album: Album to merge into self
     public mutating func merge(_ album: Album) {
         // Merge Album metadata
         mergeMetadata(album)
@@ -195,19 +242,35 @@ extension Album {
         update()
         
     }
-    
+
+    /// Merge multiple albums into self
+    ///
+    /// Merges all metadata and contents of all `albums` into self.   Contents will be assinged
+    /// disk numbers to maintain original track numbers without duplicates.  Self contents will be assign to
+    /// disk 1; albums contents will be assigned sequentially starting with disk 2
+    /// - Parameter albums: Array of albums to merge into self
     public mutating func merge(_ albums: [Album]) {
         for album in albums {
             merge(album)
         }
     }
-    
+
+    /// Merge one or more singles into self
+    ///
+    /// - Parameter singles: Array of singles to merge into self
     public mutating func merge(singles: [Single]) {
         for single in singles {
             addSingle(single)
         }
     }
-    
+
+    /// Set contents disk number
+    ///
+    /// If `force` then set disk number on all content (singles, compositions, movements)
+    /// Otherwise only set disk number when nil.
+    /// - Parameters:
+    ///   - disk: Disk number to set
+    ///   - force: Force disk number to be set even if not nil
     public mutating func setDisk(_ disk: Int?, force: Bool = true) {
         for index in contents.indices {
             if let composition = contents[index].composition {
@@ -224,7 +287,12 @@ extension Album {
             }
         }
     }
-    
+
+    /// Remove and return ``Single``
+    ///
+    /// Returned single will have implied metadata from Album added
+    /// - Parameter id: Id of single to separate
+    /// - Returns: Separated ``Single``
     public mutating func separateSingle(_ id: String) -> Single? {
         for content in contents {
             if var single = content.single,
@@ -275,7 +343,11 @@ extension Album {
         }
         return nil
     }
-    
+
+    /// Return content as an array of Singles
+    ///
+    /// Singles and Movements are returned as a flat array of Singles with implied metadata.
+    /// - Returns: Array of ``Single``
     public func splitBySingle() -> [Single] {
         var singles: [Single] = []
         
@@ -317,7 +389,13 @@ extension Album {
         
         return singles
     }
-    
+
+    /// Split album by disk
+    ///
+    /// Split album into array of Albums with content for unique disks.  For instance a 2 disk album
+    /// will return two separate independent albums, etc.  Returned albums will have disk numbers
+    /// removed (set to nil)
+    /// - Returns: Array of ``Album``
     public mutating func splitByDisk() -> [Album] {
         var lastDisk: Int = 1
         var album = self

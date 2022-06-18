@@ -8,6 +8,8 @@
 import Foundation
 
 extension Album {
+
+    /// Sort contents by disk and track
     public mutating func sortContents() {
         for index in contents.indices {
             if var composition = contents[index].composition {
@@ -28,7 +30,12 @@ extension Album {
         }
         
     }
-    
+
+    /// Return sort friendly version of title
+    ///
+    /// Returns a title with articles ('a', 'an', 'the') stripped from the beginning of the string
+    /// - Parameter title: The title
+    /// - Returns: Sort friendly version of title
     public static func sortedTitle(_ title: String) -> String {
         var value = title
         if title.lowercased().hasPrefix("the ") {
@@ -40,7 +47,13 @@ extension Album {
         }
         return value
     }
-    
+
+    /// Returns sort friendly version of a persons name
+    ///
+    /// The returned name attempts to be last name first with a comma separated the last name from
+    /// the rest of the name.  Leading articles are removed
+    /// - Parameter person: Person's name
+    /// - Returns: Sort friendly version of person's name
     public static func sortedPerson(_ person: String?) -> String? {
         if var value = person {
             // Remove 'A', 'An' or 'The'

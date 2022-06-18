@@ -7,6 +7,9 @@
 
 import Foundation
 
+/// Struct containing single or composition content
+///
+/// Only one of composition or single should be provided.  disk and track are convience duplicates of the child content.
 public struct AlbumContent: Identifiable, Hashable {
     public var id: String  // Copy of composition.id or single.id
     public var disk: Int?

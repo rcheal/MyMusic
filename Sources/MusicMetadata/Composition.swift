@@ -7,6 +7,11 @@
 
 import Foundation
 
+/// A struct that stores metadata for a composition
+///
+/// A composition - used mainly in classical music - is a musical work consisting of one or more
+/// movements (``Movement``).  There is no audio track directly associated with a composition.  The audio tracks belong
+/// to the contained movements.
 public struct Composition: Identifiable, Hashable {
     public var id: String
     public var albumId: String?

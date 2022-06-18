@@ -8,7 +8,13 @@
 import Foundation
 
 extension Album {
-    
+
+    /// Populate specified fields from another ``Album`` struct
+    ///
+    /// Used to return a slimmed down album definition for API transfer.
+    /// - Parameters:
+    ///   - fields: Comma separated list of field names
+    ///   - album: Full ``Album`` to pull values from
     public mutating func addFields(_ fields: String, from album: Album) {
 
         let components = fields.lowercased().components(separatedBy: ",")

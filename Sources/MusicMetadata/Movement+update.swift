@@ -9,7 +9,7 @@ import Foundation
 
 extension Movement {
     
-    public mutating func update(_ album: Album? = nil, composition: Composition? = nil) {
+    internal mutating func update(_ album: Album? = nil, composition: Composition? = nil) {
         if let album = album {
             albumId = album.id
         }
@@ -18,11 +18,11 @@ extension Movement {
         }
     }
 
-    public mutating func update(disk: Int?) {
+    internal mutating func update(disk: Int?) {
         self.disk = disk
     }
     
-    public mutating func update(track: Int, disk: Int? = nil) {
+    internal mutating func update(track: Int, disk: Int? = nil) {
         self.track = track
         if let disk = disk {
             self.disk = disk

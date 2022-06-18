@@ -8,8 +8,11 @@
 import Foundation
 
 extension AlbumSummary {
-    
-    public mutating func update() {
+
+    /// Generates sort fields
+    ///
+    ///
+    internal mutating func update() {
         sortTitle = Album.sortedTitle(title).lowercased()
         sortArtist = Album.sortedPerson(artist)?.lowercased()
         sortComposer = Album.sortedPerson(composer)?.lowercased()

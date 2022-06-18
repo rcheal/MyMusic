@@ -9,13 +9,13 @@ import Foundation
 
 extension CompositionSummary {
     
-    public mutating func update() {
+    internal mutating func update() {
         sortTitle = Album.sortedTitle(title).lowercased()
         sortArtist = Album.sortedPerson(artist)?.lowercased()
         sortComposer = Album.sortedPerson(composer)?.lowercased()
     }
     
-    public mutating func update(_ album: Album) {
+    internal mutating func update(_ album: Album) {
         sortTitle = Album.sortedTitle(title).lowercased()
         sortArtist = Album.sortedPerson(artist ?? album.artist)?.lowercased()
         sortComposer = Album.sortedPerson(composer ?? album.composer)?.lowercased()

@@ -481,7 +481,7 @@ final class MusicMetadataContentTests: XCTestCase {
         movement.id = replacedMovement.id
 
         album.replaceMovement(movement: movement, compositionId: composition.id)
-        album.updateDuration()
+        album.update()
         
         XCTAssertEqual(album.duration, 1500)
 

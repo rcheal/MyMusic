@@ -8,7 +8,8 @@
 import Foundation
 
 extension Composition {
-    
+
+    /// Sort movements by disk and track
     public mutating func sortContents() {
         movements = movements.sorted {
             let diska = $0.disk ?? 1

@@ -7,6 +7,10 @@
 
 import Foundation
 
+/// A struct that stores metadata for a movement.
+///
+/// Movements - used primarily in classical music are parts of a composition (``Composition``).  Each
+/// movement references an audio file (`filename`).
 public struct Movement: Identifiable, Hashable {
     public var id: String
     public var compositionId: String?

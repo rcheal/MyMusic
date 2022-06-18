@@ -7,6 +7,7 @@
 
 import Foundation
 
+// TODO: Move to Audio player...
 public struct PlayQueue {
 
     public var autoRepeat: Bool = false

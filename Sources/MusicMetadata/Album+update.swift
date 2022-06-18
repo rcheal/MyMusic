@@ -8,7 +8,19 @@
 import Foundation
 
 extension Album {
-    
+
+    /// Updates various album fields
+    ///
+    /// The following metadata fields are updated
+    /// - sortTitle (generated from title if missing)
+    /// - sortArtist (generated from artist if missing)
+    /// - sortComposer (generated from composer if missing
+    ///
+    /// Single and Composition content is also updated by calling .update(self)
+    ///
+    /// Tracks are resequenced  to remove any gaps or duplicates
+    ///
+    /// Durations are recalulated from content
     public mutating func update() {
         if let sortTitle = sortTitle,
            let first = sortTitle.first, first.isUppercase {} else {
@@ -39,7 +51,7 @@ extension Album {
 
     }
     
-    mutating func updateTracks() {
+    mutating internal func updateTracks() {
         for index in contents.indices {
             if var composition = contents[index].composition {
                 composition.updateTrack()
@@ -52,7 +64,7 @@ extension Album {
         }
     }
     
-    mutating func updateDuration() {
+    mutating internal func updateDuration() {
         duration = 0
         for content in contents {
             if let single = content.single {

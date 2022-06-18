@@ -7,6 +7,11 @@
 
 import Foundation
 
+/// A struct hat store the metadata for a single audio file (or track)
+///
+/// A single may stand alone or be part of an album.  If part of an album,
+/// then albumId must be used to retrieve the associated ``Album`` to
+/// supply fields that are set to nil in ``Single``
 public struct Single: Identifiable, Hashable {
     public var id: String
     public var compositionId: String?
@@ -33,12 +38,14 @@ public struct Single: Identifiable, Hashable {
     public var encodedBy: String?
     public var encoderSettings: String?
     public var recordingYear: Int?
-    public var duration: Int {       /// duration in seconds
+    /// duration in seconds
+    public var duration: Int {
         get { _duration ?? 0 }
         set { _duration = newValue}
     }
     private var _duration: Int?
-    public var directory: String?   /// for orphaned singles only
+    /// for orphaned singles only
+    public var directory: String?
 
     // Sort fields
     public var sortTitle: String?

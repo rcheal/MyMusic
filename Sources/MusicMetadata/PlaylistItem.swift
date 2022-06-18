@@ -14,6 +14,10 @@ public enum PlaylistItemType: String, Codable {
     case single
 }
 
+/// Struct containing single item in playlist
+///
+/// A playlist item may be an album, a composition, a movement or a single.
+/// PlaylistItemType is implied by the constructor used.
 public struct PlaylistItem: Identifiable, Hashable {
 
     public var playlistType: PlaylistItemType
@@ -53,6 +57,7 @@ public struct PlaylistItem: Identifiable, Hashable {
         self.playlistType = .single
     }
 
+//    #if TESTING
     // Album
     public init(album: String, items: [PlaylistItem]? = nil) {
         self.id = UUID().uuidString
@@ -82,6 +87,8 @@ public struct PlaylistItem: Identifiable, Hashable {
         self.title = single
         self.playlistType = .single
     }
+//    #endif
+
 
 }
 
@@ -94,32 +101,3 @@ extension PlaylistItem: Codable {
         case items
     }
 }
-
-extension PlaylistItem {
-
-    public var count: Int {
-        get {
-            items?.count ?? 0
-        }
-    }
-
-    public var trackCount: Int {
-        get {
-            switch playlistType {
-            case .single, .movement:
-                return 1
-            default:
-                var count = 0
-                if let items = items {
-                    for item in items {
-                        count += item.trackCount
-                    }
-                }
-                return count
-            }
-        }
-    }
-
-}
-
-
