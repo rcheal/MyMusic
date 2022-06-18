@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Type of playlist - regular (.explicit) or smart (.implicit)
 public enum PlaylistType: String, CaseIterable, Identifiable, Codable {
     /// Playlist is explicitly defined list of albums, compostions, movements and/or singles
     case implicit

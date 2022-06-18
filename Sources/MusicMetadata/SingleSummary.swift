@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Abbreviated form of Single to improvie performance in single lists
 public struct SingleSummary: Identifiable, Hashable {
     public var id: String
     public var albumId: String?

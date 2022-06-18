@@ -8,6 +8,7 @@
 import Foundation
 import CoreLocation
 
+/// Direction to move an item in a Playlist or PlaylistItem
 public enum PlaylistItemMoveDirection {
     case up, down
 }

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Type of playlist item - album, composition, movement or single
 public enum PlaylistItemType: String, Codable {
     case album
     case composition
@@ -56,39 +57,6 @@ public struct PlaylistItem: Identifiable, Hashable {
         self.title = single.description
         self.playlistType = .single
     }
-
-//    #if TESTING
-    // Album
-    public init(album: String, items: [PlaylistItem]? = nil) {
-        self.id = UUID().uuidString
-        self.title = album
-        self.playlistType = .album
-        self.items = items
-    }
-
-    // Composition
-    public init(composition: String, items: [PlaylistItem]? = nil) {
-        self.id = UUID().uuidString
-        self.title = composition
-        self.playlistType = .composition
-        self.items = items
-    }
-
-    // Movement
-    public init(movement: String) {
-        self.id = UUID().uuidString
-        self.title = movement
-        self.playlistType = .movement
-    }
-
-    // Single
-    public init(single: String) {
-        self.id = UUID().uuidString
-        self.title = single
-        self.playlistType = .single
-    }
-//    #endif
-
 
 }
 

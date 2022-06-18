@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Abrieviated form of Album to improve performance in album lists
+/// Abbreviated form of Album to improve performance in album lists
 public struct AlbumSummary: Identifiable, Hashable {
     
     public var id: String

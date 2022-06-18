@@ -9,7 +9,7 @@ import Foundation
 
 extension SingleSummary {
     
-    public mutating func update(_ album: Album? = nil) {
+    internal mutating func update(_ album: Album? = nil) {
         sortTitle = Album.sortedTitle(title).lowercased()
         if let album = album {
             sortArtist = Album.sortedPerson(artist ?? album.artist)?.lowercased()

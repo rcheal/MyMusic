@@ -9,6 +9,19 @@ import Foundation
 
 extension SingleSummary {
     
+    /// Computed short description of Single
+    ///
+    /// Prefers 'composer: title' for classical and 'title - artist' otherwise
+    ///
+    /// Specifically for classical:
+    /// - if composer exists, then 'composer: title'
+    /// - if artists exists, then 'artist: title'
+    /// - otherwise, 'title'
+    ///
+    /// For non-classical:
+    /// - if artist exists, then 'title - artist'
+    /// - if composer exists then 'title - composer'
+    /// - otherwise, 'title'
     public var description: String {
         if genre == "Classical" {
             if let composer = composer {

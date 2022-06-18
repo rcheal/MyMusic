@@ -111,19 +111,19 @@ final class MusicMetadataFieldTests: XCTestCase {
     
     func createPlaylist(_ title: String) -> Playlist {
         let content = [
-            PlaylistItem(album: "White Album", items: [
-                PlaylistItem(single: "Back in the U.S.S.R."),
-                PlaylistItem(single: "Dear Prudence"),
-                PlaylistItem(single: "Glass Onion"),
-                PlaylistItem(single: "Ob-La-Di, Ob-La-Da"),
-                PlaylistItem(single: "Wild Honey Pie")
+            PlaylistItem(AlbumSummary(UUID().uuidString, title: "White Album"), items: [
+                PlaylistItem(SingleSummary(UUID().uuidString, title: "Back in the U.S.S.R.")),
+                PlaylistItem(SingleSummary(UUID().uuidString, title: "Dear Prudence")),
+                PlaylistItem(SingleSummary(UUID().uuidString, title: "Glass Onion")),
+                PlaylistItem(SingleSummary(UUID().uuidString, title: "Ob-La-Di, Ob-La-Da")),
+                PlaylistItem(SingleSummary(UUID().uuidString, title: "Wild Honey Pie"))
             ]),
-            PlaylistItem(composition: "Beethoven Symphony No. 6", items: [
-                PlaylistItem(movement: "Allegro ma non troppo"),
-                PlaylistItem(movement: "Andante molto mosso"),
-                PlaylistItem(movement: "Allegro"),
-                PlaylistItem(movement: "Allegro"),
-                PlaylistItem(movement: "Allegretto")
+            PlaylistItem(CompositionSummary(UUID().uuidString, title: "Beethoven Symphony No. 6"), items: [
+                PlaylistItem(Movement(title: "Allegro ma non troppo", filename: "", track: 1)),
+                PlaylistItem(Movement(title: "Andante molto mosso", filename: "", track: 2)),
+                PlaylistItem(Movement(title: "Allegro", filename: "", track: 3)),
+                PlaylistItem(Movement(title: "Allegro", filename: "", track: 4)),
+                PlaylistItem(Movement(title: "Allegretto", filename: "", track: 5))
             ])
         ]
 

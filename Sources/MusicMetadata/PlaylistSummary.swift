@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Abrieviated form of Playlist to improve performance in playlist lists
+/// Abbreviated form of Playlist to improve performance in playlist lists
 public struct PlaylistSummary: Identifiable, Hashable {
     public var id: String
     public var user: String?
