@@ -25,7 +25,7 @@ public enum APIError: Error, Equatable {
     case badURL
     case unknown
 
-    init(status: Int) {
+    public init(status: Int) {
         switch status {
         case 200:
             self = .ok
