@@ -465,15 +465,6 @@ final class MusicMetadataFieldTests: XCTestCase {
 
     }
     
-    func testTransactionFields() throws {
-        let id = UUID().uuidString
-        let transaction = Transaction(method: "POST", entity: "album", id: id)
-
-        XCTAssertEqual(transaction.id, id)
-        XCTAssertEqual(transaction.method, "POST")
-        XCTAssertEqual(transaction.entity, "album")
-    }
-
     static var allTests = [
         ("testAlbumFields", testAlbumFields),
         ("testSingleFields", testSingleFields),
@@ -486,6 +477,5 @@ final class MusicMetadataFieldTests: XCTestCase {
         ("testSingleSummary", testSingleSummary),
         ("testSingleSummaryUpdate", testSingleSummaryUpdate),
         ("testPlaylistSummary", testPlaylistSummary),
-        ("testTransactionFields", testTransactionFields)
     ]
 }
