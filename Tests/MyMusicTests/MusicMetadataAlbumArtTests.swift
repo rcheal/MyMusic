@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import MusicMetadata
+@testable import MyMusic
 
 
 @available(OSX 11.0, *)

@@ -8,24 +8,46 @@
 import Foundation
 import Combine
 
+/// URL prefix for server access - `"v1"`
 public let serverEndpoint = "v1"
-public let albumsEndpoint = "v1/albums"
-public let singlesEndpoint = "v1/singles"
-public let playlistsEndpoint = "v1/playlists"
 
+/// URL prefix for album access - `"v1/albums"`
+public let albumsEndpoint = "v1/albums"
+/// URL prefix for single access - `"v1/singles"`
+public let singlesEndpoint = "v1/singles"
+/// URL prefix for playlist access - `"v1/playlists"`
+public let playlistsEndpoint = "v1/playlists"
+/// URL prefix for transaction access = "v1/transactions"
+public let transactionsEndpoint = "v1/transactions"
+
+/// Swift API for MyMusicServer RESTful web api
+///
+/// This is version 1 of the MyMusicServer web api.
+///
+/// The URL prefix for these services is http://{server-name}:{port}/v1.
+/// - albumsEndpoint = "v1/albums"
+/// - singlesEndpoint = "v1/singles"
+/// - playlistsEndpoint = "v1/playlists"
 public class MyMusicAPI {
-    
+
+    /// URL of MyMusicServer to connect to
     public var serverURL: String = ""
+    /// Globally shared api class
     public static var shared = MyMusicAPI()
+    /// URL of local directory containing associated files.  Used by some file upload (`post` and `put`) calls to find file contents.
     public var fileRootURL = URL(fileURLWithPath: "")
-    
-    private var subscriptions = Set<AnyCancellable>()
-    
+
+
+    /// Initiator if more than one api class is requred (for instance copying metadata between servers).  In normal cases ``shared`` should be used.
     public init() {
         
     
     }
 
+    /// Convert URLResponse into APIError
+    ///
+    /// - Parameter response: response from URLSession
+    /// - Returns: Corresponding ``APIError``
     private func getAPIError(from response: URLResponse) -> APIError {
         guard let httpResponse = response as? HTTPURLResponse else {
             return APIError.unknown
@@ -34,163 +56,16 @@ public class MyMusicAPI {
     }
 
 
-    // MARK: - Combine Publisher creators
-    
-    private func apiGetListPublisher(_ endPoint: String, fields: String? = nil, offset: Int? = nil, limit: Int? = nil) -> AnyPublisher<Data, APIError> {
-        if let url = URL(string: serverURL) {
-            var endpointURL = url.appendingPathComponent(endPoint)
-            var queryItems: [(String,String)] = []
-            if let fields = fields {
-                queryItems.append(("fields",fields))
-            }
-            if let offset = offset {
-                queryItems.append(("offset",String(offset)))
-            }
-            if let limit = limit {
-                queryItems.append(("limit",String(limit)))
-            }
-            endpointURL.append(queryItems: queryItems)
-            return apiGetPublisher(for: endpointURL)
-        }
-        return Fail<Data, APIError>(error: .badURL)
-            .eraseToAnyPublisher()
-    }
-    
-    private func apiGetPublisher(_ endPoint: String, id: String? = nil, filename: String? = nil) -> AnyPublisher<Data, APIError> {
-        if let url = URL(string: serverURL) {
-            var endpointURL = url.appendingPathComponent(endPoint)
-            if let id = id {
-                endpointURL.appendPathComponent(id)
-                if let filename = filename {
-                    endpointURL.appendPathComponent(filename)
-                }
-            }
-            return apiGetPublisher(for: endpointURL)
-        }
-        return Fail<Data, APIError>(error: .badURL)
-            .eraseToAnyPublisher()
-    }
-
-    private func apiPostPublisher(_ endPoint: String, id: String, filename: String? = nil, data: Data) -> AnyPublisher<Void, APIError> {
-        if let url = URL(string: serverURL) {
-            var endpointURL = url.appendingPathComponent(endPoint).appendingPathComponent(id)
-            var contentType = "application/json"
-            if let filename = filename {
-                endpointURL.appendPathComponent(filename)
-                contentType = "application/octet-stream"
-            }
-            return apiPublisher(for: endpointURL, method: "POST", contentType: contentType, body: data)
-            
-        }
-        return Fail<Void, APIError>(error: .badURL)
-            .eraseToAnyPublisher()
-    }
-    
-    private func apiPutPublisher(_ endPoint: String, id: String, filename: String? = nil, data: Data) -> AnyPublisher<Void, APIError> {
-        if let url = URL(string: serverURL) {
-            var endpointURL = url.appendingPathComponent(endPoint).appendingPathComponent(id)
-            var contentType = "application/json"
-            if let filename = filename {
-                endpointURL.appendPathComponent(filename)
-                contentType = "application/octet-stream"
-            }
-            return apiPublisher(for: endpointURL, method: "PUT", contentType: contentType, body: data)
-            
-        }
-        return Fail<Void, APIError>(error: .badURL)
-            .eraseToAnyPublisher()
-    }
-    
-    private func apiDeletePublisher(_ endPoint: String, id: String, filename: String? = nil) -> AnyPublisher<Void, APIError> {
-        if let url = URL(string: serverURL) {
-            var endpointURL = url.appendingPathComponent(endPoint).appendingPathComponent(id)
-            if let filename = filename {
-                endpointURL.appendPathComponent(filename)
-            }
-            return apiPublisher(for: endpointURL, method: "DELETE")
-        }
-        return Fail<Void, APIError>(error: .badURL)
-            .eraseToAnyPublisher()
-    }
-    
-    private func apiPublisher(for url: URL, method: String, contentType: String? = nil, body: Data? = nil) -> AnyPublisher<Void, APIError> {
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = method
-        if let body = body,
-           let contentType = contentType {
-            urlRequest.setValue(contentType, forHTTPHeaderField: "Content-Type")
-            urlRequest.httpBody = body
-        }
-        return URLSession.shared.dataTaskPublisher(for: urlRequest)
-            .tryMap { _, response in
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    throw APIError.unknown
-                }
-                if httpResponse.statusCode == 404 {
-                    throw APIError.notFound
-                }
-                if httpResponse.statusCode == 409 {
-                    throw APIError.conflict
-                }
-                if (400..<500 ~= httpResponse.statusCode) {
-                    throw APIError.clientError(statusCode: httpResponse.statusCode)
-                }
-                if (500..<600 ~= httpResponse.statusCode) {
-                    throw APIError.serverError(statusCode: httpResponse.statusCode)
-                }
-            }
-            .mapError { error in
-                if let error = error as? APIError {
-                    return error
-                }
-                if let urlerror = error as? URLError {
-                    return APIError.networkError(from: urlerror)
-                }
-                return APIError.unknown
-            }
-            .eraseToAnyPublisher()
-    
-    }
-        
-    private func apiGetPublisher(for url: URL) -> AnyPublisher<Data, APIError> {
-        return URLSession.shared.dataTaskPublisher(for: url)
-            .tryMap { data, response in
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    throw APIError.unknown
-                }
-                if httpResponse.statusCode == 404 {
-                    throw APIError.notFound
-                }
-                if (400..<500 ~= httpResponse.statusCode) {
-                    throw APIError.clientError(statusCode: httpResponse.statusCode)
-                }
-                if (500..<600 ~= httpResponse.statusCode) {
-                    throw APIError.serverError(statusCode: httpResponse.statusCode)
-                }
-                return data
-            }
-            .mapError { error in
-                if let error = error as? APIError {
-                    return error
-                }
-                if let urlerror = error as? URLError {
-                    return APIError.networkError(from: urlerror)
-                }
-                return APIError.unknown
-            }
-            .eraseToAnyPublisher()
-    }
-    
     // MARK: - Server
 
-    /**
-        GET /v1
-
-     Returns a structure containing general server infomation
-
-     - Returns: APIServerStatus
-     */
-    public func getServerInfo() async throws -> APIServerStatus {
+    /// Returns a structure containing general server infomation
+    ///
+    ///  Results in the following web service request:
+    ///  ```
+    ///  GET /v1
+    ///  ```
+    /// - Returns: Server status in `APIServerStatus`
+    public func getServerStatus() async throws -> APIServerStatus {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(serverEndpoint)
             let request = URLRequest(url: endPoint)
@@ -209,33 +84,50 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    // MARK: Server (Combine)
-
-    public func getServerInfo() throws -> AnyPublisher<APIServerStatus, APIError> {
-        return apiGetPublisher(serverEndpoint)
-            .decode(type: APIServerStatus.self, decoder: JSONDecoder())
-            .mapError { error in
-                if let error = error as? APIError {
-                    return error
-                }
-                return APIError.unknown
+    /// Get a list of transactions
+    ///
+    /// Returns a list of all transactions from `startTime` until now.  If `startTime` is
+    /// omitted - returns a list of all transactions.
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// GET /{transactionsEndPoint}?startTime
+    /// ```
+    /// - Parameter startTime: Start timestamp of transactions to return.  ISO 8601 (yyyy-MM-dd'T'HH:mm:ss.SSS'Z').
+    /// - Returns: ``APITransactions``
+    public func getTransactions(startTime: String? = nil) async throws -> APITransactions {
+        if let url = URL(string: serverURL) {
+            var endPoint = url.appendingPathComponent(transactionsEndpoint)
+            var queryItems : [(String,String)] = []
+            if let startTime = startTime {
+                queryItems.append(("startTime", startTime))
+                endPoint.append(queryItems: queryItems)
             }
-            .eraseToAnyPublisher()
+            var request = URLRequest(url: endPoint)
+            request.httpMethod = "GET"
+            let (data, response) = try await URLSession.shared.data(for: request)
+            if let transaction = try? JSONDecoder().decode(APITransactions.self, from: data) {
+                return transaction
+            }
+            throw getAPIError(from: response)
+        }
+        throw APIError.badURL
     }
 
     // MARK: - Albums
 
-    /**
-     GET /{albumsEndpoint}?fields&offset&limit
-
-     HTTP call to return a list of album metadata.  Use fields to limit the metadata for each album and offset/limit to page through the results
-
-     - Parameter fields: A comma separated list of fields to be include in the result.  nil for all fields
-     - Parameter offset: Offset in list of all albums, to start the result
-     - Parameter limit: Maximum number of albums to return
-
-     - Returns: APIAlbums
-     */
+    ///  Get a list of album metadata
+    ///
+    ///  Returns a list of all album metadata or a subset of album metadata, defined by fields, offset and limit
+    ///
+    ///  Results in the following web service request:
+    ///  ```
+    ///  GET /{albumsEndpoint}?fields&offset&limit
+    ///  ```
+    ///   - Parameter fields: A comma separated list of fields to be included in the result.  Set to nil for all fields.
+    ///   - Parameter offset: Offset in list of all albums, to start the result
+    ///   - Parameter limit: Maximum number of albums to return
+    /// - Returns: `APIAlbums`
     public func getAlbums(fields: String? = nil, offset: Int? = nil, limit: Int? = nil) async throws -> APIAlbums {
         if let url = URL(string: serverURL) {
             var endPoint = url.appendingPathComponent(albumsEndpoint)
@@ -263,15 +155,15 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    /**
-     HEAD /{albumsEndpoint}/:id
-
-     HTTP HEAD call to determine if a specific album exists.
-
-     - Parameter albumId: Unique id of specific album to check
-
-     - Returns: true if album exists, false otherwise.
-     */
+    /// Determine if a specific album exists
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// HEAD /{albumsEndpoint}/:id
+    /// ```
+    /// where ``albumsEndpoint``
+    /// - Parameter albumId: Unique id of specific album to check
+    /// - Returns: `true` if album exists, `false` otherwise
     public func head(albumId: String) async throws -> Bool {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(albumId)
@@ -291,15 +183,16 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    /**
-     GET /{albumsEndpoint}/:id
-
-     HTTP call to retrieve a specfic albums metadata.  Separate calls to getFile(:) must be made to retrieve audio files and cover artwork
-
-     - Parameter albumId: Unique id of specific album to retrieve
-
-     - Returns: Album
-     */
+    /// Retrieve metadata for a specific album
+    ///
+    /// Separate calls to `getFile(id:filename:)` must be made to retrieve audio files and cover artwork
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// GET /{albumsEndpoint}/:{id}
+    /// ```
+    /// - Parameter albumId: Unique id of specific album to retrieve
+    /// - Returns: `Album`
     public func get(albumId: String) async throws -> Album {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(albumId)
@@ -314,25 +207,23 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    /**
-     POST album metadata and files to server
-
-     POSTs album metadata and associated files to server.  Setting skipFiles to true will skip the associated files.
-
-     POST /{albumsEndpoint}/:id
-
-     If not skipFiles:
-
-        POST /{albumsEndpoint}/:id/:filename
-
-        ...    (repeat for each image and audio file in album)
-
-     - Parameter album: Album metadata to post
-
-     - Parameter skipFiles: Set to true to post metadata withoutj files
-
-     - Returns: Transaction
-     */
+    /// Uploads album metadata and file(s) to server
+    ///
+    /// Uploads album metatdata and associated audio and artwork files to the server.
+    /// The albums must not already exist on the server.
+    ///
+    /// Results in the following web service request(s):
+    /// ```
+    /// POST /{albumsEndpoint}/:id
+    /// ```
+    /// If not skipFiles, then for each audio or artwork file:
+    /// ```
+    /// POST /{albumsEndpoint}/:id:filename
+    /// ```
+    /// - Parameters:
+    ///   - album: Album metadata to upload
+    ///   - skipFiles: Set to true to upload metadata without associated files
+    /// - Returns: On success - `Transaction`; on failure - `APIError` is thrown
     public func post(album: Album, skipFiles: Bool = false) async throws -> Transaction {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(album.id)
@@ -363,25 +254,22 @@ public class MyMusicAPI {
 
     }
 
-    /**
-     PUT album metadata to server
-
-     PUTs album metadata to server.  Setting skipFiles to false also PUT associated files to server.
-
-     PUT /{albumsEndpoint}/:id
-
-     If not skipFiles:
-
-        PUT /{albumsEndpoint}/:id/:filename
-
-        ...    (repeat for each image and audio file in album)
-
-     - Parameter album: Album metadata to put
-
-     - Parameter skipFiles: Set to false to include associated files
-
-     - Returns: Transaction
-     */
+    /// Replaces album metadata and file(s) on server
+    ///
+    /// By default only replaces metadata.  Setting `skipFiles` to `false` will also replace audio and artwork files
+    ///
+    /// Results in the following web server request(s):
+    /// ```
+    /// PUT /{albumsEndpoint}/:id
+    /// ```
+    /// If not `skipFiles`, then for each audio or artwork file:
+    /// ```
+    /// PUT /{albumsEndpoint}/:id/:filename
+    /// ```
+    /// - Parameters:
+    ///   - album: New album metadata
+    ///   - skipFiles: Set to false to include associated files
+    /// - Returns: `Transaction`
     public func put(album: Album, skipFiles: Bool = true) async throws -> Transaction {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(album.id)
@@ -411,15 +299,14 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    /**
-     DELETE /{albumsEndpoint}/:id
-
-     Deletes album and associated files from the server.
-
-     - Parameter albumId: Unique id of the album to be deleted
-
-     - Returns: Transaction
-     */
+    /// Removes album metadata and associated files from the server
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// DELETE /{albumsEndpoint}/:id
+    /// ```
+    /// - Parameter albumId: Unique id of the album to be deleted
+    /// - Returns: `Transaction` or throws `APIError`
     public func delete(albumId: String) async throws -> Transaction {
         if let url = URL(string: serverURL) {
             let endpointURL = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(albumId)
@@ -432,156 +319,19 @@ public class MyMusicAPI {
         throw  APIError.badURL
     }
 
-    // MARK: Albums (Combine)
-    /**
-     GET /{albumsEndpoint}?fields&offset&limit
-     */
-    public func getAlbums(fields: String? = nil, offset: Int? = nil, limit: Int? = nil) throws -> AnyPublisher<APIAlbums, APIError> {
-        return apiGetListPublisher(albumsEndpoint, fields: fields, offset: offset, limit: limit)
-            .decode(type: APIAlbums.self, decoder: JSONDecoder())
-            .mapError { error in
-                if let error = error as? APIError {
-                    return error
-                }
-                return APIError.unknown
-            }
-            .eraseToAnyPublisher()
-    }
-
-    /**
-     GET /{albumsEndpoint}/:id
-     */
-//    @available(*, deprecated, message: "Use 'get(albumId:) async throws' instead")
-    func getAlbum(_ id: String) throws -> AnyPublisher<Album, APIError> {
-        return apiGetPublisher(albumsEndpoint, id: id)
-            .decode(type: Album.self, decoder: JSONDecoder())
-            .mapError { error in
-                if let error = error as? APIError {
-                    return error
-                }
-                return APIError.unknown
-            }
-            .eraseToAnyPublisher()
-    }
-
-    /**
-     POST /{albumsEndpoint}/:id
-     POST /{albumsEndpoint}/:id/:filename
-     ...    (repeat for each image and audio file in album)
-     */
-//    @available(*, deprecated, message: "Use 'post(album:) async throws -> Transsaction' instead")
-    public func postAlbum(_ album: Album) throws -> AnyPublisher<Void, APIError> {
-        let publisher = PassthroughSubject<AnyPublisher<Void, APIError>, APIError>()
-        if let json = album.json,
-           let directory = album.directory {
-            let metaDataPostPublisher = apiPostPublisher(albumsEndpoint, id: album.id, data: json)
-
-            metaDataPostPublisher
-                .sink(
-                    receiveCompletion: { [self] completion in
-                        switch completion {
-                        case .failure(let apiError):
-                            publisher.send(completion: .failure(apiError))
-
-                        case .finished:
-                            let filenames =  album.getFilenames()
-                            let localAlbumURL = fileRootURL.appendingPathComponent(directory)
-                            for filename in filenames {
-                                let localFileURL = localAlbumURL.appendingPathComponent(filename)
-                                if let data = FileManager.default.contents(atPath: localFileURL.path) {
-                                    let fileDataPostPublisher = apiPostPublisher(albumsEndpoint, id: album.id, filename: filename, data: data)
-                                    publisher.send(fileDataPostPublisher)
-                                }
-                            }
-                            publisher.send(completion: .finished)
-
-
-                        }
-
-                    },
-                    receiveValue: { _ in } )
-                .store(in: &subscriptions)
-
-
-            return publisher
-                .flatMap { $0 }
-                .eraseToAnyPublisher()
-        }
-        throw APIError.unknown
-    }
-
-    /**
-     PUT /{albumsEndpoint}/:id
-     */
-//    @available(*, deprecated, message: "Use 'put(album:skipFiles) async throws -> Transsaction' instead")
-    public func putAlbum(_ album: Album, skipFiles: Bool = true) throws -> AnyPublisher<Void, APIError> {
-        let publisher = PassthroughSubject<AnyPublisher<Void, APIError>, APIError>()
-        if let json = album.json,
-           let directory = album.directory {
-            let metaDataPostPublisher = apiPutPublisher(albumsEndpoint, id: album.id, data: json)
-            if skipFiles {
-                return metaDataPostPublisher.eraseToAnyPublisher()
-            }
-
-            metaDataPostPublisher
-                .sink(
-                    receiveCompletion: { [self] completion in
-                        switch completion {
-                        case .failure(let apiError):
-                            publisher.send(completion: .failure(apiError))
-
-                        case .finished:
-                            let filenames =  album.getFilenames()
-                            let localAlbumURL = fileRootURL.appendingPathComponent(directory)
-                            for filename in filenames {
-                                let localFileURL = localAlbumURL.appendingPathComponent(filename)
-                                if let data = FileManager.default.contents(atPath: localFileURL.path) {
-                                    let fileDataPostPublisher = apiPostPublisher(albumsEndpoint, id: album.id, filename: filename, data: data)
-                                    publisher.send(fileDataPostPublisher)
-                                }
-                            }
-                            publisher.send(completion: .finished)
-
-
-                        }
-
-                    },
-                    receiveValue: { _ in } )
-                .store(in: &subscriptions)
-
-
-            return publisher
-                .flatMap { $0 }
-                .eraseToAnyPublisher()
-        }
-        throw APIError.unknown
-    }
-
-    /**
-     DELETE /{albumsEndpoint}/:id
-     */
-//    @available(*, deprecated, message: "Use 'delete(albumId:) async throws' instead")
-    public func deleteAlbum(_ id: String) throws -> AnyPublisher<Void, APIError> {
-        return apiDeletePublisher(albumsEndpoint, id: id)
-            .eraseToAnyPublisher()
-    }
-
     // MARK: - Album Files
 
-    /**
-     GET /{albumsEndpoint}/:id/:filename}
-
-     Retrieve a single file contents from an album
-
-     - Parameter albumId: Unique id of the associated album
-
-     - Parameter filename: Filename of the file to retrieve
-
-     - Returns: Contents of the file (Data)
-
-     - Throws: APIError
-     */
-    public func getFile(albumId: String, filename: String) async throws -> Data {
+    /// Retrieves a file associated with an album from the server
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// GET /{albumsEndpoint}/:id/:filename
+    /// ```
+    /// - Parameters:
+    ///   - albumId: Unique id of the associated album
+    ///   - filename: Name of the file to retrieve
+    /// - Returns: Contents of file (Data) or throws `APIError`
+    public func get(albumId: String, filename: String) async throws -> Data {
         if let url = URL(string: serverURL) {
             let endpointURL = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(albumId).appendingPathComponent(filename)
 
@@ -591,22 +341,19 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    /**
-     POST /{albumsEndpoint}/:id/:filename}
-
-     Post a single file contents related to the album.
-
-     - Parameter albumId: Unique identifier of associated album
-
-     - Parameter filename: Filename of the file to post
-
-     - Parameter data: Content of file to post
-
-     - Returns: No return value
-
-     - Throws: APIError
-     */
-    public func postFile(albumId: String, filename: String, data: Data) async throws {
+    /// Upload a single associated file to the server
+    ///
+    /// The file must not already exist on the server
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// POST /{albumsEndpoint}/:id/:filename
+    /// ```
+    /// - Parameters:
+    ///   - albumId: Unique identifier of the associated album
+    ///   - filename: Name of the file to upload; this must match the name in the album metadata
+    ///   - data: Content of the file to upload
+    public func post(albumId: String, filename: String, data: Data) async throws {
         if let url = URL(string: serverURL) {
             var endpointURL = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(albumId)
             let contentType = "application/octet-stream"
@@ -625,23 +372,19 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    /**
-     POST /{albumsEndpoint}/:id/:filename}
-
-     Post a single file contents related to the album.  The file to post will be found on the local disk in the directory specified in the Album metadata
-
-     - Parameter album: Previously retrieved (get(albumId:) metadata for the album
-
-     - Parameter filename: Filename of the file to post
-
-     - Returns: No return value
-
-     - Throws: APIError
-
-     - Deprecated:  Use 'postFile(albumId:filename:data) async throws' instead
-     */
-//    @available(*, deprecated, message: "Use 'postFile(albumId:filename:data) async throws' instead")
-    public func postFile(album: Album, filename: String) async throws {
+    /// Upload a single associated file to the server
+    ///
+    /// The file must not already exist on the server.
+    /// The file to upload will be found on the local disk in the directory specified in the Album metadata.
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// POST /{albumsEndpoint}/:id/:filename
+    /// ```
+    /// - Parameters:
+    ///   - album: Album metadata for the associated file.
+    ///   - filename: Name of the file to upload.  This should match the value in the album metadata.
+    public func post(album: Album, filename: String) async throws {
         if let directory = album.directory {
             let localAlbumURL = fileRootURL.appendingPathComponent(directory)
             let localFileURL = localAlbumURL.appendingPathComponent(filename)
@@ -667,22 +410,17 @@ public class MyMusicAPI {
         throw APIError.badRequest
     }
 
-    /**
-     PUT /{albumsEndpoint}/:id/:filename}
-
-     Replace a single file contents related to the album.
-
-     - Parameter albumId: Unique identifier of associated album
-
-     - Parameter filename: Filename of the file to put
-
-     - Parameter data: Content of file to put
-
-     - Returns: No return value
-
-     - Throws: APIError
-     */
-    public func putFile(albumId: String, filename: String, data: Data) async throws {
+    /// Replace a single file related to an album
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// PUT /{albumsEndpoint}/:id/:filename
+    /// ```
+    /// - Parameters:
+    ///   - albumId: Unique identifier of the associated album
+    ///   - filename: Name of file to replace
+    ///   - data: Content of new file
+    public func put(albumId: String, filename: String, data: Data) async throws {
         if let url = URL(string: serverURL) {
             var endpointURL = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(albumId)
             let contentType = "application/octet-stream"
@@ -701,11 +439,21 @@ public class MyMusicAPI {
             throw APIError.unknown
         }
         throw APIError.badURL
-
     }
 
-//    @available(*, deprecated, message: "Use 'putFile(albumId:filename:data) async throws' instead")
-    public func putFile(album: Album, filename: String) async throws {
+    /// Replace a single file related to an album
+    ///
+    /// The file must already exist on the server.
+    /// The file to upload will be found on the local disk in the directory specified in the Album metadata.
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// PUT /{albumsEndpoint}/:id/:filename
+    /// ```
+    /// - Parameters:
+    ///   - album: Album metadata for the associated file
+    ///   - filename: Name of the file to upload.  This should match the value in the album metadata.
+    public func put(album: Album, filename: String) async throws {
         if let directory = album.directory {
             let localAlbumURL = fileRootURL.appendingPathComponent(directory)
             let localFileURL = localAlbumURL.appendingPathComponent(filename)
@@ -734,7 +482,16 @@ public class MyMusicAPI {
 
     }
 
-    public func deleteFile(albumId: String, filename: String) async throws {
+    /// Delete a single file related to an album
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// DELETE /{albumsEndpoint}/:id/:filename
+    /// ```
+    /// - Parameters:
+    ///   - albumId: Unique identifier of the associated album
+    ///   - filename: Name of the file to delete
+    public func delete(albumId: String, filename: String) async throws {
         if let url = URL(string: serverURL) {
             let endPointURL = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(albumId).appendingPathComponent(filename)
             var request = URLRequest(url: endPointURL)
@@ -752,58 +509,21 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    // MARK: Album Files (Combine)
-    
-    /**
-     GET /{albumsEndpoint}/:id/:filename}
-     */
-//    @available(*, deprecated, message: "Use 'getFile(album:filename) async throws -> Data' instead")
-    public func getAlbumFile(_ id: String, filename: String) throws -> AnyPublisher<Data, APIError> {
-        return apiGetPublisher(albumsEndpoint, id: id, filename: filename)
-    }
-
-//    @available(*, deprecated, message: "Use 'postFile(albumId:filename:data) async throws' instead")
-    public func postAlbumFile(_ album: Album, filename: String) throws -> AnyPublisher<Void, APIError> {
-        if let directory = album.directory {
-            let localAlbumURL = fileRootURL.appendingPathComponent(directory)
-            let localFileURL = localAlbumURL.appendingPathComponent(filename)
-            if let data = FileManager.default.contents(atPath: localFileURL.path) {
-                return apiPostPublisher(albumsEndpoint, id: album.id, filename: filename, data: data)
-            }
-        }
-        throw APIError.unknown
-    }
-
-//    @available(*, deprecated, message: "Use 'putFile(albumId:filename:data) async throws' instead")
-    public func putAlbumFile(_ album: Album, filename: String) throws -> AnyPublisher<Void, APIError> {
-        if let directory = album.directory {
-            let localAlbumURL = fileRootURL.appendingPathComponent(directory)
-            let localFileURL = localAlbumURL.appendingPathComponent(filename)
-            if let data = FileManager.default.contents(atPath: localFileURL.path) {
-                return apiPutPublisher(albumsEndpoint, id: album.id, filename: filename, data: data)
-            }
-        }
-        throw APIError.unknown
-    }
-
-//    @available(*, deprecated, message: "Use 'deleteFile(albumId:filename) async throws' instead")
-    public func deleteAlbumFile(_ id: String, filename: String) throws -> AnyPublisher<Void, APIError> {
-        return apiDeletePublisher(albumsEndpoint, id: id, filename: filename)
-    }
-
     // MARK: - Singles
 
-    /**
-     GET /{singlesEndpoint}?fields&offset&limit
-
-     HTTP call to return a list of single metadata.  Use fields to limit the metadata for each single and offset/limit to page through the results
-
-     - Parameter fields: A comma separated list of fields to be include in the result.  nil for all fields
-     - Parameter offset: Offset in list of all singles, to start the result
-     - Parameter limit: Maximum number of singles to return
-
-     - Returns: APISingles
-     */
+    /// Get a list of single metadata
+    ///
+    /// Returns a list of all single metadata or a subset of single metadata, defined by `fields`, `offset` and `limit`
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// GET /{singlesEndpoint}?fields&offset&limit
+    /// ```
+    /// - Parameters:
+    ///   - fields: A comma separated list of fields to be included in the result.  Set to nil for all fields.
+    ///   - offset: Offset in list of all singles, to start the result
+    ///   - limit: Maximum nummber of singles to return
+    /// - Returns: ``APISingles``
     public func getSingles(fields: String? = nil, offset: Int? = nil, limit: Int? = nil) async throws -> APISingles {
         if let url = URL(string: serverURL) {
             var endPoint = url.appendingPathComponent(singlesEndpoint)
@@ -831,15 +551,14 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    /**
-     HEAD /{singlesEndpoint}/:id
-
-     HTTP HEAD call to determine if a specific single exits.
-
-     - Parameter singleId: Unique id of specific single to check
-
-     - Returns: true if single exists, false otherwise.
-     */
+    /// Determine if a specific single exists
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// HEAD /{singlesEndpoint}/:id
+    /// ```
+    /// - Parameter singleId: Unique id of specific single to check
+    /// - Returns: `true` if single exists, `false` otherwise
     public func head(singleId: String) async throws -> Bool {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(singleId)
@@ -859,15 +578,16 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    /**
-     GET /{singlesEndpoint}/:id
-
-     HTTP call to retrieve a specfic singles metadata.  A separate call to getFile(:) must be made to retrieve the associated audio file.
-
-     - Parameter singleId: Unique id of specific single to retrieve
-
-     - Returns: Single
-     */
+    /// Retrieve metadata for a specific single
+    ///
+    /// A separate call to `getFile(id:filename:)` must be made to retrieve the associated audio file.
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// GET /{singlessEndpoint}/:{id}
+    /// ```
+    /// - Parameter albumId: Unique id of specific single to retrieve
+    /// - Returns: `Single`
     public func get(singleId: String) async throws -> Single {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(singleId)
@@ -882,23 +602,22 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    /**
-     POST single metadata and audio file to server
-
-     POSTs single metadata and associated audio file to server.  Setting skipFiles to true will skip the associated audio file.
-
-     POST /(singlesEndpoint}/:id
-
-     If not skipFiles:
-
-        POST /{singlesEndpoint}/:id/:filename
-
-     - Parameter single: Single metadata to post
-
-     - Parameter skipFiles: Set to true to post metadata without files
-
-     - Returns: Transaction
-     */
+    /// Uploads single metadata and audio file to server
+    ///
+    /// The single must not already exist on the server.
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// POST /{singlesEndpoint}/:id
+    /// ```
+    /// If not skipFiles, then:
+    /// ```
+    /// POST /{singlesEndpoint}/:id/:filename
+    /// ```
+    /// - Parameters:
+    ///   - single: Single metadata to upload
+    ///   - skipFiles: Set to `true` to upload metadata without the audio file
+    /// - Returns: On success - `Transaction`; on failure - `APIError` is thrown
     public func post(single: Single, skipFiles: Bool = false) async throws -> Transaction {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(single.id)
@@ -927,23 +646,23 @@ public class MyMusicAPI {
 
     }
 
-    /**
-     PUT single metadata to server
-
-     PUTs single metadata to server.  Setting skipFiles to false also PUT associated audio file to server.
-
-     PUT /{singlesEndpoint}/:id
-
-     If not skipFiles:
-
-        PUT /{singlesEndpoint}/:id/:filename
-
-     - Parameter single: Single metadata to put
-
-     - Parameter skipFiles: Set to false to include associated audio file
-
-     - Returns: Transaction
-     */
+    /// Replaces single metadata and audio file on server
+    ///
+    /// By default only replaces metadata.  Setting `skipFiles` to `false` will also replace the associated
+    /// audio file.
+    ///
+    /// Results in the following web server request:
+    /// ```
+    /// PUT /{SinglesEndpoint}/:id
+    /// ```
+    /// If not `skipfiles`, then:
+    /// ```
+    /// PUT /{SinglesEndpoint}/:id/:filename
+    /// ```
+    /// - Parameters:
+    ///   - single: New single metadata
+    ///   - skipFiles: Set to false to include audio files
+    /// - Returns: `Transaction`
     public func put(single: Single, skipFiles: Bool = true) async throws -> Transaction {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(single.id)
@@ -970,15 +689,14 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    /**
-     DELETE /{singlesEndpoint}/:id
-
-     Deletes single and associated audio file from the server.
-
-     - Parameter singleId: Unique id of the single to be deleted
-
-     - Returns: Transaction
-     */
+    /// Removes single metadata and audio file from the server
+    ///
+    /// Results in the folllowing web service request:
+    /// ```
+    /// DELETE /{singlesEndpoint}/:id
+    /// ```
+    /// - Parameter singleId: Unique id of the single to be deleted
+    /// - Returns: `Transaction` or throws `APIError`
      public func delete(singleId: String) async throws -> Transaction {
         if let url = URL(string: serverURL) {
             let endpointURL = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(singleId)
@@ -992,116 +710,19 @@ public class MyMusicAPI {
     }
 
 
-    // MARK: Singles (Combine)
-    
-    /**
-     GET /{singlesEndpoint}?fields&offset&limit
-     */
-//    @available(*, deprecated, message: "Use 'getSingles(fields:offset:limit:) async throws -> APISingles' instead")
-    public func getSingles(fields: String? = nil, offset: Int? = nil, limit: Int? = nil) throws -> AnyPublisher<APISingles, APIError> {
-        return apiGetListPublisher(singlesEndpoint, fields: fields, offset: offset, limit: limit)
-            .decode(type: APISingles.self, decoder: JSONDecoder())
-            .mapError { error in
-                if let error = error as? APIError {
-                    return error
-                }
-                return APIError.unknown
-            }
-            .eraseToAnyPublisher()
-    }
-
-    /**
-     GET /{singlesEndpoint}/:id
-     */
-//    @available(*, deprecated, message: "Use 'get(singleId:) async throws -> Single' instead")
-    public func getSingle(_ id: String) throws -> AnyPublisher<Single, APIError> {
-        return apiGetPublisher(singlesEndpoint, id: id)
-            .decode(type: Single.self, decoder: JSONDecoder())
-            .mapError { error in
-                if let error = error as? APIError {
-                    return error
-                }
-                return APIError.unknown
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    /**
-     POST /{singlesEndpoint}/:id
-     */
-    public func postSingle(_ single: Single) throws -> AnyPublisher<Void, APIError> {
-        let publisher = PassthroughSubject<AnyPublisher<Void, APIError>, APIError>()
-        if let json = single.json,
-           let directory = single.directory {
-            let metaDataPostPublisher = apiPostPublisher(singlesEndpoint, id: single.id, data: json)
-            
-            metaDataPostPublisher
-                .sink(
-                    receiveCompletion: { [self] completion in
-                        switch completion {
-                        case .failure(let apiError):
-                            publisher.send(completion: .failure(apiError))
-                            
-                        case .finished:
-                            let filename = single.filename
-                            let localSingleURL = fileRootURL.appendingPathComponent(directory)
-                            let localFileURL = localSingleURL.appendingPathComponent(filename)
-                            if let data = FileManager.default.contents(atPath: localFileURL.path) {
-                                let fileDataPostPublisher = apiPostPublisher(singlesEndpoint, id: single.id, filename: filename, data: data)
-                                publisher.send(fileDataPostPublisher)
-                            }
-                            publisher.send(completion: .finished)
-                            
-                            
-                        }
-                        
-                    },
-                    receiveValue: { _ in } )
-                .store(in: &subscriptions)
-            
-            
-            return publisher
-                .flatMap { $0 }
-                .eraseToAnyPublisher()
-        }
-        throw APIError.unknown
-    }
-            
-    /**
-     PUT /{singlesEndpoint}/:id
-     */
-    public func putSingle(_ single: Single) throws -> AnyPublisher<Void, APIError> {
-        if let json = single.json {
-            return apiPutPublisher(singlesEndpoint, id: single.id, data: json)
-                .eraseToAnyPublisher()
-        }
-        throw APIError.unknown
-    }
-    
-    /**
-     DELETE /{singlesEndpoint}/:id
-     */
-    public func deleteSingle(_ id: String) throws -> AnyPublisher<Void, APIError> {
-        return apiDeletePublisher(singlesEndpoint, id: id)
-            .eraseToAnyPublisher()
-    }
-    
     // MARK: - Single Files
 
-    /**
-     GET /{singlesEndpoint)}/:id/:filename}
-
-     Retrieve a single file contents from a single
-
-     - Parameter singleId: Unique identifier of single
-
-     - Parameter filename: Filename of the file to retrieve
-
-     - Returns: Contents of the file (Data)
-
-     - Throws: APIError
-     */
-    public func getFile(singleId: String, filename: String) async throws -> Data {
+    /// Retrieves the audio file for a single
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// GET /{albumsEndpoint}/:id:filename
+    /// ```
+    /// - Parameters:
+    ///   - singleId: Unique identifier of single
+    ///   - filename: Name of audio file
+    /// - Returns: Contents of the audio file (Data)
+    public func get(singleId: String, filename: String) async throws -> Data {
         if let url = URL(string: serverURL) {
             let endpointURL = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(singleId).appendingPathComponent(filename)
 
@@ -1111,22 +732,19 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    /**
-     POST /{singlesEndpoint}/:id/:filename}
-
-     Post a file contents related to the single.
-
-     - Parameter single: Previously retrieved (get(singleId:) metadata for the single
-
-     - Parameter filename: Filename of the file to post
-
-     - Parameter data: Content of file to post
-
-     - Returns: No returrn value
-
-     - Throws: APIError
-     */
-    public func postFile(singleId: String, filename: String, data: Data) async throws {
+    /// Upload the audio file associated with a single
+    ///
+    /// The file must not already exist on the server.
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// POST /{singlesEndpoint}/:id/:filename
+    /// ```
+    /// - Parameters:
+    ///   - singleId: Unique identifier of the associated single
+    ///   - filename: Name of the file to upload; this must match the name in the single metadata
+    ///   - data: Content of the file to upload
+    public func post(singleId: String, filename: String, data: Data) async throws {
         if let url = URL(string: serverURL) {
             var endpointURL = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(singleId)
             let contentType = "application/octet-stream"
@@ -1146,20 +764,18 @@ public class MyMusicAPI {
 
     }
 
-    /**
-     POST /{singlesEndpoint}/:id/:filename}
-
-     Post a file contents related to the single.  The file to post will be found on the local disk in the directory specified in the Single metadata
-
-     - Parameter single: Previously retrieved (get(singleId:) metadata for the single
-
-     - Parameter filename: Filename of the file to post
-
-     - Returns: No returrn value
-
-     - Throws: APIError
-     */
-    public func postFile(single: Single, filename: String) async throws {
+    /// Upload the audio file associated with a single
+    ///
+    /// The file must not already exist on the server.
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// POST /{singlesEndpoint}/:id/:filename
+    /// ```
+    /// - Parameters:
+    ///   - single: Single metadata for the associated audio file
+    ///   - filename: Name of the audio file to upload.  This should match the value in the single metadata
+    public func post(single: Single, filename: String) async throws {
         if let directory = single.directory {
             let localSingleURL = fileRootURL.appendingPathComponent(directory)
             let localFileURL = localSingleURL.appendingPathComponent(filename)
@@ -1185,22 +801,17 @@ public class MyMusicAPI {
         throw APIError.badRequest
     }
 
-    /**
-     PUT /{singleEndpoint}/:id/:filename}
-
-     Replace a file related to the single.
-
-     - Parameter singleId: Unique identifier of associated single
-
-     - Parameter filename: Filename of the file to put
-
-     - Parameter data: Contents of the file to put
-
-     - Returns: No return value
-
-     - Throws: APIError
-     */
-    public func putFile(singleId: String, filename: String, data: Data) async throws {
+    /// Replace an audio file related to a Single
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// PUT /{singlesEndpoint}/:id/:filename
+    /// ```
+    /// - Parameters:
+    ///   - singleId: Unique identifier of the associated single
+    ///   - filename: Name of the audio file to replace
+    ///   - data: Content of new audio file
+    public func put(singleId: String, filename: String, data: Data) async throws {
         if let url = URL(string: serverURL) {
             var endpointURL = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(singleId)
             let contentType = "application/octet-stream"
@@ -1219,20 +830,16 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    /**
-     PUT /{singleEndpoint}/:id/:filename}
-
-     Put a file related to the single.  The file to put will be found on the local disk in the directory specified in the Single metadata
-
-     - Parameter single: Previously retrieved (get(singleId:) metadata for the single
-
-     - Parameter filename: Filename of the file to put
-
-     - Returns: Contents of the file (Data)
-
-     - Throws: APIError
-     */
-    public func putFile(single: Single, filename: String) async throws {
+    /// Replace an audio file related to a Single
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// PUT /{singlesEndpoint}/:id/:filename
+    /// ```
+    /// - Parameters:
+    ///   - single: Single metadata for the associated audio file
+    ///   - filename: Name of the audio file to replace
+    public func put(single: Single, filename: String) async throws {
         if let directory = single.directory {
             let localSingleURL = fileRootURL.appendingPathComponent(directory)
             let localFileURL = localSingleURL.appendingPathComponent(filename)
@@ -1258,7 +865,16 @@ public class MyMusicAPI {
         throw APIError.badRequest
     }
 
-    public func deleteFile(singleId: String, filename: String) async throws {
+    /// Delete an audio file related to a single
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// DELETE /{singlesEndpoint}/:id/:filename
+    /// ```
+    /// - Parameters:
+    ///   - singleId: Unique identifier of the associated single
+    ///   - filename: Name of the audio file to delete
+    public func delete(singleId: String, filename: String) async throws {
         if let url = URL(string: serverURL) {
             let endPointURL = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(singleId).appendingPathComponent(filename)
             var request = URLRequest(url: endPointURL)
@@ -1276,41 +892,6 @@ public class MyMusicAPI {
         throw APIError.badURL
     }
 
-    // MARK: Single Files (Combine)
-    
-    /**
-     GET /{singlesEndpoint}/:id/:filename
-     */
-    public func getSingleFile(_ id: String, filename: String) throws -> AnyPublisher<Data, APIError> {
-        return apiGetPublisher(singlesEndpoint, id: id, filename: filename)
-    }
-    
-    public func postSingleFile(_ single: Single, filename: String) throws -> AnyPublisher<Void, APIError> {
-        if let directory = single.directory {
-            let localSingleURL = fileRootURL.appendingPathComponent(directory)
-            let localFileURL = localSingleURL.appendingPathComponent(filename)
-            if let data = FileManager.default.contents(atPath: localFileURL.path) {
-                return apiPostPublisher(singlesEndpoint, id: single.id, filename: filename, data: data)
-            }
-        }
-        throw APIError.unknown
-    }
-    
-    public func putSingleFile(_ single: Single, filename: String) throws -> AnyPublisher<Void, APIError> {
-        if let directory = single.directory {
-            let localSingleURL = fileRootURL.appendingPathComponent(directory)
-            let localFileURL = localSingleURL.appendingPathComponent(filename)
-            if let data = FileManager.default.contents(atPath: localFileURL.path) {
-                return apiPutPublisher(singlesEndpoint, id: single.id, filename: filename, data: data)
-            }
-        }
-        throw APIError.unknown
-    }
-    
-    public func deleteSingleFile(_ id: String, filename: String) throws -> AnyPublisher<Void, APIError> {
-        return apiDeletePublisher(singlesEndpoint, id: id, filename: filename)
-    }
-    
     // MARK: - Playlists
 
     /**
@@ -1324,6 +905,21 @@ public class MyMusicAPI {
 
      - Returns: APIPlaylists
      */
+
+    /// Get a list of playlist metadata
+    ///
+    /// Returns a list of all playlist metatdata or a subset of playlist metadata, defined by `fields`, `offset` and `limit`
+    ///
+    /// Results in the following web service request:
+    /// ```
+    /// GET /{playlistsEndpoint}?fields&offset&limit
+    /// ```
+    /// - Parameters:
+    ///   - fields: A comma separated list of fields to be included in the result.  Set to nil for all fields.
+    ///   - offset: Offset in list of all playlists, to start the result
+    ///   - limit: Maximum number of playlists to return.  Set to nil for all playlists
+    /// - Returns: ``APIPlaylists``
+    /// - Throws: ``APIError``
     public func getPlaylists(fields: String? = nil, offset: Int? = nil, limit: Int? = nil) async throws -> APIPlaylists {
         if let url = URL(string: serverURL) {
             var endPoint = url.appendingPathComponent(playlistsEndpoint)

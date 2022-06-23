@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "MyMusicAPI",
+    name: "MyMusic",
     platforms: [
         .macOS(.v12),
         .iOS(.v15)
@@ -12,25 +12,19 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
-            name: "MyMusicAPI",
-            targets: ["MyMusicAPI"]),
+            name: "MyMusic",
+            targets: ["MyMusic"]),
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
-//        .package(
-////            name: "MusicMetadata",
-//            url: "https://github.com/rcheal/MusicMetadata.git",
-//            from: "1.0.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
-            name: "MyMusicAPI",
+            name: "MyMusic",
             dependencies: []),
         .testTarget(
-            name: "MyMusicAPITests",
-            dependencies: ["MyMusicAPI"]),
+            name: "MyMusicTests",
+            dependencies: ["MyMusic"]),
     ]
 )

@@ -1,7 +1,6 @@
 import XCTest
 import Combine
-@testable import MyMusicAPI
-@testable import MusicMetadata
+@testable import MyMusic
 
 let defaultServerURL = "http://127.0.0.1:8888"
 
@@ -157,7 +156,7 @@ final class MyMusicAPITests: XCTestCase {
         let expectedAddress = "127.0.0.1:8888"
 
         do {
-            let status = try await api.getServerInfo()
+            let status = try await api.getServerStatus()
             XCTAssertEqual(status.version, expectedVersion)
             XCTAssertEqual(status.apiVersions, expectedApiVersions)
             XCTAssertEqual(status.name, expectedName)
@@ -366,7 +365,7 @@ final class MyMusicAPITests: XCTestCase {
 
         do {
             // When
-            fileContents = try await api.getFile(albumId: testAlbum.id, filename: filename)
+            fileContents = try await api.get(albumId: testAlbum.id, filename: filename)
             // Then
             XCTAssertEqual(fileContents, expectedContents)
         } catch {
@@ -417,7 +416,7 @@ final class MyMusicAPITests: XCTestCase {
 
         do {
             // When
-            try await api.postFile(album: album, filename: filename)
+            try await api.post(album: album, filename: filename)
             // Then
             //  Success
         } catch {
@@ -480,7 +479,7 @@ final class MyMusicAPITests: XCTestCase {
         let album = try await createAlbum(title: title, composer: composer)
 
         do {
-            try await api.putFile(album: album, filename: filename)
+            try await api.put(album: album, filename: filename)
         } catch {
             if let apiError = error as? APIError {
                 XCTFail("Failed with error - \(apiError)")
@@ -531,7 +530,7 @@ final class MyMusicAPITests: XCTestCase {
         let album = try await createAlbum(title: title, composer: composer)
 
         do {
-            try await api.deleteFile(albumId: album.id, filename: filename)
+            try await api.delete(albumId: album.id, filename: filename)
         } catch {
             if let apiError = error as? APIError {
                 XCTFail("Failed with error - \(apiError)")
@@ -683,7 +682,7 @@ final class MyMusicAPITests: XCTestCase {
 
         do {
             // When
-            fileContents = try await api.getFile(singleId: testSingle.id, filename: filename)
+            fileContents = try await api.get(singleId: testSingle.id, filename: filename)
             // Then
             XCTAssertEqual(fileContents, expectedContents)
         } catch {
@@ -734,7 +733,7 @@ final class MyMusicAPITests: XCTestCase {
 
         do {
             // When
-            try await api.postFile(single: single, filename: filename)
+            try await api.post(single: single, filename: filename)
             // Then
             //  Success
         } catch {
@@ -745,7 +744,7 @@ final class MyMusicAPITests: XCTestCase {
             }
         }
 
-        try await api.deleteFile(singleId: single.id, filename: filename)
+        try await api.delete(singleId: single.id, filename: filename)
         try await deleteSingle(single.id)
         
     }
@@ -801,7 +800,7 @@ final class MyMusicAPITests: XCTestCase {
 
         do {
             // When
-            try await api.putFile(single: single, filename: filename)
+            try await api.put(single: single, filename: filename)
             // Then
             //  Success
         } catch {
@@ -812,7 +811,7 @@ final class MyMusicAPITests: XCTestCase {
             }
         }
 
-        try await api.deleteFile(singleId: single.id, filename: filename)
+        try await api.delete(singleId: single.id, filename: filename)
         try await deleteSingle(single.id)
     }
     
@@ -862,7 +861,7 @@ final class MyMusicAPITests: XCTestCase {
         
         do {
             // When
-            try await api.deleteFile(singleId: single.id, filename: filename)
+            try await api.delete(singleId: single.id, filename: filename)
             // Then
             //  Success
         } catch {
@@ -873,7 +872,7 @@ final class MyMusicAPITests: XCTestCase {
             }
         }
         do {
-            try await api.deleteFile(singleId: single.id, filename: filename)
+            try await api.delete(singleId: single.id, filename: filename)
             XCTFail("Double delete did not fail")
         } catch APIError.notFound {
             // Success

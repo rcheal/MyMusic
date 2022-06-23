@@ -7,7 +7,9 @@
 
 import Foundation
 
+/// Struct containing list of albums
 public struct APIAlbums {
+    /// List of albums requested by client
     public var albums: [Album]
     private var _metadata: APIMetadata
     
@@ -16,6 +18,8 @@ public struct APIAlbums {
         self._metadata = _metadata
     }
 
+    /// Request metadata related to album list
+    /// - Returns: ``APIMetadata``
     public func getMetadata() -> APIMetadata { _metadata }
 }
 

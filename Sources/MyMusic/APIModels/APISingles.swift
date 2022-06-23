@@ -7,7 +7,9 @@
 
 import Foundation
 
+/// Struct containing list of singles
 public struct APISingles {
+    /// List of singles requested by client
     public var singles: [Single]
     private var _metadata: APIMetadata
     
@@ -16,6 +18,8 @@ public struct APISingles {
         self._metadata = _metadata
     }
 
+    /// Request metadata related to single list
+    /// - Returns: ``APIMetadata``
     public func getMetadata() -> APIMetadata { _metadata }
 }
 

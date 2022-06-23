@@ -7,7 +7,9 @@
 
 import Foundation
 
+/// Struct containing list of transactions
 public struct APITransactions {
+    /// List of transactions requested by client
     public var transactions: [Transaction]
     private var _metadata: APIMetadata
     
@@ -16,6 +18,8 @@ public struct APITransactions {
         self._metadata = _metadata
     }
 
+    /// Request metadata related to transaction list
+    /// - Returns: ``APIMetadata``
     public func getMetadata() -> APIMetadata { _metadata }
 }
 
