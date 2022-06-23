@@ -955,9 +955,6 @@ final class MyMusicAPITests: XCTestCase {
                 case 4:
                     XCTAssertEqual(item.id, "82475e20-95b5-46b0-9c20-8ae4e7fa6539")
                     XCTAssertEqual(item.playlistType, .movement)
-                case 5:
-                    XCTAssertEqual(item.id, "ce5c07c4-a766-41a8-b75d-c65c9d260465")
-                    XCTAssertEqual(item.playlistType, .playlist)
                 default:
                     break
                 }

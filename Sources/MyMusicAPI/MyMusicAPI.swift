@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import MusicMetadata
 import Combine
 
 public let serverEndpoint = "v1"
