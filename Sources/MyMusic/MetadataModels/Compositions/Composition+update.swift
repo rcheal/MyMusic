@@ -40,13 +40,13 @@ extension Composition {
         }
     }
     
-    internal mutating func updateMovementDisks() {
+    public mutating func updateMovementDisks() {
         for index in movements.indices {
             movements[index].update(disk: startDisk)
         }
     }
     
-    internal mutating func updateMovementTracks() {
+    public mutating func updateMovementTracks() {
         var track = startTrack
         for index in movements.indices {
             movements[index].update(track: track)
