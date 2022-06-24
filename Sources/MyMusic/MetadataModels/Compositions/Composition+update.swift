@@ -9,7 +9,7 @@ import Foundation
 
 extension Composition {
     
-    internal mutating func update(_ album: Album) {
+    public mutating func update(_ album: Album) {
         sortTitle = Album.sortedTitle(title).lowercased()
         sortArtist = Album.sortedPerson(artist ?? album.artist)?.lowercased()
         sortComposer = Album.sortedPerson(composer ?? album.composer)?.lowercased()
@@ -24,7 +24,7 @@ extension Composition {
 
     }
     
-    internal mutating func update() {
+    public mutating func update() {
         sortTitle = Album.sortedTitle(title).lowercased()
         sortArtist = Album.sortedPerson(artist)?.lowercased()
         sortComposer = Album.sortedPerson(composer)?.lowercased()

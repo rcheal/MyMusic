@@ -9,7 +9,7 @@ import Foundation
 
 extension Single {
     
-    internal mutating func update(composition: Composition? = nil) {
+    public mutating func update(composition: Composition? = nil) {
         sortTitle = Album.sortedTitle(title).lowercased()
         if let composition = composition {
             sortArtist = Album.sortedPerson((artist ?? composition.artist)?.lowercased())
@@ -25,7 +25,7 @@ extension Single {
         }
     }
     
-    internal mutating func update(_ album: Album, composition: Composition? = nil) {
+    public  mutating func update(_ album: Album, composition: Composition? = nil) {
         sortTitle = Album.sortedTitle(title).lowercased()
         if let composition = composition {
             sortArtist = Album.sortedPerson((artist ?? composition.artist) ?? album.artist)?.lowercased()
