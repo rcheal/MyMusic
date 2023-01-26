@@ -24,6 +24,9 @@ public struct PlaylistItem: Identifiable, Hashable {
     public var playlistType: PlaylistItemType
     public var id: String
     public var title: String
+    public var artist: String?
+    public var composer: String?
+    public var albumTitle: String?
 
 
     public var items: [PlaylistItem]?
