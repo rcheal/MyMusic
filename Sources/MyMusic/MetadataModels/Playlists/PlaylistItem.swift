@@ -28,7 +28,7 @@ public struct PlaylistItem: Identifiable, Hashable {
     public var composer: String?
     public var albumTitle: String?
 
-
+    public var albumId: String?
     public var items: [PlaylistItem]?
 
     // Album
