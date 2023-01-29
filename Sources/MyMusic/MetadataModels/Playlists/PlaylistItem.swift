@@ -21,14 +21,15 @@ public enum PlaylistItemType: String, Codable {
 /// PlaylistItemType is implied by the constructor used.
 public struct PlaylistItem: Identifiable, Hashable {
 
-    public var playlistType: PlaylistItemType
     public var id: String
+    public var albumId: String?
     public var title: String
     public var artist: String?
     public var composer: String?
+    public var genre: String?
     public var albumTitle: String?
+    public var playlistType: PlaylistItemType
 
-    public var albumId: String?
     public var items: [PlaylistItem]?
 
     // Album
@@ -37,7 +38,7 @@ public struct PlaylistItem: Identifiable, Hashable {
         self.title = album.title
         self.artist = album.artist
         self.composer = album.composer
-        self.albumTitle = album.title
+        self.genre = album.genre
         self.playlistType = .album
         self.items = items
     }
@@ -46,8 +47,9 @@ public struct PlaylistItem: Identifiable, Hashable {
     public init(_ composition: CompositionSummary, items: [PlaylistItem]? = nil) {
         self.id = composition.id
         self.title = composition.title
-        self.composer = composition.composer
         self.artist = composition.artist
+        self.composer = composition.composer
+        self.genre = composition.composer
         self.playlistType = .composition
         self.items = items
     }
@@ -65,6 +67,7 @@ public struct PlaylistItem: Identifiable, Hashable {
         self.title = single.title
         self.composer = single.composer
         self.artist = single.artist
+        self.genre = single.genre
         self.playlistType = .single
     }
 
@@ -74,7 +77,12 @@ extension PlaylistItem: Codable {
 
     public enum CodingKeys: String, CodingKey {
         case id
+        case albumId
         case title
+        case artist
+        case composer
+        case genre
+        case albumTitle
         case playlistType
         case items
     }
