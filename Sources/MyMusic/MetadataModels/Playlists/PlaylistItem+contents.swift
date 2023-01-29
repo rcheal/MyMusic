@@ -52,6 +52,25 @@ extension PlaylistItem {
         return nil
     }
 
+    /// Get parent item for specific child
+    ///
+    /// - Parameter id: id of child playlist item
+    /// - Parameter parent: parent to search for child in
+    /// - Returns: Parent item found or nil
+    public func getParentItem(_ id: String, parent: PlaylistItem?) -> PlaylistItem? {
+        if let items = items {
+            for item in items {
+                if item.id == id {
+                    return parent
+                }
+                if let parentItem = item.getParentItem(id, parent: item) {
+                    return parentItem
+                }
+            }
+        }
+        return nil
+    }
+
     /// Get indices of specific child playlist item
     ///
     /// - Parameter id: id of playlist item to check
