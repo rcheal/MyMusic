@@ -49,7 +49,7 @@ public struct PlaylistItem: Identifiable, Hashable {
         self.title = composition.title
         self.artist = composition.artist
         self.composer = composition.composer
-        self.genre = composition.composer
+        self.genre = composition.genre
         self.playlistType = .composition
         self.items = items
     }
@@ -65,8 +65,8 @@ public struct PlaylistItem: Identifiable, Hashable {
     public init(_ single: SingleSummary) {
         self.id = single.id
         self.title = single.title
-        self.composer = single.composer
         self.artist = single.artist
+        self.composer = single.composer
         self.genre = single.genre
         self.playlistType = .single
     }
