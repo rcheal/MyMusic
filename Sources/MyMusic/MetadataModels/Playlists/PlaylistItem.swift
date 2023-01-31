@@ -23,6 +23,7 @@ public struct PlaylistItem: Identifiable, Hashable {
 
     public var id: String
     public var albumId: String?
+    public var compositionId: String?
     public var title: String
     public var artist: String?
     public var composer: String?
@@ -46,6 +47,7 @@ public struct PlaylistItem: Identifiable, Hashable {
     // Composition
     public init(_ composition: CompositionSummary, items: [PlaylistItem]? = nil) {
         self.id = composition.id
+        self.albumId = composition.albumId
         self.title = composition.title
         self.artist = composition.artist
         self.composer = composition.composer
@@ -57,6 +59,8 @@ public struct PlaylistItem: Identifiable, Hashable {
     // Movement
     public init(_ movement: Movement) {
         self.id = movement.id
+        self.albumId = movement.albumId
+        self.compositionId = movement.compositionId
         self.title = movement.title
         self.playlistType = .movement
     }
@@ -64,6 +68,7 @@ public struct PlaylistItem: Identifiable, Hashable {
     // Single
     public init(_ single: SingleSummary) {
         self.id = single.id
+        self.albumId = single.albumId
         self.title = single.title
         self.artist = single.artist
         self.composer = single.composer
@@ -78,6 +83,7 @@ extension PlaylistItem: Codable {
     public enum CodingKeys: String, CodingKey {
         case id
         case albumId
+        case compositionId
         case title
         case artist
         case composer
