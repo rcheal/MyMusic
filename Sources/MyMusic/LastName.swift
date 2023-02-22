@@ -9,7 +9,7 @@ import Foundation
 
 public func lastName(_ name: String?) -> String? {
     if var value = name {
-        let pattern = " *\\(\\d{4}-\\d{4}\\) *"
+        let pattern = " *\\(\\d{4}(-\\d{4})?\\) *"
         if let dateRange = value.range(of: pattern, options:.regularExpression) {
             value.removeSubrange(dateRange)
         }
