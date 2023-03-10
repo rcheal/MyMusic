@@ -7,6 +7,8 @@
 
 import Foundation
 
+#if !os(Linux)
+
 /// URL prefix for server access - `"v1"`
 public let serverEndpoint = "v1"
 
@@ -1089,6 +1091,6 @@ public class MyMusicAPI {
         throw  APIError.badURL
     }
 
-
-
 }
+
+#endif
