@@ -1,5 +1,4 @@
 import XCTest
-import Combine
 @testable import MyMusic
 
 let defaultServerURL = "http://127.0.0.1:8888"
@@ -21,15 +20,13 @@ struct Resource {
 final class MyMusicAPITests: XCTestCase {
     
     var api: MyMusicAPI!
-    var subscriptions = Set<AnyCancellable>()
-    
+
     override func setUp() {
         api = MyMusicAPI.shared
         api.serverURL = defaultServerURL
     }
     
     override func tearDown() {
-        subscriptions = []
     }
     
     func getAlbumURL(title: String, composer: String) -> URL {
