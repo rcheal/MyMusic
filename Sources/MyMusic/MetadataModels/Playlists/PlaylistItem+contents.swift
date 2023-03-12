@@ -92,6 +92,16 @@ extension PlaylistItem {
         return []
     }
 
+    public func getAllItems() -> [PlaylistItem] {
+        var allItems: [PlaylistItem] = [self]
+        if let items = items {
+            for item in items {
+                allItems.append(contentsOf: item.getAllItems())
+            }
+        }
+        return allItems
+    }
+
     internal func flattened() -> [PlaylistItem] {
         if let items = items {
             var newItems: [PlaylistItem] = []

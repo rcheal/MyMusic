@@ -29,6 +29,14 @@ extension Playlist {
         }
     }
 
+    public func getAllItems() -> [PlaylistItem] {
+        var allItems: [PlaylistItem] = []
+        for item in items {
+            allItems.append(contentsOf: item.getAllItems())
+        }
+        return allItems
+    }
+
     /// Get flatted array of playlist items
     ///
     /// Traverses playlist tree and returns an array of tracks (singles and movements)
