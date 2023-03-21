@@ -383,8 +383,8 @@ final class MyMusicAPITests: XCTestCase {
             // When
             let transaction = try await api.post(album: album)
             // Then
-            XCTAssertEqual(transaction.entity, "album")
-            XCTAssertEqual(transaction.method, "POST")
+            XCTAssertEqual(transaction.entity, albumEntity)
+            XCTAssertEqual(transaction.method, postMethod)
             XCTAssertEqual(transaction.id, album.id)
         } catch {
             if let apiError = error as? APIError {
@@ -441,8 +441,8 @@ final class MyMusicAPITests: XCTestCase {
             // When
             let transaction = try await api.put(album: album)
             // Then
-            XCTAssertEqual(transaction.entity, "album")
-            XCTAssertEqual(transaction.method, "PUT")
+            XCTAssertEqual(transaction.entity, albumEntity)
+            XCTAssertEqual(transaction.method, putMethod)
             XCTAssertEqual(transaction.id, testAlbum.id)
         } catch {
             if let apiError = error as? APIError {
@@ -498,8 +498,8 @@ final class MyMusicAPITests: XCTestCase {
             // When
             let transaction = try await api.delete(albumId: testAlbum.id)
             // Then
-            XCTAssertEqual(transaction.entity, "album")
-            XCTAssertEqual(transaction.method, "DELETE")
+            XCTAssertEqual(transaction.entity, albumEntity)
+            XCTAssertEqual(transaction.method, deleteMethod)
             XCTAssertEqual(transaction.id, testAlbum.id)
         } catch {
             if let apiError = error as? APIError {
@@ -700,8 +700,8 @@ final class MyMusicAPITests: XCTestCase {
             // When
             let transaction = try await api.post(single: single)
             // Then
-            XCTAssertEqual(transaction.entity, "single")
-            XCTAssertEqual(transaction.method, "POST")
+            XCTAssertEqual(transaction.entity, singleEntity)
+            XCTAssertEqual(transaction.method, postMethod)
             XCTAssertEqual(transaction.id, single.id)
         } catch {
             if let apiError = error as? APIError {
@@ -761,8 +761,8 @@ final class MyMusicAPITests: XCTestCase {
             // When
             let transaction = try await api.put(single: single)
             // Then
-            XCTAssertEqual(transaction.entity, "single")
-            XCTAssertEqual(transaction.method, "PUT")
+            XCTAssertEqual(transaction.entity, singleEntity)
+            XCTAssertEqual(transaction.method, putMethod)
             XCTAssertEqual(transaction.id, testSingle.id)
         } catch {
             if let apiError = error as? APIError {
@@ -826,8 +826,8 @@ final class MyMusicAPITests: XCTestCase {
             // When
             let transaction = try await api.delete(singleId: testSingle3.id)
             // Then
-            XCTAssertEqual(transaction.entity, "single")
-            XCTAssertEqual(transaction.method, "DELETE")
+            XCTAssertEqual(transaction.entity, singleEntity)
+            XCTAssertEqual(transaction.method, deleteMethod)
             XCTAssertEqual(transaction.id, testSingle3.id)
             let apiSingles = try await api.getSingles(fields: "title", offset: nil, limit: nil)
             let titles =  apiSingles.singles.map { $0.title }
@@ -1019,8 +1019,8 @@ final class MyMusicAPITests: XCTestCase {
             // When
             let transaction = try await api.post(playlist: playlist)
             // Then
-            XCTAssertEqual(transaction.entity, "playlist")
-            XCTAssertEqual(transaction.method, "POST")
+            XCTAssertEqual(transaction.entity, playlistEntity)
+            XCTAssertEqual(transaction.method, postMethod)
             XCTAssertEqual(transaction.id, playlist.id)
         } catch {
             if let apiError = error as? APIError {
@@ -1050,8 +1050,8 @@ final class MyMusicAPITests: XCTestCase {
             // When
             let transaction = try await api.put(playlist: playlist)
             // then
-            XCTAssertEqual(transaction.entity, "playlist")
-            XCTAssertEqual(transaction.method, "PUT")
+            XCTAssertEqual(transaction.entity, playlistEntity)
+            XCTAssertEqual(transaction.method, putMethod)
             XCTAssertEqual(transaction.id, testPlaylist.id)
         } catch {
             if let apiError = error as? APIError {
@@ -1084,8 +1084,8 @@ final class MyMusicAPITests: XCTestCase {
             // When
             let transaction =  try await api.delete(playlistId: testPlaylist.id)
             // Then
-            XCTAssertEqual(transaction.entity, "playlist")
-            XCTAssertEqual(transaction.method, "DELETE")
+            XCTAssertEqual(transaction.entity, playlistEntity)
+            XCTAssertEqual(transaction.method, deleteMethod)
             XCTAssertEqual(transaction.id, testPlaylist.id)
         } catch {
             if let apiError = error as? APIError {

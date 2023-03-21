@@ -236,7 +236,7 @@ public class MyMusicAPI {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(album.id)
             var request = URLRequest(url: endPoint)
-            request.httpMethod = "POST"
+            request.httpMethod = postMethod
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             if let json = album.json {
                 let (data, response) = try await URLSession.shared.upload(for: request, from: json)
@@ -248,7 +248,7 @@ public class MyMusicAPI {
                          for filename in filenames {
                              let localFileURL = localAlbumURL.appendingPathComponent(filename)
                              var fileRequest = URLRequest(url: endPoint.appendingPathComponent(filename))
-                             fileRequest.httpMethod = "POST"
+                             fileRequest.httpMethod = postMethod
                              let (_, _) = try await URLSession.shared.upload(for: fileRequest, fromFile: localFileURL)
                          }
                     }
@@ -283,7 +283,7 @@ public class MyMusicAPI {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(album.id)
             var request = URLRequest(url: endPoint)
-            request.httpMethod = "PUT"
+            request.httpMethod = putMethod
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             if let json = album.json {
                 let (data, response) = try await URLSession.shared.upload(for: request, from: json)
@@ -295,7 +295,7 @@ public class MyMusicAPI {
                         for filename in filenames {
                             let localFileURL = localAlbumURL.appendingPathComponent(filename)
                             var fileRequest = URLRequest(url: endPoint.appendingPathComponent(filename))
-                            fileRequest.httpMethod = "PUT"
+                            fileRequest.httpMethod = putMethod
                             let (_, _) = try await URLSession.shared.upload(for: fileRequest, fromFile: localFileURL)
                         }
                     }
@@ -321,7 +321,7 @@ public class MyMusicAPI {
         if let url = URL(string: serverURL) {
             let endpointURL = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(albumId)
             var request = URLRequest(url: endpointURL)
-            request.httpMethod = "DELETE"
+            request.httpMethod = deleteMethod
 
             let (data, _) = try await URLSession.shared.data(for: request)
             return try JSONDecoder().decode(Transaction.self, from: data)
@@ -371,7 +371,7 @@ public class MyMusicAPI {
             let contentType = "application/octet-stream"
             endpointURL.appendPathComponent(filename)
             var request = URLRequest(url: endpointURL)
-            request.httpMethod = "POST"
+            request.httpMethod = postMethod
             request.setValue(contentType, forHTTPHeaderField: "Content-Type")
 
             let (_, response) = try await URLSession.shared.upload(for: request, from: data)
@@ -407,7 +407,7 @@ public class MyMusicAPI {
                     let contentType = "application/octet-stream"
                     endpointURL.appendPathComponent(filename)
                     var request = URLRequest(url: endpointURL)
-                    request.httpMethod = "POST"
+                    request.httpMethod = postMethod
                     request.setValue(contentType, forHTTPHeaderField: "Content-Type")
 
                     let (_, response) = try await URLSession.shared.upload(for: request, from: data)
@@ -440,7 +440,7 @@ public class MyMusicAPI {
             let contentType = "application/octet-stream"
             endpointURL.appendPathComponent(filename)
             var request = URLRequest(url: endpointURL)
-            request.httpMethod = "PUT"
+            request.httpMethod = putMethod
             request.setValue(contentType, forHTTPHeaderField: "Content-Type")
 
             let (_, response) = try await URLSession.shared.upload(for: request, from: data)
@@ -478,7 +478,7 @@ public class MyMusicAPI {
                     let contentType = "application/octet-stream"
                     endpointURL.appendPathComponent(filename)
                     var request = URLRequest(url: endpointURL)
-                    request.httpMethod = "PUT"
+                    request.httpMethod = putMethod
                     request.setValue(contentType, forHTTPHeaderField: "Content-Type")
 
                     let (_, response) = try await URLSession.shared.upload(for: request, from: data)
@@ -511,7 +511,7 @@ public class MyMusicAPI {
         if let url = URL(string: serverURL) {
             let endPointURL = url.appendingPathComponent(albumsEndpoint).appendingPathComponent(albumId).appendingPathComponent(filename)
             var request = URLRequest(url: endPointURL)
-            request.httpMethod = "DELETE"
+            request.httpMethod = deleteMethod
 
             let (_, response) = try await URLSession.shared.data(for: request)
             if let httpResponse = response as? HTTPURLResponse {
@@ -642,7 +642,7 @@ public class MyMusicAPI {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(single.id)
             var request = URLRequest(url: endPoint)
-            request.httpMethod = "POST"
+            request.httpMethod = postMethod
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             if let json = single.json {
                 let (data, response) = try await URLSession.shared.upload(for: request, from: json)
@@ -653,7 +653,7 @@ public class MyMusicAPI {
                         let localSingleURL = fileRootURL.appendingPathComponent(directory)
                         let localFileURL = localSingleURL.appendingPathComponent(filename)
                         var fileRequest = URLRequest(url: endPoint.appendingPathComponent(filename))
-                        fileRequest.httpMethod = "POST"
+                        fileRequest.httpMethod = postMethod
                         let (_, _) = try await URLSession.shared.upload(for: fileRequest, fromFile: localFileURL)
                     }
                     return transaction
@@ -688,7 +688,7 @@ public class MyMusicAPI {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(single.id)
             var request = URLRequest(url: endPoint)
-            request.httpMethod = "PUT"
+            request.httpMethod = putMethod
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             if let json = single.json {
                 let (data, response) = try await URLSession.shared.upload(for: request, from: json)
@@ -698,7 +698,7 @@ public class MyMusicAPI {
                         let localSingleURL = fileRootURL.appendingPathComponent(directory)
                             let localFileURL = localSingleURL.appendingPathComponent(filename)
                             var fileRequest = URLRequest(url: endPoint.appendingPathComponent(filename))
-                            fileRequest.httpMethod = "PUT"
+                            fileRequest.httpMethod = putMethod
                             let (_, _) = try await URLSession.shared.upload(for: fileRequest, fromFile: localFileURL)
                     }
                     return transaction
@@ -723,7 +723,7 @@ public class MyMusicAPI {
         if let url = URL(string: serverURL) {
             let endpointURL = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(singleId)
             var request = URLRequest(url: endpointURL)
-            request.httpMethod = "DELETE"
+            request.httpMethod = deleteMethod
 
             let (data, _) = try await URLSession.shared.data(for: request)
             return try JSONDecoder().decode(Transaction.self, from: data)
@@ -774,7 +774,7 @@ public class MyMusicAPI {
             let contentType = "application/octet-stream"
             endpointURL.appendPathComponent(filename)
             var request = URLRequest(url: endpointURL)
-            request.httpMethod = "POST"
+            request.httpMethod = postMethod
             request.setValue(contentType, forHTTPHeaderField: "Content-Type")
 
             let (_, response) = try await URLSession.shared.upload(for: request, from: data)
@@ -810,7 +810,7 @@ public class MyMusicAPI {
                     let contentType = "application/octet-stream"
                     endpointURL.appendPathComponent(filename)
                     var request = URLRequest(url: endpointURL)
-                    request.httpMethod = "POST"
+                    request.httpMethod = postMethod
                     request.setValue(contentType, forHTTPHeaderField: "Content-Type")
 
                     let (_, response) = try await URLSession.shared.upload(for: request, from: data)
@@ -843,7 +843,7 @@ public class MyMusicAPI {
             let contentType = "application/octet-stream"
             endpointURL.appendPathComponent(filename)
             var request = URLRequest(url: endpointURL)
-            request.httpMethod = "PUT"
+            request.httpMethod = putMethod
             request.setValue(contentType, forHTTPHeaderField: "Content-Type")
 
             let (_, response) = try await URLSession.shared.upload(for: request, from: data)
@@ -876,7 +876,7 @@ public class MyMusicAPI {
                     let contentType = "application/octet-stream"
                     endpointURL.appendPathComponent(filename)
                     var request = URLRequest(url: endpointURL)
-                    request.httpMethod = "PUT"
+                    request.httpMethod = putMethod
                     request.setValue(contentType, forHTTPHeaderField: "Content-Type")
 
                     let (_, response) = try await URLSession.shared.upload(for: request, from: data)
@@ -906,7 +906,7 @@ public class MyMusicAPI {
         if let url = URL(string: serverURL) {
             let endPointURL = url.appendingPathComponent(singlesEndpoint).appendingPathComponent(singleId).appendingPathComponent(filename)
             var request = URLRequest(url: endPointURL)
-            request.httpMethod = "DELETE"
+            request.httpMethod = deleteMethod
 
             let (_, response) = try await URLSession.shared.data(for: request)
             if let httpResponse = response as? HTTPURLResponse {
@@ -1029,7 +1029,7 @@ public class MyMusicAPI {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(playlistsEndpoint).appendingPathComponent(playlist.id)
             var request = URLRequest(url: endPoint)
-            request.httpMethod = "POST"
+            request.httpMethod = postMethod
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             if let json = playlist.json {
                 let (data, response) = try await URLSession.shared.upload(for: request, from: json)
@@ -1056,7 +1056,7 @@ public class MyMusicAPI {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(playlistsEndpoint).appendingPathComponent(playlist.id)
             var request = URLRequest(url: endPoint)
-            request.httpMethod = "PUT"
+            request.httpMethod = putMethod
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             if let json = playlist.json {
                 let (data, response) = try await URLSession.shared.upload(for: request, from: json)
@@ -1083,7 +1083,7 @@ public class MyMusicAPI {
         if let url = URL(string: serverURL) {
             let endpointURL = url.appendingPathComponent(playlistsEndpoint).appendingPathComponent(playlistId)
             var request = URLRequest(url: endpointURL)
-            request.httpMethod = "DELETE"
+            request.httpMethod = deleteMethod
 
             let (data, _) = try await URLSession.shared.data(for: request)
             return try JSONDecoder().decode(Transaction.self, from: data)

@@ -9,15 +9,23 @@ import Foundation
 
 var iso8601Formatter: DateFormatter?
 
+let postMethod = "POST"
+let putMethod = "PUT"
+let deleteMethod = "DELETE"
+
+let albumEntity = "album"
+let singleEntity = "single"
+let playlistEntity = "playlist"
+
 /// A struct that stores attributes of a single transaction against the MyMusicServer
 public struct Transaction: Identifiable, Hashable {
     /// id of entity added, modified or deleted
     public var id: String
     /// time of transaction - ISO 8601 (yyyy-MM-dd'T'HH:mm:ss.SSS'Z')
     public var time: String
-    /// HTTP method - 'POST', 'PUT' or 'DELETE
+    /// HTTP method - postMethod, putMethod or deleteMethod
     public var method: String
-    /// MyMusic entity involved - 'album', 'single', or 'playlist'
+    /// MyMusic entity involved - albumEntity, singleEntity, or playlistEntity
     public var entity: String
     
     public init(method: String, entity: String, id: String) {
