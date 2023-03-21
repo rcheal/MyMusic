@@ -9,13 +9,13 @@ import Foundation
 
 var iso8601Formatter: DateFormatter?
 
-let postMethod = "POST"
-let putMethod = "PUT"
-let deleteMethod = "DELETE"
+public let postMethod = "POST"
+public let putMethod = "PUT"
+public let deleteMethod = "DELETE"
 
-let albumEntity = "album"
-let singleEntity = "single"
-let playlistEntity = "playlist"
+public let albumEntity = "album"
+public let singleEntity = "single"
+public let playlistEntity = "playlist"
 
 /// A struct that stores attributes of a single transaction against the MyMusicServer
 public struct Transaction: Identifiable, Hashable {
