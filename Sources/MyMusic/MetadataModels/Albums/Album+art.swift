@@ -91,5 +91,15 @@ extension Album {
             _albumArt!.removePages()
         }
     }
+
+    /// Returns copy artWork items
+    public func getArtItems() -> [AlbumArtRef] {
+        return albumArt.items
+    }
+
+    /// Return index of ``AlbumArtRef``
+    public func getArtIndex(_ artRef: AlbumArtRef) -> Int? {
+        return albumArt.getItemIndex(artRef)
+    }
     
 }

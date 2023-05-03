@@ -133,5 +133,14 @@ public struct AlbumArtwork: Hashable, Codable {
             return removed
         }
     }
-        
+
+    /// Returns copy of ``items``
+    public func getItems() -> [AlbumArtRef] {
+        return items
+    }
+
+    /// Returns index of ``artRef``
+    public func getItemIndex(_ artRef: AlbumArtRef) -> Int? {
+        return items.firstIndex(of: artRef)
+    }
 }
