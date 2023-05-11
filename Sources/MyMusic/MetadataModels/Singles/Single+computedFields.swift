@@ -15,6 +15,8 @@ extension Single {
 
     public var conductorLastName: String? { lastName(conductor) }
 
+    public var isLone: Bool { albumId == nil }
+
 }
 
 extension SingleSummary {
@@ -22,5 +24,7 @@ extension SingleSummary {
     public var composerLastName: String? { lastName(composer) }
 
     public var artistLastName: String? { lastName(artist) }
+
+    public var isLone: Bool { albumId == nil }
 
 }
