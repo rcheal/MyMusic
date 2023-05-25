@@ -12,7 +12,7 @@ import Foundation
 /// A single may stand alone or be part of an album.  If part of an album,
 /// then albumId must be used to retrieve the associated ``Album`` to
 /// supply fields that are set to nil in ``Single``
-public struct Single: Identifiable, Hashable {
+public struct Single: Identifiable, Equatable, Hashable {
     public var id: String
     public var compositionId: String?
     public var albumId: String?

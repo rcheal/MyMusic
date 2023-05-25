@@ -8,7 +8,7 @@
 import Foundation
 
 /// A struct that stores metadata for an album along with path references to audio and artwork files
-public struct Album: Identifiable, Hashable {
+public struct Album: Identifiable, Equatable, Hashable {
 
     /// UUID which identifies the album within  the collection
     public var id: String

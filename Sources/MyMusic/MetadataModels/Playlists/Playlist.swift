@@ -23,7 +23,7 @@ public enum PlaylistType: String, CaseIterable, Identifiable, Codable {
 /// A playlist is either an explicit list of albums, compositions, movements and/or singles
 /// or an implicit list that is automatically created at playtime by searching the entire collection for
 /// matching artists, composers, genres, years and or ratings
-public struct Playlist: Identifiable, Hashable {
+public struct Playlist: Identifiable, Equatable, Hashable {
     /// UUID which identifies the playlist withing the collection
     public var id: String
     /// Optional username that owns the playlist.  If missing, the playlist is visible to all users
