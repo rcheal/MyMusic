@@ -20,6 +20,12 @@ public struct FileHash: Codable {
     public var hash: String?
     public var hashtype: FileHashType?
 
+    public init(filename: String, hash: String? = nil, hashtype: FileHashType? = nil) {
+        self.filename = filename
+        self.hash = hash
+        self.hashtype = hashtype
+    }
+
     public enum CodingKeys: String, CodingKey {
         case filename
         case hash
@@ -29,6 +35,18 @@ public struct FileHash: Codable {
 
 public struct APIFileHashes {
     public var hashes: [FileHash]
+
+    public init(filename: String, hash: String? = nil, hashtype: FileHashType? = nil) {
+        hashes  = [FileHash(filename: filename, hash: hash, hashtype: hashtype)]
+    }
+
+    public init(_ hash: FileHash) {
+        hashes = [hash]
+    }
+
+    public init(hashes: [FileHash]) {
+        self.hashes = hashes
+    }
 }
 
 extension APIFileHashes: Codable {
