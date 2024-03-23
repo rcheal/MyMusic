@@ -77,9 +77,21 @@ public class MyMusicAPI {
                 let serverStatus = try JSONDecoder().decode(APIServerStatus.self, from: data)
                 return serverStatus
             } catch {
-                if let error = error as? APIError {
-                    throw error
+                if let error = error as? URLError {
+                    switch error.code {
+                    case .badURL:
+                        throw APIError.badURL
+                    case .cannotConnectToHost:
+                        throw APIError.serviceUnavailable
+                    case .cannotFindHost:
+                        throw APIError.serverError(statusCode: 1)
+                    case .timedOut:
+                        throw APIError.serverError(statusCode: 2)
+                    default:
+                        throw APIError.serverError(statusCode: 3)
+                    }
                 }
+
                 throw APIError.unknown
             }
         }
