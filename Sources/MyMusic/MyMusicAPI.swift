@@ -81,14 +81,10 @@ public class MyMusicAPI {
                     switch error.code {
                     case .badURL:
                         throw APIError.badURL
-                    case .cannotConnectToHost:
+                    case .cannotConnectToHost, .timedOut:
                         throw APIError.serviceUnavailable
-                    case .cannotFindHost:
-                        throw APIError.serverError(statusCode: 1)
-                    case .timedOut:
-                        throw APIError.serverError(statusCode: 2)
                     default:
-                        throw APIError.serverError(statusCode: 3)
+                        throw APIError.serviceUnavailable
                     }
                 }
 
