@@ -65,17 +65,18 @@ public class MyMusicAPI {
     ///  ```
     ///  GET /v1
     ///  ```
+    /// - Parameter timeout: Time in seconds to allow before connection times out
     /// - Returns: Server status in ``APIServerStatus``
     /// - Throws: ``APIError``
-    public func getServerStatus() async throws -> APIServerStatus {
+    public func getServerStatus(timeout: TimeInterval = 30) async throws -> APIServerStatus {
         if let url = URL(string: serverURL) {
             let endPoint = url.appendingPathComponent(serverEndpoint)
             let request = URLRequest(url: endPoint)
 
             do {
                 let urlSessionConfig = URLSessionConfiguration.default
-                urlSessionConfig.timeoutIntervalForRequest = 1
-                urlSessionConfig.timeoutIntervalForResource = 1
+                urlSessionConfig.timeoutIntervalForRequest = timeout
+                urlSessionConfig.timeoutIntervalForResource = timeout
                 let urlSession = URLSession(configuration: urlSessionConfig)
                 let (data, _) = try await urlSession.data(for: request)
                 let serverStatus = try JSONDecoder().decode(APIServerStatus.self, from: data)
