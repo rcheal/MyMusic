@@ -73,7 +73,9 @@ public class MyMusicAPI {
             let request = URLRequest(url: endPoint)
 
             do {
-                let (data, _) = try await URLSession.shared.data(for: request)
+                let urlSession = URLSession.shared
+                urlSession.configuration.timeoutIntervalForResource = 5
+                let (data, _) = try await urlSession.data(for: request)
                 let serverStatus = try JSONDecoder().decode(APIServerStatus.self, from: data)
                 return serverStatus
             } catch {
