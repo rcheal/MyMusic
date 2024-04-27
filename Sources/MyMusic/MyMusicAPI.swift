@@ -254,16 +254,25 @@ public class MyMusicAPI {
             if let json = album.json {
                 let (data, response) = try await URLSession.shared.upload(for: request, from: json)
                 if let transaction = Transaction.decodeFrom(json: data) {
-                    if !skipFiles,
-                       let directory = album.directory {
-                         let filenames =  album.getFilenames()
-                         let localAlbumURL = fileRootURL.appendingPathComponent(directory)
-                         for filename in filenames {
-                             let localFileURL = localAlbumURL.appendingPathComponent(filename)
-                             var fileRequest = URLRequest(url: endPoint.appendingPathComponent(filename))
-                             fileRequest.httpMethod = postMethod
-                             let (_, _) = try await URLSession.shared.upload(for: fileRequest, fromFile: localFileURL)
-                         }
+                    if let directory = album.directory {
+                        let localAlbumURL = fileRootURL.appendingPathComponent(directory)
+                        if skipFiles {
+                            if let frontArt = album.albumArt.frontArtRef() {
+                                let filename = frontArt.filename
+                                let localFileURL = localAlbumURL.appendingPathComponent(filename)
+                                var fileRequest = URLRequest(url: endPoint.appendingPathComponent(filename))
+                                fileRequest.httpMethod = postMethod
+                                let (_, _) = try await URLSession.shared.upload(for: fileRequest, fromFile: localFileURL)
+                            }
+                        } else {
+                            let filenames =  album.getFilenames()
+                            for filename in filenames {
+                                let localFileURL = localAlbumURL.appendingPathComponent(filename)
+                                var fileRequest = URLRequest(url: endPoint.appendingPathComponent(filename))
+                                fileRequest.httpMethod = postMethod
+                                let (_, _) = try await URLSession.shared.upload(for: fileRequest, fromFile: localFileURL)
+                            }
+                        }
                     }
                     return transaction
                 }
