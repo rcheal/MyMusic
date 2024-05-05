@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OSLog
 
 #if !os(Linux)
 
@@ -38,6 +39,7 @@ public class MyMusicAPI {
     /// URL of local directory containing associated files.  Used by some file upload (`post` and `put`) calls to find file contents.
     public var fileRootURL = URL(fileURLWithPath: "")
 
+    private var logger = Logger(subsystem: "MyMusic", category: "API")
 
     /// Initiator if more than one api class is requred (for instance copying metadata between servers).  In normal cases ``shared`` should be used.
     public init() {
@@ -271,6 +273,7 @@ public class MyMusicAPI {
                                 var fileRequest = URLRequest(url: endPoint.appendingPathComponent(filename))
                                 fileRequest.httpMethod = postMethod
                                 let (_, _) = try await URLSession.shared.upload(for: fileRequest, fromFile: localFileURL)
+                                logger.debug("File - \(localFileURL.path) - uploaded")
                             }
                         }
                     }
