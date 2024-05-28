@@ -22,7 +22,7 @@ public struct Transaction: Identifiable, Hashable {
     /// id of entity added, modified or deleted
     public var id: String
     /// title of entity added, modified or deleted
-    public var title: String?
+    public var title: String
     /// time of transaction - ISO 8601 (yyyy-MM-dd'T'HH:mm:ss.SSS'Z')
     public var time: String
     /// HTTP method - postMethod, putMethod or deleteMethod
