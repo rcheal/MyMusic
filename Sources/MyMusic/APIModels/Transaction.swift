@@ -30,10 +30,11 @@ public struct Transaction: Identifiable, Hashable {
     /// MyMusic entity involved - albumEntity, singleEntity, or playlistEntity
     public var entity: String
     
-    public init(method: String, entity: String, id: String) {
+    public init(method: String, entity: String, id: String, title: String) {
         self.method = method
         self.entity = entity
         self.id = id
+        self.title = title
 
         if iso8601Formatter == nil {
             let formatter = DateFormatter()
