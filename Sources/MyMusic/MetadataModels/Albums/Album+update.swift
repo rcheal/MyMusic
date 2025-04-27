@@ -52,14 +52,35 @@ extension Album {
     }
     
     mutating internal func updateTracks() {
+        var lastDisk = 0
+        var isAnyNullDisk = false
         for index in contents.indices {
             if var composition = contents[index].composition {
                 composition.updateTrack()
+                if let tempDisk = composition.startDisk {
+                    lastDisk = max(tempDisk, lastDisk)
+                } else {
+                    isAnyNullDisk = true
+                }
                 contents[index].disk = composition.startDisk
                 contents[index].track = composition.startTrack
             } else if let single = contents[index].single {
                 contents[index].disk = single.disk
                 contents[index].track = single.track
+            }
+        }
+        // Fix nil disk mixed with actual disk
+        if lastDisk > 0 && isAnyNullDisk {
+            for index in contents.indices {
+                if var composition = contents[index].composition {
+                    if composition.startDisk == nil {
+                        composition.startDisk = lastDisk+1
+                    }
+                } else if var single = contents[index].single {
+                    if single.disk == nil {
+                        single.disk = lastDisk+1
+                    }
+                }
             }
         }
     }
